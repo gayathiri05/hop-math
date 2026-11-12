@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hop Math – Level 1</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦘</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>:root{--bg:#fff7ed;--card:#ffffff;--ink:#1e293b;--muted:#64748b;--line:#e2e8f0;--primary:#7c3aed;--primary2:#a78bfa;--good:#16a34a;--goodbg:#dcfce7;--bad:#dc2626;--badbg:#fee2e2;--p3:#22c55e;--p4:#3b82f6;--p5:#a855f7;--shadow:0 6px 0 rgba(30,41,59,.08),0 10px 24px rgba(30,41,59,.08)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Nunito","Trebuchet MS",system-ui,sans-serif;color:var(--ink);background:var(--bg);background-image:radial-gradient(circle at 10% 10%,#fde68a55 0 120px,transparent 121px),radial-gradient(circle at 90% 30%,#c4b5fd55 0 160px,transparent 161px),radial-gradient(circle at 20% 90%,#99f6e455 0 140px,transparent 141px);background-attachment:fixed;min-height:100vh;font-size:18px;line-height:1.45}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:26px;color:var(--primary)}
+.brand .roo{font-size:38px;display:inline-block;animation:hop 2.4s ease-in-out infinite}
+@keyframes hop{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-10px)}90%{transform:translateY(0)}}
+.card{background:var(--card);border-radius:22px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+h1{font-size:30px;margin:0 0 6px}h2{font-size:22px;margin:0 0 12px}
+.muted{color:var(--muted)}
+.btn{border:none;border-radius:16px;padding:12px 20px;font-size:18px;font-weight:800;background:var(--primary);color:#fff;box-shadow:0 4px 0 #5b21b6;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #5b21b6}
+.btn.alt{background:#fff;color:var(--primary);border:2px solid var(--primary2);box-shadow:0 4px 0 #ddd6fe}
+.btn.green{background:#16a34a;box-shadow:0 4px 0 #166534}
+.btn.orange{background:#f97316;box-shadow:0 4px 0 #c2410c}
+.btn.small{padding:8px 14px;font-size:15px;border-radius:12px}
+.btn:disabled{opacity:.45;cursor:default}
+.profiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.prof{border:none;border-radius:26px;padding:26px 16px;color:#fff;text-align:center;box-shadow:var(--shadow);font-size:18px}
+.prof .av{font-size:64px;display:block}.prof .nm{font-size:30px;font-weight:900;display:block}
+.prof.p0{background:linear-gradient(135deg,#f472b6,#a855f7)}.prof.p1{background:linear-gradient(135deg,#38bdf8,#22c55e)}
+.tests{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tcard{border:3px solid var(--line);background:#fff;border-radius:18px;padding:14px 10px;text-align:center;font-size:16px;transition:transform .1s}
+.tcard:hover{transform:translateY(-3px)}
+.tcard .tn{font-size:22px;font-weight:900;display:block}
+.tcard.done{border-color:#86efac;background:#f0fdf4}.tcard.prog{border-color:#fcd34d;background:#fffbeb}
+.stars{font-size:20px;letter-spacing:2px}
+.skill{display:grid;grid-template-columns:minmax(150px,210px) 1fr 54px;align-items:center;gap:10px;margin:8px 0;font-size:16px}
+.bar{height:16px;background:#f1f5f9;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;border-radius:99px}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:800;font-size:14px;color:#fff}
+.weak{display:flex;flex-wrap:wrap;gap:10px}
+.qhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.qnum{font-weight:900;font-size:20px}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;color:var(--muted)}
+.qtext{font-size:22px;font-weight:700;margin:6px 0 12px}
+.eq{font-size:30px;font-weight:900;color:var(--primary);text-align:center;margin:12px 0;letter-spacing:1px}
+.qsvg{display:block;margin:10px auto 14px;width:100%;height:auto}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.ch{display:flex;align-items:center;gap:10px;border:3px solid var(--line);background:#fff;border-radius:18px;padding:12px 14px;font-size:22px;font-weight:800;color:var(--ink);text-align:left;min-height:64px}
+.ch .lt{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;color:#fff;background:#94a3b8}
+.ch:hover{border-color:var(--primary2)}
+.ch.sel{border-color:var(--primary);background:#f5f3ff}.ch.sel .lt{background:var(--primary)}
+.ch.right{border-color:var(--good);background:var(--goodbg)}.ch.right .lt{background:var(--good)}
+.ch.wrong{border-color:var(--bad);background:var(--badbg)}.ch.wrong .lt{background:var(--bad)}
+.ch .ico{flex:none}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.dots{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:10px}
+.dot{aspect-ratio:1;border-radius:10px;border:2px solid var(--line);background:#fff;font-size:13px;font-weight:800;color:var(--muted);padding:0}
+.dot.ans{background:#ede9fe;border-color:var(--primary2);color:var(--primary)}
+.dot.cur{outline:3px solid var(--primary);outline-offset:1px}
+.score{text-align:center}
+.big{font-size:64px;font-weight:900;color:var(--primary);line-height:1}
+.bigstars{font-size:44px;letter-spacing:6px}
+table.pts{width:100%;border-collapse:collapse;font-size:17px}
+table.pts td,table.pts th{padding:8px;border-bottom:1px solid var(--line);text-align:center}
+table.pts th:first-child,table.pts td:first-child{text-align:left}
+.rev{border-left:8px solid var(--line);padding:14px 16px;border-radius:16px;background:#fff;margin-bottom:12px;box-shadow:var(--shadow)}
+.rev.ok{border-left-color:var(--good)}.rev.no{border-left-color:var(--bad)}.rev.skip{border-left-color:#f59e0b}
+.rev .qtext{font-size:19px}
+.expl{background:#fefce8;border:2px dashed #fde047;border-radius:14px;padding:12px 14px;margin-top:10px;font-size:17px}
+.expl b{color:#7c2d12}
+.feedback{margin-top:14px;border-radius:16px;padding:14px 16px;font-size:18px}
+.feedback.ok{background:var(--goodbg)}.feedback.no{background:var(--badbg)}
+.tag{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}
+.confetti span{position:absolute;top:-40px;font-size:28px;animation:fall 2.8s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.foot{font-size:14px;color:var(--muted);text-align:center;margin-top:20px}
+.linkbtn{background:none;border:none;color:var(--primary);font-weight:800;text-decoration:underline;font-size:15px;padding:4px}
+@media (max-width:560px){body{font-size:17px}.qtext{font-size:20px}.ch{font-size:20px}.dots{grid-template-columns:repeat(8,1fr)}.skill{grid-template-columns:1fr 1fr 46px}.big{font-size:52px}h1{font-size:26px}}
+</style></head>
+<body><div class="wrap" id="app"></div>
+<script>/* Kangaroo-style Level 1 question generator (original questions). */
+(function (root) {
+"use strict";
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const ri=(r,a,b)=>a+Math.floor(r()*(b-a+1));
+const pick=(r,a)=>a[Math.floor(r()*a.length)];
+function shuffle(r,a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const NAMES=["Mia","Leo","Ava","Sam","Zoe","Max","Lily","Ben","Nora","Eli","Ruby","Omar","Anya","Ravi","Ella","Theo","Maya","Kai"];
+const ITEMS=["apples","stickers","marbles","shells","crayons","cookies","balloons","acorns","buttons","toy cars"];
+const names=(r,n)=>shuffle(r,NAMES).slice(0,n);
+const plural=(n,w)=>n+" "+(n===1?w.replace(/s$/,""):w);
+
+function numChoices(r,correct,extra){
+  const seen=new Set([correct]),out=[];
+  for(const e of extra||[]){if(Number.isInteger(e)&&e>=0&&!seen.has(e)){seen.add(e);out.push(e);}if(out.length===4)break;}
+  let spread=Math.max(2,Math.ceil(correct*0.2)),guard=0;
+  while(out.length<4&&guard++<500){const c=correct+(r()<0.5?-1:1)*ri(r,1,spread);if(c>=0&&!seen.has(c)){seen.add(c);out.push(c);}if(guard%20===0)spread++;}
+  const all=out.concat([correct]).sort((a,b)=>a-b);
+  return {choices:all.map(String),answer:all.indexOf(correct)};
+}
+function textChoices(r,correct,distractors,keepOrder){
+  const d=[...new Set(distractors.filter(x=>x!==correct))];
+  const ds=keepOrder?d.slice(0,4):shuffle(r,d).slice(0,4);
+  const all=keepOrder?ds.concat([correct]):shuffle(r,ds.concat([correct]));
+  if(keepOrder) all.sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true}));
+  return {choices:all,answer:all.indexOf(correct)};
+}
+
+/* ---------- SVG helpers ---------- */
+const PAL={red:"#ef4444",blue:"#3b82f6",green:"#22c55e",yellow:"#facc15",purple:"#8b5cf6"};
+const PALV=Object.values(PAL);
+function starPts(cx,cy,R,r0){let p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r0:R;p.push((cx+rr*Math.cos(a)).toFixed(1)+","+(cy+rr*Math.sin(a)).toFixed(1));}return p.join(" ");}
+function shape(t,c,x,y,s){const h=s/2;
+  if(t==="circle")return `<circle cx="${x}" cy="${y}" r="${h}" fill="${c}"/>`;
+  if(t==="square")return `<rect x="${x-h}" y="${y-h}" width="${s}" height="${s}" rx="3" fill="${c}"/>`;
+  if(t==="triangle")return `<polygon points="${x},${y-h} ${x-h},${y+h} ${x+h},${y+h}" fill="${c}"/>`;
+  if(t==="star")return `<polygon points="${starPts(x,y,h,h*0.45)}" fill="${c}"/>`;
+  if(t==="diamond")return `<polygon points="${x},${y-h} ${x+h},${y} ${x},${y+h} ${x-h},${y}" fill="${c}"/>`;
+  return "";}
+const icon=(t,c)=>`<svg class="ico" viewBox="0 0 40 40" width="44" height="44">${shape(t,c,20,20,32)}</svg>`;
+function svgWrap(w,h,body){return `<svg class="qsvg" viewBox="0 0 ${w} ${h}" style="max-width:${Math.min(w*1.4,520)}px">${body}</svg>`;}
+function rowSVG(items,q){const n=items.length+(q?1:0),w=n*50+10;let b="";items.forEach((it,i)=>b+=shape(it.t,it.c,30+i*50,30,36));
+  if(q){const x=30+items.length*50;b+=`<rect x="${x-20}" y="10" width="40" height="40" rx="8" fill="#fff" stroke="#94a3b8" stroke-dasharray="4 3" stroke-width="2"/><text x="${x}" y="38" text-anchor="middle" font-size="24" font-weight="700" fill="#64748b">?</text>`;}
+  return svgWrap(w,60,b);}
+function objectsSVG(n,t,c,per){per=per||6;const rows=Math.ceil(n/per),w=per*46+10,h=rows*46+10;let b="";for(let i=0;i<n;i++)b+=shape(t,c,28+(i%per)*46,28+Math.floor(i/per)*46,36);return svgWrap(w,h,b);}
+function mixedSVG(r,types){const cols=5,cells=shuffle(r,[...Array(15).keys()]).slice(0,types.length);let b="";
+  types.forEach((t,i)=>{const k=cells[i],x=34+(k%cols)*62+ri(r,-6,6),y=34+Math.floor(k/cols)*62+ri(r,-6,6);b+=shape(t,pick(r,PALV),x,y,ri(r,30,42));});
+  return svgWrap(cols*62+10,3*62+10,b);}
+function gridSVG(rows,cols){const s=40,w=cols*s+20,h=rows*s+20;let b=`<rect x="10" y="10" width="${cols*s}" height="${rows*s}" fill="#e0f2fe"/>`;
+  for(let i=0;i<=rows;i++)b+=`<line x1="10" y1="${10+i*s}" x2="${10+cols*s}" y2="${10+i*s}" stroke="#0369a1" stroke-width="2.5"/>`;
+  for(let j=0;j<=cols;j++)b+=`<line x1="${10+j*s}" y1="10" x2="${10+j*s}" y2="${10+rows*s}" stroke="#0369a1" stroke-width="2.5"/>`;return svgWrap(w,h,b);}
+function fanSVG(k){const A=[110,12],L=[12,150],R=[208,150];let b=`<polygon points="${A} ${L} ${R}" fill="#fef3c7" stroke="#b45309" stroke-width="3" stroke-linejoin="round"/>`;
+  for(let i=1;i<=k;i++){const x=L[0]+(R[0]-L[0])*i/(k+1);b+=`<line x1="${A[0]}" y1="${A[1]}" x2="${x}" y2="150" stroke="#b45309" stroke-width="3"/>`;}return svgWrap(220,162,b);}
+function cube(x,y,s,c){return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="3" fill="${c}" stroke="#1e293b" stroke-width="2"/>`;}
+function stacksSVG(r,hs){const s=34,H=Math.max(...hs),w=hs.length*(s+14)+10,h=H*s+20;let b=`<line x1="0" y1="${h-8}" x2="${w}" y2="${h-8}" stroke="#64748b" stroke-width="3"/>`;
+  hs.forEach((ht,i)=>{const c=PALV[i%PALV.length];for(let j=0;j<ht;j++)b+=cube(10+i*(s+14),h-8-(j+1)*s,s,c);});return svgWrap(w,h,b);}
+function stairsSVG(n){const s=30,w=n*s+20,h=n*s+20;let b="";for(let i=0;i<n;i++)for(let j=0;j<=i;j++)b+=cube(10+i*s,h-10-(j+1)*s,s,"#fb923c");return svgWrap(w,h,b);}
+function clockSVG(h,m){let b=`<circle cx="80" cy="80" r="72" fill="#fff" stroke="#7c3aed" stroke-width="6"/>`;
+  for(let i=1;i<=12;i++){const a=(i*30-90)*Math.PI/180;b+=`<text x="${(80+56*Math.cos(a)).toFixed(1)}" y="${(86+56*Math.sin(a)).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="700" fill="#334155">${i}</text>`;}
+  const ha=((h%12)+m/60)*30-90,ma=m*6-90,rad=d=>d*Math.PI/180;
+  b+=`<line x1="80" y1="80" x2="${(80+34*Math.cos(rad(ha))).toFixed(1)}" y2="${(80+34*Math.sin(rad(ha))).toFixed(1)}" stroke="#0f172a" stroke-width="7" stroke-linecap="round"/>`;
+  b+=`<line x1="80" y1="80" x2="${(80+54*Math.cos(rad(ma))).toFixed(1)}" y2="${(80+54*Math.sin(rad(ma))).toFixed(1)}" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/><circle cx="80" cy="80" r="5" fill="#0f172a"/>`;
+  return svgWrap(160,160,b);}
+function matchSVG(n){const s=46,w=n*s+20,h=s+20;let b="";const st=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#d97706" stroke-width="6" stroke-linecap="round"/>`;
+  for(let i=0;i<n;i++){const x=10+i*s;b+=st(x+4,10,x+s-4,10)+st(x+4,10+s,x+s-4,10+s);}for(let i=0;i<=n;i++){const x=10+i*s;b+=st(x,14,x,s+6);}return svgWrap(w,h,b);}
+
+const SHAPES=["circle","square","triangle","star","diamond"];
+const SHAPE_NAME={circle:"circle",square:"square",triangle:"triangle",star:"star",diamond:"diamond"};
+const COLOR_NAME=Object.fromEntries(Object.entries(PAL).map(([k,v])=>[v,k]));
+const itemName=it=>COLOR_NAME[it.c]+" "+SHAPE_NAME[it.t];
+const itemKey=it=>it.t+"|"+it.c;
+function shapeChoices(r,correct,pool){const keys=new Set([itemKey(correct)]),ds=[];for(const p of shuffle(r,pool)){if(!keys.has(itemKey(p))){keys.add(itemKey(p));ds.push(p);}if(ds.length===4)break;}
+  while(ds.length<4){const p={t:pick(r,SHAPES),c:pick(r,PALV)};if(!keys.has(itemKey(p))){keys.add(itemKey(p));ds.push(p);}}
+  const all=shuffle(r,ds.concat([correct]));return {choices:all.map(p=>icon(p.t,p.c)),answer:all.findIndex(p=>itemKey(p)===itemKey(correct)),labels:all.map(itemName)};}
+
+const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const fmt=(h,m)=>h+":"+String(m).padStart(2,"0");
+const ord=n=>n+(n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th"));
+
+/* ---------- Templates: CAT -> difficulty(1..3) -> [fn] ---------- */
+const T={};
+
+/* NUMBERS & COUNTING */
+T.numbers={1:[
+ r=>{const k=ri(r,7,16),per=6,rows=[];for(let i=0;i<k;i+=per)rows.push(Math.min(per,k-i));const c=pick(r,PALV);
+   return {text:"How many stars are in the picture?",svg:objectsSVG(k,"star",c,per),...numChoices(r,k,[k-1,k+1,k+2,k-2]),
+   explain:`Count row by row so you don't miss any:<br>${rows.map((n,i)=>`Row ${i+1}: ${n} stars`).join("<br>")}<br>Add them: ${rows.join(" + ")} = <b>${k}</b>.`};},
+ r=>{const N=ri(r,12,79);return {text:`What number is 10 more than ${N}?`,...numChoices(r,N+10,[N+1,N+11,N+9,N+20,N-10]),
+   explain:`Adding 10 makes the <b>tens digit</b> go up by 1. The ones digit stays the same.<br>${N} has ${Math.floor(N/10)} tens and ${N%10} ones → ${Math.floor(N/10)+1} tens and ${N%10} ones = <b>${N+10}</b>.`};},
+ r=>{let N=ri(r,21,98);if(N%10===Math.floor(N/10))N++;const t=Math.floor(N/10),o=N%10;
+   return {text:`How many tens are in the number ${N}?`,...numChoices(r,t,[o,t+1,t-1,t+2,o+1]),
+   explain:`In ${N}, the <b>left digit</b> tells the tens and the right digit tells the ones.<br>${N} = ${t} tens + ${o} ones (${t*10} + ${o}).<br>So there are <b>${t}</b> tens.`};}
+],2:[
+ r=>{const A=ri(r,3,25),B=A+ri(r,7,16),[n]=names(r,1),ans=B-A+1;
+   return {text:`${n} writes down all the numbers from ${A} to ${B}. How many numbers does ${n} write?`,...numChoices(r,ans,[B-A,B-A+2,B-A-1]),
+   explain:`${B} − ${A} = ${B-A}, but that misses one number! We must count <b>both</b> ${A} and ${B}, so add 1: ${B-A} + 1 = <b>${ans}</b>.<br>Check with a small example: 1 to 3 is 1, 2, 3 → 3 numbers, and 3 − 1 + 1 = 3.`};},
+ r=>{const d=shuffle(r,[1,2,3,4,5,6,7,8,9]).slice(0,3),s=d.slice().sort((a,b)=>b-a),ans=s[0]*10+s[1];
+   return {text:`Using two of the digits ${d.join(", ")} (each digit at most once), what is the biggest two-digit number you can make?`,
+   ...numChoices(r,ans,[s[0]*10+s[2],s[1]*10+s[0],s[2]*10+s[0],s[1]*10+s[2]]),
+   explain:`To make the biggest number, put the <b>biggest digit in the tens place</b>: ${s[0]}.<br>Then put the next biggest digit in the ones place: ${s[1]}.<br>Answer: <b>${ans}</b>.`};},
+ r=>{const N=ri(r,11,30),ans=Math.floor(N/2);
+   return {text:`How many even numbers are there from 1 to ${N}?`,...numChoices(r,ans,[Math.ceil(N/2)===ans?ans+1:Math.ceil(N/2),ans-1,N-ans+2,ans+2]),
+   explain:`Even numbers end in 0, 2, 4, 6 or 8: they are every other number.<br>${Array.from({length:ans},(_,i)=>2*(i+1)).join(", ")}<br>That is <b>${ans}</b> even numbers.`};}
+],3:[
+ r=>{let N,D,list;do{N=ri(r,3,9)*10;D=ri(r,1,Math.min(9,N/10));list=[];for(let i=1;i<=N;i++)if(String(i).includes(String(D)))list.push(i);}while(list.length<4);
+   const ones=list.filter(x=>x%10===D).length,occ=list.reduce((s,x)=>s+String(x).split("").filter(c=>c===String(D)).length,0);
+   return {text:`How many of the numbers from 1 to ${N} have the digit ${D} in them?`,...numChoices(r,list.length,[ones,occ,list.length-1,list.length+1]),
+   explain:`List them carefully, looking at the ones place AND the tens place:<br>${list.join(", ")}<br>That is <b>${list.length}</b> numbers.`+(list.includes(D*11)?`<br>Careful: ${D*11} has the digit ${D} twice, but it is still only one number.`:"")};},
+ r=>{let t,u;do{t=ri(r,3,9);u=ri(r,0,t-2);}while(t+u>17);const s=t+u,df=t-u,ans=10*t+u;
+   return {text:`I am a two-digit number. My two digits add up to ${s}. My tens digit is ${df} more than my ones digit. What number am I?`,...numChoices(r,ans,[10*u+t,10*t+u+1,10*(t-1)+u+1,10*(t+1)+u-1].filter(x=>x>9&&x<100)),
+   explain:`Try pairs of digits that add up to ${s} and check the difference:<br>tens ${t}, ones ${u}: ${t} + ${u} = ${s} ✓ and ${t} − ${u} = ${df} ✓<br>The tens digit is the bigger one, so the number is <b>${ans}</b> (not ${10*u+t}).`};},
+ r=>{const S=ri(r,3,9),list=[];for(let t=1;t<=S;t++)list.push(10*t+(S-t));
+   return {text:`How many two-digit numbers have digits that add up to ${S}?`,...numChoices(r,S,[S-1,S+1,S+2,S-2]),
+   explain:`The tens digit can't be 0. Go through tens digits 1, 2, 3, … and find the ones digit each time:<br>${list.join(", ")}<br>That is <b>${S}</b> numbers. (Don't forget ${S*10}, where the ones digit is 0!)`};}
+]};
+
+/* ADDING & TAKING AWAY */
+T.arith={1:[
+ r=>{const a=ri(r,5,20),b=ri(r,3,15),[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} has ${a} ${it}. ${y} gives ${x} ${b} more. How many ${it} does ${x} have now?`,...numChoices(r,a+b,[a-b,a+b+1,a+b-1,a+b+10]),
+   explain:`"Gives more" means we <b>add</b>.<br>${a} + ${b} = <b>${a+b}</b>.`};},
+ r=>{const a=ri(r,12,30),b=ri(r,3,a-3),[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} had ${a} ${it} and gave ${b} of them to ${y}. How many ${it} does ${x} have left?`,...numChoices(r,a-b,[a+b,a-b+1,a-b-1,b]),
+   explain:`"Gave away" means we <b>take away</b> (subtract).<br>${a} − ${b} = <b>${a-b}</b>.`};},
+ r=>{const a=ri(r,6,12),b=ri(r,2,a-2),c=ri(r,2,7);
+   return {text:`There are ${a} birds in a tree. ${b} birds fly away. Then ${c} new birds land in the tree. How many birds are in the tree now?`,...numChoices(r,a-b+c,[a-b,a+b+c,a+c,a-b-c,a-b+c+1]),
+   explain:`Do it one step at a time:<br>Fly away: ${a} − ${b} = ${a-b}<br>Land: ${a-b} + ${c} = <b>${a-b+c}</b>.`};}
+],2:[
+ r=>{const a=ri(r,5,15),b=ri(r,2,8),[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} has ${a} ${it}. ${y} has ${b} more ${it} than ${x}. How many ${it} do they have together?`,...numChoices(r,2*a+b,[a+b,2*a,a+2*b,2*a+b+1]),
+   explain:`Step 1, find how many ${y} has: ${a} + ${b} = ${a+b}.<br>Step 2, add both amounts: ${a} + ${a+b} = <b>${2*a+b}</b>.<br>Careful: ${a+b} is only ${y}'s amount, not the total.`};},
+ r=>{const g=ri(r,2,5),e=ri(r,3,6),k=ri(r,2,e+2),[x]=names(r,1);
+   return {text:`${x} has ${g} bags with ${e} cookies in each bag. ${x} eats ${k} cookies. How many cookies are left?`,...numChoices(r,g*e-k,[g*e,g+e-k,g*e-k+1,g*e+k]),
+   explain:`First count all the cookies: ${Array(g).fill(e).join(" + ")} = ${g*e}.<br>Then take away the ones eaten: ${g*e} − ${k} = <b>${g*e-k}</b>.`};},
+ r=>{const b=ri(r,5,15),c=ri(r,3,12);let a;do{a=ri(r,2,b+c-2);}while(a===b||a===c);const ans=b+c-a;
+   return {text:`What number goes in the box?<div class="eq">▢ + ${a} = ${b} + ${c}</div>`,...numChoices(r,ans,[b+c,b+c+a,ans+1,ans-1]),
+   explain:`Both sides must be equal. The right side is ${b} + ${c} = ${b+c}.<br>So ▢ + ${a} = ${b+c}. What plus ${a} makes ${b+c}? ${b+c} − ${a} = <b>${ans}</b>.<br>Check: ${ans} + ${a} = ${b+c} ✓`};}
+],3:[
+ r=>{const Y=ri(r,4,18),D=ri(r,2,10),X=Y+D,Tt=X+Y,[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} and ${y} have ${Tt} ${it} together. ${x} has ${D} more than ${y}. How many ${it} does ${y} have?`,...numChoices(r,Y,[X,Tt-D,Math.floor(Tt/2),D,Y+1]),
+   explain:`Take away ${x}'s ${D} extra ${it} first: ${Tt} − ${D} = ${Tt-D}.<br>Now the two have the same amount, so split it in half: ${Tt-D} ÷ 2 = <b>${Y}</b>.<br>Check: ${y} has ${Y}, ${x} has ${Y} + ${D} = ${X}, and ${Y} + ${X} = ${Tt} ✓`};},
+ r=>{let u,d,N,m,pos;do{u=ri(r,3,5);d=ri(r,1,u-1);N=ri(r,10,20);pos=0;m=0;while(true){m++;pos+=u;if(pos>=N)break;pos-=d;}}while(Math.ceil(N/(u-d))===m);
+   const naive=Math.ceil(N/(u-d)),before=(m-1)*(u-d);
+   return {text:`A frog wants to climb to the top of a ladder with ${N} steps. Every minute it jumps up ${u} steps, then slides down ${d} step${d>1?"s":""}. In which minute does the frog first reach the top?`,...numChoices(r,m,[naive,m+1,m-1,N]),
+   explain:`Each full minute the frog goes up ${u} − ${d} = ${u-d} step${u-d>1?"s":""}.<br>After ${m-1} minutes it is on step ${before}.<br>In minute ${m} it jumps up ${u}: ${before} + ${u} = ${before+u}, which reaches step ${N}. It's at the top, so it doesn't slide back!<br>Answer: minute <b>${m}</b>. (The trap answer ${naive} forgets that the last jump reaches the top.)`};},
+ r=>{const g=ri(r,2,7),[x,y]=names(r,2);
+   return {text:`${x} gives ${y} ${g} marbles. Now they both have the same number of marbles. How many more marbles did ${x} have than ${y} at the start?`,...numChoices(r,2*g,[g,g+1,3*g,2*g+1]),
+   explain:`When ${x} gives away ${g}, ${x} goes DOWN by ${g} and ${y} goes UP by ${g}.<br>So the gap closes by ${g} + ${g} = ${2*g}.<br>Example: if ${y} started with 10, ${x} started with ${10+2*g}. After giving: both have ${10+g}. ✓<br>${x} had <b>${2*g}</b> more.`};}
+]};
+
+/* PATTERNS */
+T.patterns={1:[
+ r=>{const k=pick(r,[2,3,5,10]),s=ri(r,1,15),seq=[0,1,2,3].map(i=>s+i*k),ans=s+4*k;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[ans+1,ans-1,ans+k,ans-k]),
+   explain:`Each number is <b>${k} more</b> than the one before: ${seq.map((v,i)=>i?`+${k}`:"").filter(Boolean).join(", ")}.<br>${seq[3]} + ${k} = <b>${ans}</b>.`};},
+ r=>{const L=ri(r,2,3),unit=shuffle(r,SHAPES).slice(0,L).map(t=>({t,c:pick(r,PALV)}));const n=ri(r,5,8),items=[];for(let i=0;i<n;i++)items.push(unit[i%L]);const ans=unit[n%L];
+   const ch=shapeChoices(r,ans,unit.concat(SHAPES.map(t=>({t,c:pick(r,PALV)}))));
+   return {text:`The shapes repeat in a pattern. Which shape comes next?`,svg:rowSVG(items,true),choices:ch.choices,answer:ch.answer,labels:ch.labels,
+   explain:`Find the part that repeats: <b>${unit.map(itemName).join(" → ")}</b>, then it starts again.<br>The last shape is the ${itemName(items[n-1])}, so next comes the <b>${itemName(ans)}</b>.`};},
+ r=>{const k=pick(r,[2,3,4,5]),s=ri(r,25,40),seq=[0,1,2,3].map(i=>s-i*k),ans=s-4*k;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[ans+1,ans-1,ans+k,ans-k]),
+   explain:`Each number is <b>${k} less</b> than the one before.<br>${seq[3]} − ${k} = <b>${ans}</b>.`};}
+],2:[
+ r=>{const s=ri(r,1,10),seq=[s];for(let i=1;i<5;i++)seq.push(seq[i-1]+i);const ans=seq[4]+5;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[seq[4]+4,ans+1,seq[4]+6,seq[4]+1]),
+   explain:`Look at how much it grows each time: +1, +2, +3, +4. The jump gets 1 bigger every time!<br>So the next jump is +5: ${seq[4]} + 5 = <b>${ans}</b>.`};},
+ r=>{const L=ri(r,3,4),unit=shuffle(r,SHAPES).slice(0,L).map(t=>({t,c:pick(r,PALV)})),n=ri(r,12,25),ans=unit[(n-1)%L];
+   const items=[];for(let i=0;i<L*2;i++)items.push(unit[i%L]);const ch=shapeChoices(r,ans,unit);const full=Math.floor((n-1)/L)*L;
+   return {text:`This pattern keeps going forever. Which shape is in place number ${n}?`,svg:rowSVG(items,false),choices:ch.choices,answer:ch.answer,labels:ch.labels,
+   explain:`The pattern repeats every <b>${L}</b> shapes.<br>Places ${L}, ${2*L}, ${3*L}, … are the last shape of a group.<br>Place ${full} ends a group${full===0?" (well, place 0 is before the start)":""}, so place ${n} is shape number ${(n-1)%L+1} of the group: the <b>${itemName(ans)}</b>.`};},
+ r=>{const a=ri(r,3,6),b=ri(r,1,a-1),s=ri(r,2,10),seq=[s];for(let i=1;i<6;i++)seq.push(seq[i-1]+(i%2?a:-b));const ans=seq[5]+a;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[seq[5]-b,ans+1,seq[5]+a-b,ans-1]),
+   explain:`The pattern takes turns: <b>+${a}</b>, then <b>−${b}</b>, then +${a}, −${b}, …<br>The last step was −${b}, so now it's +${a}: ${seq[5]} + ${a} = <b>${ans}</b>.`};}
+],3:[
+ r=>{const sh=shuffle(r,SHAPES).slice(0,3).map(t=>({t,c:pick(r,PALV)})),unit=[sh[0],sh[1],sh[1],sh[2]],N=ri(r,15,30);let cnt=0;for(let i=0;i<N;i++)if(unit[i%4]===sh[1])cnt++;
+   const full=Math.floor(N/4),left=N%4,leftB=[0,0,1,2][left];
+   return {text:`This pattern repeats over and over. How many ${itemName(sh[1])}s are there among the first ${N} shapes?`,svg:rowSVG(unit.concat(unit),false),...numChoices(r,cnt,[Math.floor(N/4),cnt+1,cnt-1,Math.floor(N/2)]),
+   explain:`One group has 4 shapes and <b>2</b> ${itemName(sh[1])}s.<br>${N} shapes = ${full} full groups${left?` + ${left} more shape${left>1?"s":""}`:""}.<br>${full} groups × 2 = ${full*2}${left?`, and the extra ${left} shape${left>1?"s have":" has"} ${leftB} more`:""}.<br>Total: <b>${cnt}</b>.`};},
+ r=>{const a=ri(r,1,3),b=ri(r,a,4),seq=[a,b];for(let i=2;i<6;i++)seq.push(seq[i-1]+seq[i-2]);const ans=seq[4]+seq[5];
+   return {text:`In this list, each number (after the first two) is made in the same way. What comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[seq[5]+(seq[5]-seq[4]),ans+1,2*seq[5],ans-1]),
+   explain:`Each number is the <b>sum of the two numbers before it</b>:<br>${seq.slice(2).map((v,i)=>`${seq[i]} + ${seq[i+1]} = ${v}`).join("<br>")}<br>Next: ${seq[4]} + ${seq[5]} = <b>${ans}</b>.`};},
+ r=>{const n=ri(r,5,7),ans=n*(n+1)/2;
+   return {text:`Figure 1 has 1 dot. Figure 2 has 3 dots (a triangle with rows of 1 and 2). Figure 3 has 6 dots (rows of 1, 2 and 3). How many dots does Figure ${n} have?`,...numChoices(r,ans,[ans-n+1,ans+1,n*n,2*n+1,ans-1]),
+   explain:`Each new figure adds one more row, and the new row is 1 longer.<br>Figure ${n} has rows of ${Array.from({length:n},(_,i)=>i+1).join(", ")}.<br>${Array.from({length:n},(_,i)=>i+1).join(" + ")} = <b>${ans}</b>.`};}
+]};
+
+/* SHAPES & GEOMETRY */
+T.shapes={1:[
+ r=>{const t=ri(r,1,4),s=ri(r,1,4);
+   return {text:`How many sides do ${plural(t,"triangles")} and ${plural(s,"squares")} have altogether?`,...numChoices(r,3*t+4*s,[t+s,4*t+3*s,3*t+4*s+1,3*t+4*s-1]),
+   explain:`A triangle has 3 sides and a square has 4 sides.<br>Triangles: ${t} × 3 = ${3*t}<br>Squares: ${s} × 4 = ${4*s}<br>Total: ${3*t} + ${4*s} = <b>${3*t+4*s}</b>.`};},
+ r=>{const target=pick(r,["triangle","circle","square","star"]),k=ri(r,3,6),others=SHAPES.filter(x=>x!==target),types=[];for(let i=0;i<k;i++)types.push(target);const m=ri(r,4,7);for(let i=0;i<m;i++)types.push(pick(r,others));
+   return {text:`How many ${target}s are in the picture?`,svg:mixedSVG(r,types),...numChoices(r,k,[k+1,k-1,k+m,m]),
+   explain:`Look only at the ${target}s and ignore the colors and sizes. Touch each one as you count.<br>There are <b>${k}</b> ${target}s. The other ${m} shapes are not ${target}s.`};},
+ r=>{const opts={triangle:3,square:4,pentagon:5,hexagon:6},k=pick(r,[3,4,5,6]),ans=Object.keys(opts).find(x=>opts[x]===k);
+   return {text:`Which shape has exactly ${k} corners?`,...textChoices(r,ans,["circle","triangle","square","pentagon","hexagon","octagon"]),
+   explain:`Count corners: triangle 3, square 4, pentagon 5, hexagon 6, octagon 8, circle 0.<br>So the shape with ${k} corners is the <b>${ans}</b>.`};}
+],2:[
+ r=>{const R=ri(r,2,4),C=ri(r,3,6);
+   return {text:`How many small squares make up this rectangle?`,svg:gridSVG(R,C),...numChoices(r,R*C,[R+C,R*C-1,R*C+1,2*(R+C)]),
+   explain:`There are ${R} rows with ${C} squares in each row.<br>${Array(R).fill(C).join(" + ")} = <b>${R*C}</b>.`};},
+ r=>{const a=ri(r,2,9),b=ri(r,a+1,12),[x]=names(r,1),p=2*(a+b);
+   return {text:`A rectangle is ${a} cm wide and ${b} cm long. ${x} the ant walks all the way around its edge once. How many centimeters does ${x} walk?`,...numChoices(r,p,[a+b,a*b,p+2,2*a+b]),
+   explain:`A rectangle has 4 sides: two of ${b} cm and two of ${a} cm.<br>${b} + ${a} + ${b} + ${a} = <b>${p}</b> cm.<br>(${a+b} is only half the way around!)`};},
+ r=>{const s=ri(r,2,6),ans=8*s;
+   return {text:`Four small squares, each with sides of ${s} cm, are put together to make one big square. How long is the edge around the big square?`,...numChoices(r,ans,[4*s,16*s,ans-s,2*s*2+s]),
+   explain:`The big square is 2 small squares wide, so each big side is ${s} + ${s} = ${2*s} cm.<br>The big square has 4 sides: 4 × ${2*s} = <b>${ans}</b> cm.`};}
+],3:[
+ r=>{const [R,C]=pick(r,[[2,2],[2,3],[3,3],[2,4],[3,4]]);let tot=0,parts=[];for(let k=1;k<=Math.min(R,C);k++){const c=(R-k+1)*(C-k+1);tot+=c;parts.push(`${k}×${k} squares: ${c}`);}
+   return {text:`How many squares of any size can you find in this picture?`,svg:gridSVG(R,C),...numChoices(r,tot,[R*C,R*C+1,tot+1,tot-1]),
+   explain:`Don't forget the bigger squares made from several small ones!<br>${parts.join("<br>")}<br>Total: <b>${tot}</b>.`};},
+ r=>{const k=ri(r,1,3),n=k+1,ans=n*(n+1)/2,parts=[];for(let s=1;s<=n;s++)parts.push(`made of ${s} piece${s>1?"s":""}: ${n-s+1}`);
+   return {text:`How many triangles of any size are in this picture?`,svg:fanSVG(k),...numChoices(r,ans,[n,n+1,ans+1,ans-1,2*n]),
+   explain:`The bottom is split into ${n} pieces. Every triangle uses one or more pieces that sit next to each other.<br>Triangles ${parts.join("<br>Triangles ")}<br>Total: ${Array.from({length:n},(_,i)=>n-i).join(" + ")} = <b>${ans}</b>.`};},
+ r=>{const n=ri(r,4,7),ans=3*n+1;
+   return {text:`This row of 3 squares is made with 10 matchsticks. How many matchsticks are needed for a row of ${n} squares made the same way?`,svg:matchSVG(3),...numChoices(r,ans,[4*n,3*n,ans+1,4*n-1]),
+   explain:`The first square needs 4 sticks. Every new square shares one side, so it needs only <b>3 more</b> sticks.<br>${n} squares: 4 + ${n-1} × 3 = 4 + ${3*(n-1)} = <b>${ans}</b>.<br>(Check with the picture: 4 + 3 + 3 = 10 ✓)`};}
+]};
+
+/* LOGIC */
+T.logic={1:[
+ r=>{const [a,b,c]=names(r,3),askTall=r()<0.5;
+   return {text:`${a} is taller than ${b}. ${c} is shorter than ${b}. Who is the ${askTall?"tallest":"shortest"}?`,...textChoices(r,askTall?a:c,[a,b,c,"They are all the same","We cannot tell"].filter(x=>x!==(askTall?a:c))),
+   explain:`Put them in order from tallest to shortest:<br>${a} is taller than ${b}, and ${b} is taller than ${c}.<br>${a} → ${b} → ${c}<br>So the ${askTall?"tallest":"shortest"} is <b>${askTall?a:c}</b>.`};},
+ r=>{const c=ri(r,1,4),b=ri(r,1,4),ans=4*c+2*b;
+   return {text:`How many legs do ${plural(c,"cats")} and ${plural(b,"birds")} have altogether?`,...numChoices(r,ans,[c+b,2*c+4*b,ans+2,ans-2]),
+   explain:`A cat has 4 legs and a bird has 2 legs.<br>Cats: ${c} × 4 = ${4*c}<br>Birds: ${b} × 2 = ${2*b}<br>Total: <b>${ans}</b>.`};},
+ r=>{const n=ri(r,8,15),k=ri(r,2,n-2),[x]=names(r,1);
+   return {text:`${n} children stand in a line. ${x} is ${ord(k)} from the front. How many children are behind ${x}?`,...numChoices(r,n-k,[n-k+1,n-k-1,k,k-1]),
+   explain:`${k} children are at the front, counting ${x} too.<br>Everyone else is behind: ${n} − ${k} = <b>${n-k}</b>.`};}
+],2:[
+ r=>{const f=ri(r,3,9),b=ri(r,3,9),[x]=names(r,1),ans=f+b-1;
+   return {text:`Children stand in a line. ${x} is ${ord(f)} from the front and ${ord(b)} from the back. How many children are in the line?`,...numChoices(r,ans,[f+b,f+b+1,ans-1,Math.abs(f-b)]),
+   explain:`If we add ${f} + ${b} = ${f+b}, we have counted ${x} <b>twice</b> (once from each end).<br>So take 1 away: ${f+b} − 1 = <b>${ans}</b>.`};},
+ r=>{const c=ri(r,2,7),d=ri(r,2,6),ans=2*c+4*d;
+   return {text:`A farm has ${c} chickens and ${d} dogs. How many legs are there altogether?`,...numChoices(r,ans,[c+d,2*(c+d),4*(c+d),ans+2]),
+   explain:`Chickens: ${c} × 2 = ${2*c} legs<br>Dogs: ${d} × 4 = ${4*d} legs<br>Total: ${2*c} + ${4*d} = <b>${ans}</b>.`};},
+ r=>{const C=ri(r,2,4),cols=["red","blue","green","yellow"].slice(0,C);
+   return {text:`A drawer has lots of socks: ${cols.slice(0,-1).join(", ")} and ${cols[C-1]}. In the dark, what is the smallest number of socks you must take to be <b>sure</b> to get two of the same color?`,...numChoices(r,C+1,[2,C,C+2,2*C]),
+   explain:`Think of the unluckiest case: each sock you take is a new color.<br>With ${C} colors you could get ${C} different socks first.<br>The very next sock MUST match one of them. So you need ${C} + 1 = <b>${C+1}</b>.`};}
+],3:[
+ r=>{const n=ri(r,4,6),ans=n*(n-1)/2;
+   return {text:`${n} friends meet. Each friend shakes hands with every other friend exactly once. How many handshakes are there?`,...numChoices(r,ans,[n*(n-1),n,2*n,ans+1]),
+   explain:`Friend 1 shakes ${n-1} hands. Friend 2 has already shaken with Friend 1, so only ${n-2} new ones. And so on.<br>${Array.from({length:n-1},(_,i)=>n-1-i).join(" + ")} = <b>${ans}</b>.<br>(${n} × ${n-1} = ${n*(n-1)} counts each handshake twice.)`};},
+ r=>{const h=ri(r,6,12),g=ri(r,2,h-2),L=2*h+2*g;
+   return {text:`In a yard there are chickens and dogs. Together they have ${h} heads and ${L} legs. How many dogs are there?`,...numChoices(r,g,[h-g,L/4|0,g+1,g-1]),
+   explain:`Pretend every animal is a chicken: ${h} × 2 = ${2*h} legs.<br>But there are ${L} legs, which is ${L-2*h} extra.<br>Each dog has 2 extra legs, so dogs = ${L-2*h} ÷ 2 = <b>${g}</b>.<br>Check: ${h-g} chickens × 2 + ${g} dogs × 4 = ${2*(h-g)} + ${4*g} = ${L} ✓`};},
+ r=>{const a=ri(r,5,10),b=ri(r,2,6),y=ri(r,2,6),S=a+b+2*y,[x,z]=names(r,2);
+   return {text:`${x} is ${a} years old and ${z} is ${b}. In how many years will their ages add up to ${S}?`,...numChoices(r,y,[S-a-b,y+1,y-1,2*y+1]),
+   explain:`Right now their ages add up to ${a} + ${b} = ${a+b}.<br>Every year, <b>both</b> get 1 year older, so the total grows by 2.<br>We need ${S} − ${a+b} = ${S-a-b} more, so ${S-a-b} ÷ 2 = <b>${y}</b> years.`};}
+]};
+
+/* TIME, MONEY & MEASURING */
+T.measure={1:[
+ r=>{const h=ri(r,1,12),m=pick(r,[0,30]),ans=fmt(h,m),alt=[fmt(h%12+1,m),fmt(h,m?0:30),fmt((h+5)%12+1,m),fmt(h===1?12:h-1,m),fmt(12,h*5%60)];
+   return {text:`What time does this clock show?`,svg:clockSVG(h,m),...textChoices(r,ans,alt),
+   explain:`The <b>short black hand</b> shows the hour and the <b>long red hand</b> shows the minutes.<br>${m===0?`The long hand points straight up at 12, so it is exactly "o'clock". The short hand points at ${h}.`:`The long hand points down at 6, which means 30 minutes (half past). The short hand is halfway between ${h} and ${h%12+1}.`}<br>Time: <b>${ans}</b>.`};},
+ r=>{const h=ri(r,6,12),k=ri(r,2,5),ans=(h+k-1)%12+1,o=x=>x+" o'clock",w=x=>((x-1)%12+12)%12+1;
+   return {text:`It is ${h} o'clock now. What time will it be in ${k} hours?`,...textChoices(r,o(ans),[...new Set([o(w(ans+1)),o(w(ans-1)),o(w(h-k)),o(w(ans+2)),o(w(ans-2)),o(w(ans+3))])].filter(x=>x!==o(ans)).slice(0,4)),
+   explain:`Count forward on the clock, one hour at a time:<br>${Array.from({length:k},(_,i)=>w(h+i+1)).join(" → ")}<br>${h+k>12?"After 12 the clock starts again at 1. ":""}It will be <b>${o(ans)}</b>.`};},
+ r=>{const a=ri(r,1,5),b=ri(r,1,9),ans=10*a+b;
+   return {text:`How many cents is this: ${plural(a,"dimes")} and ${plural(b,"pennies")}? (A dime is 10 cents. A penny is 1 cent.)`,...numChoices(r,ans,[a+b,10*b+a,ans+10,ans-1]),
+   explain:`Dimes: ${Array(a).fill(10).join(" + ")} = ${10*a} cents<br>Pennies: ${b} cents<br>Total: ${10*a} + ${b} = <b>${ans}</b> cents.`};}
+],2:[
+ r=>{const w=ri(r,0,6),D=ri(r,8,20),ans=DAYS[(w+D)%7];
+   return {text:`Today is ${DAYS[w]}. What day of the week will it be ${D} days from today?`,...textChoices(r,ans,DAYS),
+   explain:`Every 7 days it is ${DAYS[w]} again.<br>${D} = ${Math.floor(D/7)===1?"7":`7 + 7`}${D%7?` + ${D%7}`:""}.<br>So go ${D%7} day${D%7===1?"":"s"} past ${DAYS[w]}${D%7?": "+Array.from({length:D%7},(_,i)=>DAYS[(w+i+1)%7]).join(" → "):""}.<br>Answer: <b>${ans}</b>.`};},
+ r=>{const a=ri(r,1,4),b=ri(r,1,4),c=ri(r,1,6),ans=10*a+5*b+c;
+   return {text:`How many cents do you have with ${plural(a,"dimes")}, ${plural(b,"nickels")} and ${plural(c,"pennies")}? (Dime = 10¢, nickel = 5¢, penny = 1¢)`,...numChoices(r,ans,[a+b+c,10*a+b+c,ans+5,ans-5]),
+   explain:`Dimes: ${a} × 10 = ${10*a}¢<br>Nickels: ${b} × 5 = ${5*b}¢<br>Pennies: ${c} × 1 = ${c}¢<br>Total: <b>${ans}¢</b>.`};},
+ r=>{const p=ri(r,3,17)*5,[x]=names(r,1),ans=100-p;
+   return {text:`A toy costs ${p} cents. ${x} pays with a 1-dollar bill (100 cents). How much change does ${x} get?`,...numChoices(r,ans,[ans+10,ans-10,ans+5,p]),
+   explain:`Count up from ${p} to 100:<br>${p} → ${Math.ceil((p+1)/10)*10} is ${Math.ceil((p+1)/10)*10-p}, then ${Math.ceil((p+1)/10)*10} → 100 is ${100-Math.ceil((p+1)/10)*10}.<br>${Math.ceil((p+1)/10)*10-p} + ${100-Math.ceil((p+1)/10)*10} = <b>${ans}</b> cents.`};}
+],3:[
+ r=>{const w=ri(r,0,6),D=ri(r,15,31),ans=DAYS[(w+D-1)%7],same=[1,8,15,22,29].filter(x=>x<=D);
+   return {text:`The 1st day of a month is a ${DAYS[w]}. What day of the week is the ${ord(D)} of that month?`,...textChoices(r,ans,DAYS),
+   explain:`Adding 7 days gives the same weekday, so the ${same.map(ord).join(", ")} are all ${DAYS[w]}s.<br>The ${ord(D)} is ${D-same[same.length-1]} day${D-same[same.length-1]===1?"":"s"} after the ${ord(same[same.length-1])}.<br>Answer: <b>${ans}</b>.`};},
+ r=>{const h=ri(r,1,8),m=pick(r,[0,15,30,45]),M=pick(r,[75,90,105,120,135]),tot=h*60+m+M,eh=Math.floor(tot/60),em=tot%60,ans=fmt((eh-1)%12+1,em);
+   const alts=[fmt(h+1,(m+M)%60),fmt(eh,(em+15)%60),fmt(eh+1,em),fmt(h+Math.floor(M/100),m+M%100<60?m+M%100:em),fmt(eh,(em+45)%60)];
+   return {text:`A movie starts at ${fmt(h,m)} and lasts ${M} minutes. At what time does it end?`,...textChoices(r,ans,alts),
+   explain:`${M} minutes = ${Math.floor(M/60)} hour${Math.floor(M/60)>1?"s":""} and ${M%60} minutes (1 hour = 60 minutes).<br>${fmt(h,m)} + ${Math.floor(M/60)} hour${Math.floor(M/60)>1?"s":""} = ${fmt(h+Math.floor(M/60),m)}<br>${fmt(h+Math.floor(M/60),m)} + ${M%60} minutes = <b>${ans}</b>.`};},
+ r=>{const a=ri(r,2,4),b=ri(r,2,3);
+   return {text:`On a balance scale, 1 melon weighs the same as ${a} apples. 1 pumpkin weighs the same as ${b} melons. How many apples weigh the same as 1 pumpkin?`,...numChoices(r,a*b,[a+b,a*b+1,a,b*b+a]),
+   explain:`Swap each melon for ${a} apples.<br>1 pumpkin = ${b} melons = ${Array(b).fill(a).join(" + ")} apples = <b>${a*b}</b> apples.`};}
+]};
+
+/* SPATIAL THINKING */
+T.spatial={1:[
+ r=>{const sym=["A","H","M","O","T","U","V","W","X","Y"],non=["B","C","D","E","F","G","J","K","L","N","P","R","S","Z"],ans=pick(r,sym);
+   return {text:`Which letter looks exactly the same when you look at it in a mirror (flipped left-to-right)?`,...textChoices(r,ans,shuffle(r,non)),
+   explain:`Imagine a line straight down the middle of the letter. If the left half and the right half match, the mirror shows the same letter.<br><b>${ans}</b> matches on both sides. The others face one way (like B, C, F, or S), so in a mirror they look backwards.`};},
+ r=>{const t=ri(r,1,6);
+   return {text:`On a dice, the numbers on opposite faces always add up to 7. If the top face shows ${t}, what number is on the bottom face?`,...numChoices(r,7-t,[t,6-t+2,(7-t)%6+1,(t%6)+1].filter(x=>x>=1&&x<=6&&x!==7-t)),
+   explain:`Top + bottom = 7.<br>${t} + ? = 7, so the bottom shows <b>${7-t}</b>.<br>Opposite pairs: 1 & 6, 2 & 5, 3 & 4.`};},
+ r=>{const n=ri(r,3,4),hs=Array.from({length:n},()=>ri(r,1,4)),s=hs.reduce((a,b)=>a+b,0);
+   return {text:`How many cubes are there in these towers altogether?`,svg:stacksSVG(r,hs),...numChoices(r,s,[s+1,s-1,n,s+2]),
+   explain:`Count each tower from left to right: ${hs.join(", ")}.<br>${hs.join(" + ")} = <b>${s}</b>.`};}
+],2:[
+ r=>{const n=ri(r,4,6),ans=n*(n+1)/2;
+   return {text:`This staircase is built from cubes. How many cubes are used?`,svg:stairsSVG(n),...numChoices(r,ans,[n*n,2*n,ans-1,ans+n]),
+   explain:`Count each column from left to right: ${Array.from({length:n},(_,i)=>i+1).join(", ")}.<br>${Array.from({length:n},(_,i)=>i+1).join(" + ")} = <b>${ans}</b>.`};},
+ r=>{const a=2,b=ri(r,2,3),c=ri(r,2,4),ans=a*b*c;
+   return {text:`A box is filled with cubes in ${a} layers. Each layer has ${b} rows with ${c} cubes in each row. How many cubes are in the box?`,...numChoices(r,ans,[b*c,a+b+c,ans+c,ans-b]),
+   explain:`One layer: ${b} rows × ${c} = ${b*c} cubes.<br>${a} layers: ${b*c} + ${b*c} = <b>${ans}</b> cubes.`};},
+ r=>{let t=ri(r,1,6),f;do{f=ri(r,1,6);}while(f===t||f===7-t);
+   return {text:`A dice is on the table. The top shows ${t} and the front shows ${f}. Opposite faces add up to 7. What number is on the face touching the table?`,...numChoices(r,7-t,[7-f,t,f,7-t+1].filter(x=>x>=1&&x<=6)),
+   explain:`The face touching the table is the <b>bottom</b>, which is opposite the top.<br>Top + bottom = 7 → ${t} + ? = 7 → <b>${7-t}</b>.<br>The front number (${f}) doesn't matter here. It's there to trick you!`};}
+],3:[
+ r=>{const t=ri(r,1,6);
+   return {text:`A dice is on a table with ${t} on top. Opposite faces add up to 7. What is the sum of the numbers on the 4 side faces (not the top, not the bottom)?`,...numChoices(r,14,[21-t,21,15,7+t]),
+   explain:`All six faces add up to 1 + 2 + 3 + 4 + 5 + 6 = 21.<br>Top + bottom = ${t} + ${7-t} = 7.<br>Sides: 21 − 7 = <b>14</b>.<br>Fun fact: the answer is always 14, whatever is on top!`};},
+ r=>{const t=ri(r,1,6),ans=14-t;
+   return {text:`Two dice are stacked on a table, one on top of the other. The top face shows ${t}. Opposite faces add up to 7. What is the sum of the 3 faces you cannot see that are touching each other or the table?`,...numChoices(r,ans,[14,7-t,ans+1,21-t]),
+   explain:`The hidden faces are:<br>• bottom of the top dice: opposite ${t} → ${7-t}<br>• top and bottom of the lower dice: they are opposite faces → add up to 7<br>Total: ${7-t} + 7 = <b>${ans}</b>.`};},
+ r=>{const v=ri(r,0,1);
+   return v?{text:`A big cube is built from 27 small cubes (3 × 3 × 3). The outside of the big cube is painted red. How many small cubes have NO paint at all?`,...numChoices(r,1,[0,3,8,9]),
+   explain:`Only cubes that touch the outside get paint. The only cube that doesn't touch the outside is the one hidden in the very <b>center</b>.<br>27 − 26 outside cubes = <b>1</b>.`}
+   :{text:`A big cube is built from 27 small cubes (3 × 3 × 3). The outside is painted blue. How many small cubes have paint on exactly 3 faces?`,...numChoices(r,8,[4,6,12,27]),
+   explain:`A small cube gets paint on 3 faces only if it sits at a <b>corner</b> of the big cube (it touches 3 outside walls).<br>A cube has <b>8</b> corners, so the answer is 8.`};}
+]};
+
+const CATS={numbers:{name:"Numbers & Counting",emoji:"🔢",color:"#3b82f6"},arith:{name:"Adding & Taking Away",emoji:"➕",color:"#22c55e"},patterns:{name:"Patterns",emoji:"🔁",color:"#a855f7"},
+  shapes:{name:"Shapes & Geometry",emoji:"🔺",color:"#f97316"},logic:{name:"Logic Puzzles",emoji:"🧩",color:"#ec4899"},measure:{name:"Time & Money",emoji:"⏰",color:"#14b8a6"},spatial:{name:"Seeing in 3D",emoji:"🎲",color:"#eab308"}};
+const CAT_KEYS=Object.keys(CATS);
+const POINTS={1:3,2:4,3:5};
+
+function makeQ(r,cat,d,used){const list=T[cat][d];let idx=list.map((_,i)=>i).filter(i=>!used.has(cat+d+i));if(!idx.length)idx=list.map((_,i)=>i);
+  const i=pick(r,idx);used.add(cat+d+i);const q=list[i](r);return Object.assign({cat,d,pts:POINTS[d],tpl:cat+d+i},q);}
+
+function makeTest(n){const r=mulberry32(9001+n*7919),used=new Set(),qs=[];
+  for(const d of [1,2,3]){const cats=shuffle(r,CAT_KEYS).concat([pick(r,CAT_KEYS)]);for(const c of shuffle(r,cats))qs.push(makeQ(r,c,d,used));}
+  return qs;}
+function makePractice(cat,seed,count){const r=mulberry32(seed),used=new Set(),ds=[1,1,1,2,2,2,2,3,3,3].slice(0,count||10),qs=[];
+  for(const d of ds){if(T[cat][d].every((_,i)=>used.has(cat+d+i)))[...used].forEach(k=>k.startsWith(cat+d)&&used.delete(k));qs.push(makeQ(r,cat,d,used));}return qs;}
+
+const API={makeTest,makePractice,CATS,CAT_KEYS,POINTS,T};
+if(typeof module!=="undefined")module.exports=API;else root.KQ=API;
+})(this);
+</script>
+<script>(function(){
+"use strict";
+const {makeTest,makePractice,CATS,CAT_KEYS}=window.KQ;
+const KIDS=[{name:"Gia",av:"🦋"},{name:"Aria",av:"🌸"}];
+const KEY="hopmath-level1-v1";
+const LETTERS="ABCDE";
+const NUM_TESTS=10,MAX=96;
+const $=s=>document.querySelector(s);
+const app=()=>$("#app");
+
+/* ---------- storage ---------- */
+let DB;
+function blank(){const p={};KIDS.forEach(k=>p[k.name]={attempts:{},practice:{},inProgress:{}});return {profiles:p,current:null};}
+function load(){try{const s=localStorage.getItem(KEY);DB=s?JSON.parse(s):blank();}catch(e){DB=blank();}
+  KIDS.forEach(k=>{if(!DB.profiles[k.name])DB.profiles[k.name]={attempts:{},practice:{},inProgress:{}};});}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
+const P=()=>DB.profiles[DB.current];
+const kid=()=>KIDS.find(k=>k.name===DB.current);
+
+/* ---------- scoring helpers ---------- */
+function grade(qs,answers){let score=0;const byPts={3:[0,0],4:[0,0],5:[0,0]},byCat={};
+  qs.forEach((q,i)=>{const ok=answers[i]===q.answer;if(ok)score+=q.pts;byPts[q.pts][1]++;if(ok)byPts[q.pts][0]++;
+    byCat[q.cat]=byCat[q.cat]||[0,0];byCat[q.cat][1]++;if(ok)byCat[q.cat][0]++;});
+  return {score,byPts,byCat,correct:qs.filter((q,i)=>answers[i]===q.answer).length};}
+const starsFor=pct=>pct>=85?3:pct>=65?2:pct>=40?1:0;
+const starStr=(n,of=3)=>"⭐".repeat(n)+"☆".repeat(of-n);
+function latest(t){const a=P().attempts[t];return a&&a.length?a[a.length-1]:null;}
+function best(t){const a=P().attempts[t];return a&&a.length?Math.max(...a.map(x=>x.score)):null;}
+function skillStats(){const s={};CAT_KEYS.forEach(c=>s[c]=[0,0]);
+  for(let t=1;t<=NUM_TESTS;t++){const a=latest(t);if(!a)continue;const g=grade(makeTest(t),a.answers);for(const c in g.byCat){s[c][0]+=g.byCat[c][0];s[c][1]+=g.byCat[c][1];}}
+  for(const c in P().practice){const p=P().practice[c];s[c][0]+=p[0];s[c][1]+=p[1];}
+  return s;}
+function weakList(stats,limit){return CAT_KEYS.filter(c=>stats[c][1]>=3&&stats[c][0]/stats[c][1]<0.7).sort((a,b)=>stats[a][0]/stats[a][1]-stats[b][0]/stats[b][1]).slice(0,limit||3);}
+const pct=(a,b)=>b?Math.round(100*a/b):0;
+const fmtTime=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- common UI ---------- */
+let timerId=null;
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function header(extra){return `<div class="top"><div class="brand"><span class="roo">🦘</span> Hop Math <span class="pill" style="background:#f97316">Level 1</span></div>
+  <div class="row">${extra||""}${DB.current?`<button class="btn alt small" data-act="home">🏠 Home</button><button class="btn alt small" data-act="switch">${kid().av} ${esc(DB.current)} ▾</button>`:""}</div></div>`;}
+function confetti(){const box=document.createElement("div");box.className="confetti";const e=["🎉","⭐","🦘","🎈","✨","🌟"];
+  for(let i=0;i<40;i++){const s=document.createElement("span");s.textContent=e[i%e.length];s.style.left=Math.random()*100+"vw";s.style.animationDelay=Math.random()*1.2+"s";box.appendChild(s);}
+  document.body.appendChild(box);setTimeout(()=>box.remove(),4500);}
+function choiceHTML(q,i,cls){return `<button class="ch ${cls||""}" data-ch="${i}"><span class="lt">${LETTERS[i]}</span><span>${q.choices[i]}</span></button>`;}
+const answerLabel=(q,i)=>i==null?"(no answer)":`(${LETTERS[i]}) `+(q.labels?q.labels[i]:q.choices[i]);
+
+/* ---------- screens ---------- */
+function screenProfiles(){stopTimer();DB.current=null;save();
+  app().innerHTML=header()+`<div class="card" style="text-align:center"><h1>Who's practicing today?</h1><p class="muted">Tap your name to start hopping! 🦘</p></div>
+  <div class="profiles">${KIDS.map((k,i)=>{const p=DB.profiles[k.name],done=Object.keys(p.attempts).length;
+    return `<button class="prof p${i}" data-kid="${esc(k.name)}"><span class="av">${k.av}</span><span class="nm">${esc(k.name)}</span><span>${done} of ${NUM_TESTS} tests done</span></button>`;}).join("")}</div>
+  <div class="card" style="margin-top:16px"><h2>For grown-ups</h2>
+  <p class="muted" style="font-size:16px">Progress is saved automatically in this browser on this device. To move progress to another device, or to keep a safe copy, use backup and restore.</p>
+  <div class="row"><button class="btn alt small" data-act="export">⬇️ Download backup</button><label class="btn alt small" style="display:inline-block">⬆️ Restore backup<input type="file" accept="application/json" id="imp" hidden></label></div></div>
+  <div class="foot">Original practice questions in the style of Kangaroo math contests (Grades 1–2).</div>`;}
+
+function screenHome(){stopTimer();const p=P(),stats=skillStats(),weak=weakList(stats),tried=CAT_KEYS.filter(c=>stats[c][1]>0);
+  const tests=Array.from({length:NUM_TESTS},(_,i)=>i+1).map(t=>{const b=best(t),ip=p.inProgress[t];
+    if(b!=null)return `<button class="tcard done" data-test="${t}"><span class="tn">Test ${t}</span><span class="stars">${starStr(starsFor(pct(b,MAX)))}</span><br><b>${b}</b>/${MAX}<br><span class="muted" style="font-size:14px">Tap to see or retry</span></button>`;
+    if(ip)return `<button class="tcard prog" data-test="${t}"><span class="tn">Test ${t}</span>⏳ In progress<br><span class="muted" style="font-size:14px">${Object.keys(ip.answers).length}/24 answered</span></button>`;
+    return `<button class="tcard" data-test="${t}"><span class="tn">Test ${t}</span>🆕 Start<br><span class="muted" style="font-size:14px">24 questions</span></button>`;}).join("");
+  let weakHTML;
+  if(!tried.length)weakHTML=`<p class="muted">Finish a test and I'll find the skills to practice. 🔍</p>`;
+  else if(weak.length)weakHTML=`<p>These skills need a little more practice:</p><div class="weak">${weak.map(c=>`<button class="btn orange" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name} (${pct(...stats[c])}%)</button>`).join("")}</div>`;
+  else {const low=tried.sort((a,b)=>stats[a][0]/stats[a][1]-stats[b][0]/stats[b][1])[0];weakHTML=`<p>Super work! No weak spots right now. 🎉 Want a challenge in your lowest skill?</p><button class="btn orange" data-prac="${low}">${CATS[low].emoji} ${CATS[low].name}</button>`;}
+  app().innerHTML=header()+`<div class="card"><h1>Hi ${esc(DB.current)}! ${kid().av}</h1><p class="muted" style="margin:0">Each test has 24 questions: 8 worth 3 points, 8 worth 4 points and 8 worth 5 points. Best score: ${MAX}. Wrong answers don't lose points, so always pick an answer!</p></div>
+  <div class="card"><h2>📝 Practice tests</h2><div class="tests">${tests}</div></div>
+  <div class="card"><h2>🎯 Practice my weak spots</h2>${weakHTML}</div>
+  <div class="card"><h2>📊 My skills</h2>${CAT_KEYS.map(c=>{const [a,b]=stats[c];return `<div class="skill"><span>${CATS[c].emoji} ${CATS[c].name}</span><div class="bar"><i style="width:${pct(a,b)}%;background:${CATS[c].color}"></i></div><b>${b?pct(a,b)+"%":"–"}</b></div>`;}).join("")}
+  <p class="muted" style="font-size:15px">Want to practice any skill? Pick one:</p><div class="weak">${CAT_KEYS.map(c=>`<button class="btn alt small" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name}</button>`).join("")}</div></div>`;}
+
+/* --- test --- */
+let T=null; // {n,qs,answers,idx,elapsed}
+function openTest(n){const p=P();
+  if(best(n)!=null&&!p.inProgress[n]){showResults(n,p.attempts[n].length-1);return;}
+  startTest(n);}
+function startTest(n){const p=P();const ip=p.inProgress[n]||{answers:{},idx:0,elapsed:0};p.inProgress[n]=ip;save();
+  T={n,qs:makeTest(n),ip};renderQ();stopTimer();timerId=setInterval(()=>{T.ip.elapsed++;const el=$("#tm");if(el)el.textContent="⏱ "+fmtTime(T.ip.elapsed);if(T.ip.elapsed%10===0)save();},1000);}
+function renderQ(){const {qs,ip,n}=T,i=ip.idx,q=qs[i],sel=ip.answers[i];const pc={3:"var(--p3)",4:"var(--p4)",5:"var(--p5)"}[q.pts];
+  const answered=Object.keys(ip.answers).length;
+  app().innerHTML=header(`<span class="timer" id="tm">⏱ ${fmtTime(ip.elapsed)}</span>`)+`<div class="card">
+   <div class="qhead"><span class="qnum">Test ${n} · Question ${i+1} of 24</span><span class="pill" style="background:${pc}">${q.pts} points</span></div>
+   <div class="bar" style="margin-bottom:14px"><i style="width:${pct(answered,24)}%;background:linear-gradient(90deg,#f472b6,#7c3aed)"></i></div>
+   <div class="qtext">${q.text}</div>${q.svg||""}
+   <div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,sel===k?"sel":"")).join("")}</div>
+   <div class="nav"><button class="btn alt" data-act="prev" ${i===0?"disabled":""}>⬅ Back</button>
+   ${i<23?`<button class="btn" data-act="next">Next ➡</button>`:`<button class="btn green" data-act="finish">✅ Finish test</button>`}</div>
+   <div class="dots">${qs.map((_,k)=>`<button class="dot ${ip.answers[k]!=null?"ans":""} ${k===i?"cur":""}" data-go="${k}">${k+1}</button>`).join("")}</div>
+   <div class="row" style="justify-content:space-between;margin-top:12px"><span class="muted" style="font-size:15px">${answered}/24 answered · Suggested time: 75 min</span><button class="linkbtn" data-act="finish">Finish now</button></div></div>`;
+  window.scrollTo({top:0});}
+function finishTest(){const {qs,ip,n}=T,un=24-Object.keys(ip.answers).length;
+  if(un&&!confirm(`You still have ${un} question${un>1?"s":""} without an answer. Wrong answers don't lose points, so it's smart to guess!\n\nFinish the test anyway?`))return;
+  stopTimer();const answers=qs.map((_,i)=>ip.answers[i]!=null?ip.answers[i]:null),g=grade(qs,answers),p=P();
+  p.attempts[n]=p.attempts[n]||[];p.attempts[n].push({date:new Date().toISOString(),score:g.score,answers,time:ip.elapsed});delete p.inProgress[n];save();
+  showResults(n,p.attempts[n].length-1,true);}
+
+function showResults(n,ai,fresh){stopTimer();const p=P(),att=p.attempts[n][ai],qs=makeTest(n),g=grade(qs,att.answers),pc=pct(g.score,MAX),st=starsFor(pc);
+  const msg=pc>=85?"Amazing! You're a math superstar! 🌟":pc>=65?"Great job! You're hopping high! 🦘":pc>=40?"Good effort! Practice makes you stronger! 💪":"Nice try! Let's practice together and grow! 🌱";
+  const weakHere=CAT_KEYS.filter(c=>g.byCat[c]&&g.byCat[c][0]/g.byCat[c][1]<0.7).sort((a,b)=>g.byCat[a][0]/g.byCat[a][1]-g.byCat[b][0]/g.byCat[b][1]);
+  const hist=p.attempts[n].length>1?`<p class="muted" style="font-size:15px">Tries on this test: ${p.attempts[n].map((a,k)=>k===ai?`<b>${a.score}</b>`:a.score).join(" → ")}</p>`:"";
+  app().innerHTML=header()+`<div class="card score"><div class="tag">Test ${n} results</div><div style="font-size:60px">${pc>=65?"🏆":"🦘"}</div>
+   <div class="big">${g.score}<span style="font-size:30px;color:var(--muted)"> / ${MAX}</span></div><div class="bigstars">${starStr(st)}</div>
+   <h2 style="margin:8px 0 4px">${msg}</h2><p class="muted" style="margin:0">${g.correct} of 24 correct · Time ${fmtTime(att.time)}</p>${hist}</div>
+  <div class="card"><h2>🧮 How your score was counted</h2><table class="pts"><tr><th>Question type</th><th>Correct</th><th>Points each</th><th>Points earned</th></tr>
+   ${[3,4,5].map(k=>`<tr><td><span class="pill" style="background:var(--p${k})">${k}-point</span> (questions ${k===3?"1–8":k===4?"9–16":"17–24"})</td><td>${g.byPts[k][0]} of 8</td><td>${k}</td><td><b>${g.byPts[k][0]*k}</b> of ${8*k}</td></tr>`).join("")}
+   <tr><td><b>Total</b></td><td><b>${g.correct} of 24</b></td><td></td><td><b>${g.score}</b> of ${MAX}</td></tr></table>
+   <p class="muted" style="font-size:15px">Harder questions are worth more points. Stars: ⭐⭐⭐ 85% or more (82+ points), ⭐⭐ 65% or more (63+), ⭐ 40% or more (39+).</p></div>
+  <div class="card"><h2>📊 Skills in this test</h2>${CAT_KEYS.filter(c=>g.byCat[c]).map(c=>{const [a,b]=g.byCat[c];return `<div class="skill"><span>${CATS[c].emoji} ${CATS[c].name}</span><div class="bar"><i style="width:${pct(a,b)}%;background:${CATS[c].color}"></i></div><b>${a}/${b}</b></div>`;}).join("")}
+   ${weakHere.length?`<h2 style="margin-top:16px">🎯 Let's practice</h2><p>You can get stronger at these. Each practice gives you 10 new questions with help after every answer.</p><div class="weak">${weakHere.map(c=>`<button class="btn orange" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name}</button>`).join("")}</div>`:`<p style="margin-top:12px">🎉 No weak spots in this test. Fantastic!</p>`}</div>
+  <div class="card"><h2>🔍 Check every answer</h2><div class="row"><button class="btn alt small" data-filter="wrong">Show only mistakes</button><button class="btn alt small" data-filter="all">Show all</button></div></div>
+  <div id="review">${qs.map((q,i)=>{const a=att.answers[i],ok=a===q.answer,cls=a==null?"skip":ok?"ok":"no";
+    return `<div class="rev ${cls}" data-ok="${ok?1:0}"><div class="qhead"><span class="qnum">${ok?"✅":a==null?"⚪":"❌"} Question ${i+1}</span><span><span class="pill" style="background:${CATS[q.cat].color}">${CATS[q.cat].emoji} ${CATS[q.cat].name}</span> <span class="pill" style="background:var(--p${q.pts})">${q.pts} pts</span></span></div>
+     <div class="qtext">${q.text}</div>${q.svg||""}<div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,k===q.answer?"right":k===a?"wrong":"")).join("")}</div>
+     <p style="margin:10px 0 0"><b>Your answer:</b> ${esc(answerLabel(q,a))}${ok?"":` · <b>Correct:</b> ${esc(answerLabel(q,q.answer))}`}</p>
+     <div class="expl">💡 <b>How to solve it:</b><br>${q.explain}</div></div>`;}).join("")}</div>
+  <div class="card row" style="justify-content:center"><button class="btn" data-retry="${n}">🔄 Try Test ${n} again</button>${n<NUM_TESTS?`<button class="btn green" data-test="${n+1}">Next: Test ${n+1} ➡</button>`:""}<button class="btn alt" data-act="home">🏠 Home</button></div>`;
+  window.scrollTo({top:0});if(fresh&&pc>=65)confetti();}
+
+/* --- practice --- */
+let PR=null;
+function startPractice(cat){stopTimer();PR={cat,qs:makePractice(cat,Date.now()%1e9),i:0,picked:null,right:0};renderP();}
+function renderP(){const {cat,qs,i,picked}=PR,q=qs[i],done=picked!=null,ok=picked===q.answer;
+  app().innerHTML=header()+`<div class="card"><div class="qhead"><span class="qnum">${CATS[cat].emoji} ${CATS[cat].name} practice · ${i+1} of ${qs.length}</span><span class="pill" style="background:var(--p${q.pts})">${["","Easy","Medium","Tricky"][q.d]}</span></div>
+   <div class="bar" style="margin-bottom:14px"><i style="width:${pct(i,qs.length)}%;background:${CATS[cat].color}"></i></div>
+   <div class="qtext">${q.text}</div>${q.svg||""}
+   <div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,done?(k===q.answer?"right":k===picked?"wrong":""):"")).join("")}</div>
+   ${done?`<div class="feedback ${ok?"ok":"no"}"><b>${ok?"🎉 Correct! Great thinking!":"🤔 Not quite. The answer is "+esc(answerLabel(q,q.answer))+"."}</b><div class="expl">💡 <b>How to solve it:</b><br>${q.explain}</div></div>
+   <div class="nav"><span class="muted">Score so far: ${PR.right}/${i+1}</span><button class="btn" data-act="pnext">${i<qs.length-1?"Next ➡":"See my result 🏁"}</button></div>`:`<p class="muted" style="font-size:15px;margin-bottom:0">Tap an answer. You'll see the explanation right away.</p>`}</div>`;
+  if(done)$(".feedback").scrollIntoView({behavior:"smooth",block:"nearest"});else window.scrollTo({top:0});}
+function pickP(k){if(PR.picked!=null)return;PR.picked=k;const ok=k===PR.qs[PR.i].answer;if(ok)PR.right++;
+  const s=P().practice;s[PR.cat]=s[PR.cat]||[0,0];s[PR.cat][1]++;if(ok)s[PR.cat][0]++;save();renderP();}
+function nextP(){if(PR.i<PR.qs.length-1){PR.i++;PR.picked=null;renderP();return;}
+  const {cat,right,qs}=PR,pc=pct(right,qs.length),stats=skillStats()[cat];
+  app().innerHTML=header()+`<div class="card score"><div style="font-size:60px">${pc>=70?"🌟":"💪"}</div><div class="big">${right}<span style="font-size:30px;color:var(--muted)"> / ${qs.length}</span></div>
+   <h2>${pc>=90?"Wow, you mastered it!":pc>=70?"Great practice!":"Good work! Every try makes your brain stronger."}</h2>
+   <p class="muted">${CATS[cat].emoji} ${CATS[cat].name}: overall skill is now <b>${pct(...stats)}%</b></p>
+   <div class="row" style="justify-content:center"><button class="btn orange" data-prac="${cat}">🔁 10 more questions</button><button class="btn alt" data-act="home">🏠 Home</button></div></div>`;
+  if(pc>=70)confetti();}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+  if(d.kid){DB.current=d.kid;save();screenHome();return;}
+  if(d.act==="home"){if(T&&timerId)save();screenHome();return;}
+  if(d.act==="switch"){save();screenProfiles();return;}
+  if(d.act==="export"){const blob=new Blob([JSON.stringify(DB,null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="hop-math-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();return;}
+  if(d.test){openTest(+d.test);return;}
+  if(d.retry){P().inProgress[d.retry]={answers:{},idx:0,elapsed:0};save();startTest(+d.retry);return;}
+  if(d.prac){startPractice(d.prac);return;}
+  if(d.filter){document.querySelectorAll("#review .rev").forEach(r=>r.style.display=d.filter==="wrong"&&r.dataset.ok==="1"?"none":"");return;}
+  if(d.act==="pnext"){nextP();return;}
+  if(d.ch!=null){if(PR&&$(".qnum")&&$(".qnum").textContent.includes("practice")){pickP(+d.ch);return;}
+    if(T&&!b.closest(".rev")){T.ip.answers[T.ip.idx]=+d.ch;save();renderQ();}return;}
+  if(!T)return;
+  if(d.act==="prev"){T.ip.idx--;save();renderQ();}
+  else if(d.act==="next"){T.ip.idx++;save();renderQ();}
+  else if(d.go!=null){T.ip.idx=+d.go;save();renderQ();}
+  else if(d.act==="finish")finishTest();
+});
+document.addEventListener("change",e=>{if(e.target.id!=="imp")return;const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{try{const x=JSON.parse(rd.result);if(!x.profiles)throw 0;if(!confirm("Replace the progress on this device with the backup?"))return;DB=x;load2();save();screenProfiles();alert("Backup restored! ✅");}catch(err){alert("Sorry, that file doesn't look like a Hop Math backup.");}};rd.readAsText(f);});
+function load2(){KIDS.forEach(k=>{if(!DB.profiles[k.name])DB.profiles[k.name]={attempts:{},practice:{},inProgress:{}};});}
+window.addEventListener("beforeunload",save);
+
+load();if(DB.current&&DB.profiles[DB.current])screenHome();else screenProfiles();
+})();
+</script>
+</body></html>
