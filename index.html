@@ -78,7 +78,7 @@ table.pts th:first-child,table.pts td:first-child{text-align:left}
 .linkbtn{background:none;border:none;color:var(--primary);font-weight:800;text-decoration:underline;font-size:15px;padding:4px}
 @media (max-width:560px){body{font-size:17px}.qtext{font-size:20px}.ch{font-size:20px}.dots{grid-template-columns:repeat(8,1fr)}.skill{grid-template-columns:1fr 1fr 46px}.big{font-size:52px}h1{font-size:26px}}
 .prof.p2{background:linear-gradient(135deg,#fb923c,#f43f5e)}.prof.p3{background:linear-gradient(135deg,#6366f1,#0ea5e9)}
-.prof .lv{display:inline-block;background:rgba(255,255,255,.25);border-radius:99px;padding:2px 12px;margin:4px 0 6px;font-weight:800;font-size:15px}
+.prof .lv{display:table;margin-left:auto!important;margin-right:auto!important;background:rgba(255,255,255,.25);border-radius:99px;padding:2px 12px;margin:4px 0 6px;font-weight:800;font-size:15px}
 .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .mode{border:3px solid var(--line);background:#fff;border-radius:16px;padding:12px 14px;text-align:left;font-size:16px;color:var(--ink)}
 .mode span{color:var(--muted);font-size:14px}
@@ -87,6 +87,7 @@ table.pts th:first-child,table.pts td:first-child{text-align:left}
 .pics .qsvg{width:46%;min-width:220px;margin:6px 0}
 .ch .ico{width:64px;height:64px}
 @media (max-width:560px){.modes{grid-template-columns:1fr}}
+.prof.p4{background:linear-gradient(135deg,#14b8a6,#8b5cf6)}
 </style></head>
 <body><div class="wrap" id="app"></div>
 <script>/* Kangaroo-style Level 1 question generator (original questions). */
@@ -783,7 +784,7 @@ if(typeof module!=="undefined")module.exports=API;else root.KQ=API;
 <script>(function(){
 "use strict";
 const {makeTest:mkTest,makePractice,catsFor,CAT_KEYS,LEVELS}=window.KQ;
-const KIDS=[{name:"Gia",av:"🦋",level:1},{name:"Aria",av:"🌸",level:1},{name:"Ananya",av:"🌟",level:2},{name:"Sahana",av:"🚀",level:3}];
+const KIDS=[{name:"Gia",av:"🦋",level:1},{name:"Aria",av:"🌸",level:1},{name:"Ananya",av:"🌟",level:2},{name:"Sahana",av:"🚀",level:3},{name:"Varenya",av:"🐬",level:1}];
 const KEY="hopmath-level1-v1";
 const LETTERS="ABCDE";
 const NUM_TESTS=10;
