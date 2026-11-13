@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hop Math</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦘</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>:root{--bg:#fff7ed;--card:#ffffff;--ink:#1e293b;--muted:#64748b;--line:#e2e8f0;--primary:#7c3aed;--primary2:#a78bfa;--good:#16a34a;--goodbg:#dcfce7;--bad:#dc2626;--badbg:#fee2e2;--p3:#22c55e;--p4:#3b82f6;--p5:#a855f7;--shadow:0 6px 0 rgba(30,41,59,.08),0 10px 24px rgba(30,41,59,.08)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Nunito","Trebuchet MS",system-ui,sans-serif;color:var(--ink);background:var(--bg);background-image:radial-gradient(circle at 10% 10%,#fde68a55 0 120px,transparent 121px),radial-gradient(circle at 90% 30%,#c4b5fd55 0 160px,transparent 161px),radial-gradient(circle at 20% 90%,#99f6e455 0 140px,transparent 141px);background-attachment:fixed;min-height:100vh;font-size:18px;line-height:1.45}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:26px;color:var(--primary)}
+.brand .roo{font-size:38px;display:inline-block;animation:hop 2.4s ease-in-out infinite}
+@keyframes hop{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-10px)}90%{transform:translateY(0)}}
+.card{background:var(--card);border-radius:22px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+h1{font-size:30px;margin:0 0 6px}h2{font-size:22px;margin:0 0 12px}
+.muted{color:var(--muted)}
+.btn{border:none;border-radius:16px;padding:12px 20px;font-size:18px;font-weight:800;background:var(--primary);color:#fff;box-shadow:0 4px 0 #5b21b6;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #5b21b6}
+.btn.alt{background:#fff;color:var(--primary);border:2px solid var(--primary2);box-shadow:0 4px 0 #ddd6fe}
+.btn.green{background:#16a34a;box-shadow:0 4px 0 #166534}
+.btn.orange{background:#f97316;box-shadow:0 4px 0 #c2410c}
+.btn.small{padding:8px 14px;font-size:15px;border-radius:12px}
+.btn:disabled{opacity:.45;cursor:default}
+.profiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.prof{border:none;border-radius:26px;padding:26px 16px;color:#fff;text-align:center;box-shadow:var(--shadow);font-size:18px}
+.prof .av{font-size:64px;display:block}.prof .nm{font-size:30px;font-weight:900;display:block}
+.prof.p0{background:linear-gradient(135deg,#f472b6,#a855f7)}.prof.p1{background:linear-gradient(135deg,#38bdf8,#22c55e)}
+.tests{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tcard{border:3px solid var(--line);background:#fff;border-radius:18px;padding:14px 10px;text-align:center;font-size:16px;transition:transform .1s}
+.tcard:hover{transform:translateY(-3px)}
+.tcard .tn{font-size:22px;font-weight:900;display:block}
+.tcard.done{border-color:#86efac;background:#f0fdf4}.tcard.prog{border-color:#fcd34d;background:#fffbeb}
+.stars{font-size:20px;letter-spacing:2px}
+.skill{display:grid;grid-template-columns:minmax(150px,210px) 1fr 54px;align-items:center;gap:10px;margin:8px 0;font-size:16px}
+.bar{height:16px;background:#f1f5f9;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;border-radius:99px}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:800;font-size:14px;color:#fff}
+.weak{display:flex;flex-wrap:wrap;gap:10px}
+.qhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.qnum{font-weight:900;font-size:20px}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;color:var(--muted)}
+.qtext{font-size:22px;font-weight:700;margin:6px 0 12px}
+.eq{font-size:30px;font-weight:900;color:var(--primary);text-align:center;margin:12px 0;letter-spacing:1px}
+.qsvg{display:block;margin:10px auto 14px;width:100%;height:auto}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.ch{display:flex;align-items:center;gap:10px;border:3px solid var(--line);background:#fff;border-radius:18px;padding:12px 14px;font-size:22px;font-weight:800;color:var(--ink);text-align:left;min-height:64px}
+.ch .lt{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;color:#fff;background:#94a3b8}
+.ch:hover{border-color:var(--primary2)}
+.ch.sel{border-color:var(--primary);background:#f5f3ff}.ch.sel .lt{background:var(--primary)}
+.ch.right{border-color:var(--good);background:var(--goodbg)}.ch.right .lt{background:var(--good)}
+.ch.wrong{border-color:var(--bad);background:var(--badbg)}.ch.wrong .lt{background:var(--bad)}
+.ch .ico{flex:none}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.dots{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:10px}
+.dot{aspect-ratio:1;border-radius:10px;border:2px solid var(--line);background:#fff;font-size:13px;font-weight:800;color:var(--muted);padding:0}
+.dot.ans{background:#ede9fe;border-color:var(--primary2);color:var(--primary)}
+.dot.cur{outline:3px solid var(--primary);outline-offset:1px}
+.score{text-align:center}
+.big{font-size:64px;font-weight:900;color:var(--primary);line-height:1}
+.bigstars{font-size:44px;letter-spacing:6px}
+table.pts{width:100%;border-collapse:collapse;font-size:17px}
+table.pts td,table.pts th{padding:8px;border-bottom:1px solid var(--line);text-align:center}
+table.pts th:first-child,table.pts td:first-child{text-align:left}
+.rev{border-left:8px solid var(--line);padding:14px 16px;border-radius:16px;background:#fff;margin-bottom:12px;box-shadow:var(--shadow)}
+.rev.ok{border-left-color:var(--good)}.rev.no{border-left-color:var(--bad)}.rev.skip{border-left-color:#f59e0b}
+.rev .qtext{font-size:19px}
+.expl{background:#fefce8;border:2px dashed #fde047;border-radius:14px;padding:12px 14px;margin-top:10px;font-size:17px}
+.expl b{color:#7c2d12}
+.feedback{margin-top:14px;border-radius:16px;padding:14px 16px;font-size:18px}
+.feedback.ok{background:var(--goodbg)}.feedback.no{background:var(--badbg)}
+.tag{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9}
+.confetti span{position:absolute;top:-40px;font-size:28px;animation:fall 2.8s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.foot{font-size:14px;color:var(--muted);text-align:center;margin-top:20px}
+.linkbtn{background:none;border:none;color:var(--primary);font-weight:800;text-decoration:underline;font-size:15px;padding:4px}
+@media (max-width:560px){body{font-size:17px}.qtext{font-size:20px}.ch{font-size:20px}.dots{grid-template-columns:repeat(8,1fr)}.skill{grid-template-columns:1fr 1fr 46px}.big{font-size:52px}h1{font-size:26px}}
+.prof.p2{background:linear-gradient(135deg,#fb923c,#f43f5e)}.prof.p3{background:linear-gradient(135deg,#6366f1,#0ea5e9)}
+.prof .lv{display:inline-block;background:rgba(255,255,255,.25);border-radius:99px;padding:2px 12px;margin:4px 0 6px;font-weight:800;font-size:15px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.mode{border:3px solid var(--line);background:#fff;border-radius:16px;padding:12px 14px;text-align:left;font-size:16px;color:var(--ink)}
+.mode span{color:var(--muted);font-size:14px}
+.mode.on{border-color:var(--primary);background:#f5f3ff;box-shadow:0 0 0 3px #ddd6fe}
+.pics{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.pics .qsvg{width:46%;min-width:220px;margin:6px 0}
+.ch .ico{width:64px;height:64px}
+@media (max-width:560px){.modes{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap" id="app"></div>
+<script>/* Kangaroo-style Level 1 question generator (original questions). */
+(function (root) {
+"use strict";
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const ri=(r,a,b)=>a+Math.floor(r()*(b-a+1));
+const pick=(r,a)=>a[Math.floor(r()*a.length)];
+function shuffle(r,a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const NAMES=["Mia","Leo","Ava","Sam","Zoe","Max","Lily","Ben","Nora","Eli","Ruby","Omar","Anya","Ravi","Ella","Theo","Maya","Kai"];
+const ITEMS=["apples","stickers","marbles","shells","crayons","cookies","balloons","acorns","buttons","toy cars"];
+const names=(r,n)=>shuffle(r,NAMES).slice(0,n);
+const plural=(n,w)=>n+" "+(n===1?w.replace(/s$/,""):w);
+
+function numChoices(r,correct,extra){
+  const seen=new Set([correct]),out=[];
+  for(const e of extra||[]){if(Number.isInteger(e)&&e>=0&&!seen.has(e)){seen.add(e);out.push(e);}if(out.length===4)break;}
+  let spread=Math.max(2,Math.ceil(correct*0.2)),guard=0;
+  while(out.length<4&&guard++<500){const c=correct+(r()<0.5?-1:1)*ri(r,1,spread);if(c>=0&&!seen.has(c)){seen.add(c);out.push(c);}if(guard%20===0)spread++;}
+  const all=out.concat([correct]).sort((a,b)=>a-b);
+  return {choices:all.map(String),answer:all.indexOf(correct)};
+}
+function textChoices(r,correct,distractors,keepOrder){
+  const d=[...new Set(distractors.filter(x=>x!==correct))];
+  const ds=keepOrder?d.slice(0,4):shuffle(r,d).slice(0,4);
+  const all=keepOrder?ds.concat([correct]):shuffle(r,ds.concat([correct]));
+  if(keepOrder) all.sort((a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true}));
+  return {choices:all,answer:all.indexOf(correct)};
+}
+
+/* ---------- SVG helpers ---------- */
+const PAL={red:"#ef4444",blue:"#3b82f6",green:"#22c55e",yellow:"#facc15",purple:"#8b5cf6"};
+const PALV=Object.values(PAL);
+function starPts(cx,cy,R,r0){let p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r0:R;p.push((cx+rr*Math.cos(a)).toFixed(1)+","+(cy+rr*Math.sin(a)).toFixed(1));}return p.join(" ");}
+function shape(t,c,x,y,s){const h=s/2;
+  if(t==="circle")return `<circle cx="${x}" cy="${y}" r="${h}" fill="${c}"/>`;
+  if(t==="square")return `<rect x="${x-h}" y="${y-h}" width="${s}" height="${s}" rx="3" fill="${c}"/>`;
+  if(t==="triangle")return `<polygon points="${x},${y-h} ${x-h},${y+h} ${x+h},${y+h}" fill="${c}"/>`;
+  if(t==="star")return `<polygon points="${starPts(x,y,h,h*0.45)}" fill="${c}"/>`;
+  if(t==="diamond")return `<polygon points="${x},${y-h} ${x+h},${y} ${x},${y+h} ${x-h},${y}" fill="${c}"/>`;
+  return "";}
+const icon=(t,c)=>`<svg class="ico" viewBox="0 0 40 40" width="44" height="44">${shape(t,c,20,20,32)}</svg>`;
+function svgWrap(w,h,body){return `<svg class="qsvg" viewBox="0 0 ${w} ${h}" style="max-width:${Math.min(w*1.4,520)}px">${body}</svg>`;}
+function rowSVG(items,q){const n=items.length+(q?1:0),w=n*50+10;let b="";items.forEach((it,i)=>b+=shape(it.t,it.c,30+i*50,30,36));
+  if(q){const x=30+items.length*50;b+=`<rect x="${x-20}" y="10" width="40" height="40" rx="8" fill="#fff" stroke="#94a3b8" stroke-dasharray="4 3" stroke-width="2"/><text x="${x}" y="38" text-anchor="middle" font-size="24" font-weight="700" fill="#64748b">?</text>`;}
+  return svgWrap(w,60,b);}
+function objectsSVG(n,t,c,per){per=per||6;const rows=Math.ceil(n/per),w=per*46+10,h=rows*46+10;let b="";for(let i=0;i<n;i++)b+=shape(t,c,28+(i%per)*46,28+Math.floor(i/per)*46,36);return svgWrap(w,h,b);}
+function mixedSVG(r,types){const cols=5,cells=shuffle(r,[...Array(15).keys()]).slice(0,types.length);let b="";
+  types.forEach((t,i)=>{const k=cells[i],x=34+(k%cols)*62+ri(r,-6,6),y=34+Math.floor(k/cols)*62+ri(r,-6,6);b+=shape(t,pick(r,PALV),x,y,ri(r,30,42));});
+  return svgWrap(cols*62+10,3*62+10,b);}
+function gridSVG(rows,cols){const s=40,w=cols*s+20,h=rows*s+20;let b=`<rect x="10" y="10" width="${cols*s}" height="${rows*s}" fill="#e0f2fe"/>`;
+  for(let i=0;i<=rows;i++)b+=`<line x1="10" y1="${10+i*s}" x2="${10+cols*s}" y2="${10+i*s}" stroke="#0369a1" stroke-width="2.5"/>`;
+  for(let j=0;j<=cols;j++)b+=`<line x1="${10+j*s}" y1="10" x2="${10+j*s}" y2="${10+rows*s}" stroke="#0369a1" stroke-width="2.5"/>`;return svgWrap(w,h,b);}
+function fanSVG(k){const A=[110,12],L=[12,150],R=[208,150];let b=`<polygon points="${A} ${L} ${R}" fill="#fef3c7" stroke="#b45309" stroke-width="3" stroke-linejoin="round"/>`;
+  for(let i=1;i<=k;i++){const x=L[0]+(R[0]-L[0])*i/(k+1);b+=`<line x1="${A[0]}" y1="${A[1]}" x2="${x}" y2="150" stroke="#b45309" stroke-width="3"/>`;}return svgWrap(220,162,b);}
+function cube(x,y,s,c){return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="3" fill="${c}" stroke="#1e293b" stroke-width="2"/>`;}
+function stacksSVG(r,hs){const s=34,H=Math.max(...hs),w=hs.length*(s+14)+10,h=H*s+20;let b=`<line x1="0" y1="${h-8}" x2="${w}" y2="${h-8}" stroke="#64748b" stroke-width="3"/>`;
+  hs.forEach((ht,i)=>{const c=PALV[i%PALV.length];for(let j=0;j<ht;j++)b+=cube(10+i*(s+14),h-8-(j+1)*s,s,c);});return svgWrap(w,h,b);}
+function stairsSVG(n){const s=30,w=n*s+20,h=n*s+20;let b="";for(let i=0;i<n;i++)for(let j=0;j<=i;j++)b+=cube(10+i*s,h-10-(j+1)*s,s,"#fb923c");return svgWrap(w,h,b);}
+function clockSVG(h,m){let b=`<circle cx="80" cy="80" r="72" fill="#fff" stroke="#7c3aed" stroke-width="6"/>`;
+  for(let i=1;i<=12;i++){const a=(i*30-90)*Math.PI/180;b+=`<text x="${(80+56*Math.cos(a)).toFixed(1)}" y="${(86+56*Math.sin(a)).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="700" fill="#334155">${i}</text>`;}
+  const ha=((h%12)+m/60)*30-90,ma=m*6-90,rad=d=>d*Math.PI/180;
+  b+=`<line x1="80" y1="80" x2="${(80+34*Math.cos(rad(ha))).toFixed(1)}" y2="${(80+34*Math.sin(rad(ha))).toFixed(1)}" stroke="#0f172a" stroke-width="7" stroke-linecap="round"/>`;
+  b+=`<line x1="80" y1="80" x2="${(80+54*Math.cos(rad(ma))).toFixed(1)}" y2="${(80+54*Math.sin(rad(ma))).toFixed(1)}" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/><circle cx="80" cy="80" r="5" fill="#0f172a"/>`;
+  return svgWrap(160,160,b);}
+function matchSVG(n){const s=46,w=n*s+20,h=s+20;let b="";const st=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#d97706" stroke-width="6" stroke-linecap="round"/>`;
+  for(let i=0;i<n;i++){const x=10+i*s;b+=st(x+4,10,x+s-4,10)+st(x+4,10+s,x+s-4,10+s);}for(let i=0;i<=n;i++){const x=10+i*s;b+=st(x,14,x,s+6);}return svgWrap(w,h,b);}
+
+const SHAPES=["circle","square","triangle","star","diamond"];
+const SHAPE_NAME={circle:"circle",square:"square",triangle:"triangle",star:"star",diamond:"diamond"};
+const COLOR_NAME=Object.fromEntries(Object.entries(PAL).map(([k,v])=>[v,k]));
+const itemName=it=>COLOR_NAME[it.c]+" "+SHAPE_NAME[it.t];
+const itemKey=it=>it.t+"|"+it.c;
+function shapeChoices(r,correct,pool){const keys=new Set([itemKey(correct)]),ds=[];for(const p of shuffle(r,pool)){if(!keys.has(itemKey(p))){keys.add(itemKey(p));ds.push(p);}if(ds.length===4)break;}
+  while(ds.length<4){const p={t:pick(r,SHAPES),c:pick(r,PALV)};if(!keys.has(itemKey(p))){keys.add(itemKey(p));ds.push(p);}}
+  const all=shuffle(r,ds.concat([correct]));return {choices:all.map(p=>icon(p.t,p.c)),answer:all.findIndex(p=>itemKey(p)===itemKey(correct)),labels:all.map(itemName)};}
+
+const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const fmt=(h,m)=>h+":"+String(m).padStart(2,"0");
+const ord=n=>n+(n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th"));
+
+/* ---------- Templates: CAT -> difficulty(1..3) -> [fn] ---------- */
+const T={};
+
+/* NUMBERS & COUNTING */
+T.numbers={1:[
+ r=>{const k=ri(r,7,16),per=6,rows=[];for(let i=0;i<k;i+=per)rows.push(Math.min(per,k-i));const c=pick(r,PALV);
+   return {text:"How many stars are in the picture?",svg:objectsSVG(k,"star",c,per),...numChoices(r,k,[k-1,k+1,k+2,k-2]),
+   explain:`Count row by row so you don't miss any:<br>${rows.map((n,i)=>`Row ${i+1}: ${n} stars`).join("<br>")}<br>Add them: ${rows.join(" + ")} = <b>${k}</b>.`};},
+ r=>{const N=ri(r,12,79);return {text:`What number is 10 more than ${N}?`,...numChoices(r,N+10,[N+1,N+11,N+9,N+20,N-10]),
+   explain:`Adding 10 makes the <b>tens digit</b> go up by 1. The ones digit stays the same.<br>${N} has ${Math.floor(N/10)} tens and ${N%10} ones → ${Math.floor(N/10)+1} tens and ${N%10} ones = <b>${N+10}</b>.`};},
+ r=>{let N=ri(r,21,98);if(N%10===Math.floor(N/10))N++;const t=Math.floor(N/10),o=N%10;
+   return {text:`How many tens are in the number ${N}?`,...numChoices(r,t,[o,t+1,t-1,t+2,o+1]),
+   explain:`In ${N}, the <b>left digit</b> tells the tens and the right digit tells the ones.<br>${N} = ${t} tens + ${o} ones (${t*10} + ${o}).<br>So there are <b>${t}</b> tens.`};}
+],2:[
+ r=>{const A=ri(r,3,25),B=A+ri(r,7,16),[n]=names(r,1),ans=B-A+1;
+   return {text:`${n} writes down all the numbers from ${A} to ${B}. How many numbers does ${n} write?`,...numChoices(r,ans,[B-A,B-A+2,B-A-1]),
+   explain:`${B} − ${A} = ${B-A}, but that misses one number! We must count <b>both</b> ${A} and ${B}, so add 1: ${B-A} + 1 = <b>${ans}</b>.<br>Check with a small example: 1 to 3 is 1, 2, 3 → 3 numbers, and 3 − 1 + 1 = 3.`};},
+ r=>{const d=shuffle(r,[1,2,3,4,5,6,7,8,9]).slice(0,3),s=d.slice().sort((a,b)=>b-a),ans=s[0]*10+s[1];
+   return {text:`Using two of the digits ${d.join(", ")} (each digit at most once), what is the biggest two-digit number you can make?`,
+   ...numChoices(r,ans,[s[0]*10+s[2],s[1]*10+s[0],s[2]*10+s[0],s[1]*10+s[2]]),
+   explain:`To make the biggest number, put the <b>biggest digit in the tens place</b>: ${s[0]}.<br>Then put the next biggest digit in the ones place: ${s[1]}.<br>Answer: <b>${ans}</b>.`};},
+ r=>{const N=ri(r,11,30),ans=Math.floor(N/2);
+   return {text:`How many even numbers are there from 1 to ${N}?`,...numChoices(r,ans,[Math.ceil(N/2)===ans?ans+1:Math.ceil(N/2),ans-1,N-ans+2,ans+2]),
+   explain:`Even numbers end in 0, 2, 4, 6 or 8: they are every other number.<br>${Array.from({length:ans},(_,i)=>2*(i+1)).join(", ")}<br>That is <b>${ans}</b> even numbers.`};}
+],3:[
+ r=>{let N,D,list;do{N=ri(r,3,9)*10;D=ri(r,1,Math.min(9,N/10));list=[];for(let i=1;i<=N;i++)if(String(i).includes(String(D)))list.push(i);}while(list.length<4);
+   const ones=list.filter(x=>x%10===D).length,occ=list.reduce((s,x)=>s+String(x).split("").filter(c=>c===String(D)).length,0);
+   return {text:`How many of the numbers from 1 to ${N} have the digit ${D} in them?`,...numChoices(r,list.length,[ones,occ,list.length-1,list.length+1]),
+   explain:`List them carefully, looking at the ones place AND the tens place:<br>${list.join(", ")}<br>That is <b>${list.length}</b> numbers.`+(list.includes(D*11)?`<br>Careful: ${D*11} has the digit ${D} twice, but it is still only one number.`:"")};},
+ r=>{let t,u;do{t=ri(r,3,9);u=ri(r,0,t-2);}while(t+u>17);const s=t+u,df=t-u,ans=10*t+u;
+   return {text:`I am a two-digit number. My two digits add up to ${s}. My tens digit is ${df} more than my ones digit. What number am I?`,...numChoices(r,ans,[10*u+t,10*t+u+1,10*(t-1)+u+1,10*(t+1)+u-1].filter(x=>x>9&&x<100)),
+   explain:`Try pairs of digits that add up to ${s} and check the difference:<br>tens ${t}, ones ${u}: ${t} + ${u} = ${s} ✓ and ${t} − ${u} = ${df} ✓<br>The tens digit is the bigger one, so the number is <b>${ans}</b> (not ${10*u+t}).`};},
+ r=>{const S=ri(r,3,9),list=[];for(let t=1;t<=S;t++)list.push(10*t+(S-t));
+   return {text:`How many two-digit numbers have digits that add up to ${S}?`,...numChoices(r,S,[S-1,S+1,S+2,S-2]),
+   explain:`The tens digit can't be 0. Go through tens digits 1, 2, 3, … and find the ones digit each time:<br>${list.join(", ")}<br>That is <b>${S}</b> numbers. (Don't forget ${S*10}, where the ones digit is 0!)`};}
+]};
+
+/* ADDING & TAKING AWAY */
+T.arith={1:[
+ r=>{const a=ri(r,5,20),b=ri(r,3,15),[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} has ${a} ${it}. ${y} gives ${x} ${b} more. How many ${it} does ${x} have now?`,...numChoices(r,a+b,[a-b,a+b+1,a+b-1,a+b+10]),
+   explain:`"Gives more" means we <b>add</b>.<br>${a} + ${b} = <b>${a+b}</b>.`};},
+ r=>{const a=ri(r,12,30),b=ri(r,3,a-3),[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} had ${a} ${it} and gave ${b} of them to ${y}. How many ${it} does ${x} have left?`,...numChoices(r,a-b,[a+b,a-b+1,a-b-1,b]),
+   explain:`"Gave away" means we <b>take away</b> (subtract).<br>${a} − ${b} = <b>${a-b}</b>.`};},
+ r=>{const a=ri(r,6,12),b=ri(r,2,a-2),c=ri(r,2,7);
+   return {text:`There are ${a} birds in a tree. ${b} birds fly away. Then ${c} new birds land in the tree. How many birds are in the tree now?`,...numChoices(r,a-b+c,[a-b,a+b+c,a+c,a-b-c,a-b+c+1]),
+   explain:`Do it one step at a time:<br>Fly away: ${a} − ${b} = ${a-b}<br>Land: ${a-b} + ${c} = <b>${a-b+c}</b>.`};}
+],2:[
+ r=>{const a=ri(r,5,15),b=ri(r,2,8),[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} has ${a} ${it}. ${y} has ${b} more ${it} than ${x}. How many ${it} do they have together?`,...numChoices(r,2*a+b,[a+b,2*a,a+2*b,2*a+b+1]),
+   explain:`Step 1, find how many ${y} has: ${a} + ${b} = ${a+b}.<br>Step 2, add both amounts: ${a} + ${a+b} = <b>${2*a+b}</b>.<br>Careful: ${a+b} is only ${y}'s amount, not the total.`};},
+ r=>{const g=ri(r,2,5),e=ri(r,3,6),k=ri(r,2,e+2),[x]=names(r,1);
+   return {text:`${x} has ${g} bags with ${e} cookies in each bag. ${x} eats ${k} cookies. How many cookies are left?`,...numChoices(r,g*e-k,[g*e,g+e-k,g*e-k+1,g*e+k]),
+   explain:`First count all the cookies: ${Array(g).fill(e).join(" + ")} = ${g*e}.<br>Then take away the ones eaten: ${g*e} − ${k} = <b>${g*e-k}</b>.`};},
+ r=>{const b=ri(r,5,15),c=ri(r,3,12);let a;do{a=ri(r,2,b+c-2);}while(a===b||a===c);const ans=b+c-a;
+   return {text:`What number goes in the box?<div class="eq">▢ + ${a} = ${b} + ${c}</div>`,...numChoices(r,ans,[b+c,b+c+a,ans+1,ans-1]),
+   explain:`Both sides must be equal. The right side is ${b} + ${c} = ${b+c}.<br>So ▢ + ${a} = ${b+c}. What plus ${a} makes ${b+c}? ${b+c} − ${a} = <b>${ans}</b>.<br>Check: ${ans} + ${a} = ${b+c} ✓`};}
+],3:[
+ r=>{const Y=ri(r,4,18),D=ri(r,2,10),X=Y+D,Tt=X+Y,[x,y]=names(r,2),it=pick(r,ITEMS);
+   return {text:`${x} and ${y} have ${Tt} ${it} together. ${x} has ${D} more than ${y}. How many ${it} does ${y} have?`,...numChoices(r,Y,[X,Tt-D,Math.floor(Tt/2),D,Y+1]),
+   explain:`Take away ${x}'s ${D} extra ${it} first: ${Tt} − ${D} = ${Tt-D}.<br>Now the two have the same amount, so split it in half: ${Tt-D} ÷ 2 = <b>${Y}</b>.<br>Check: ${y} has ${Y}, ${x} has ${Y} + ${D} = ${X}, and ${Y} + ${X} = ${Tt} ✓`};},
+ r=>{let u,d,N,m,pos;do{u=ri(r,3,5);d=ri(r,1,u-1);N=ri(r,10,20);pos=0;m=0;while(true){m++;pos+=u;if(pos>=N)break;pos-=d;}}while(Math.ceil(N/(u-d))===m);
+   const naive=Math.ceil(N/(u-d)),before=(m-1)*(u-d);
+   return {text:`A frog wants to climb to the top of a ladder with ${N} steps. Every minute it jumps up ${u} steps, then slides down ${d} step${d>1?"s":""}. In which minute does the frog first reach the top?`,...numChoices(r,m,[naive,m+1,m-1,N]),
+   explain:`Each full minute the frog goes up ${u} − ${d} = ${u-d} step${u-d>1?"s":""}.<br>After ${m-1} minutes it is on step ${before}.<br>In minute ${m} it jumps up ${u}: ${before} + ${u} = ${before+u}, which reaches step ${N}. It's at the top, so it doesn't slide back!<br>Answer: minute <b>${m}</b>. (The trap answer ${naive} forgets that the last jump reaches the top.)`};},
+ r=>{const g=ri(r,2,7),[x,y]=names(r,2);
+   return {text:`${x} gives ${y} ${g} marbles. Now they both have the same number of marbles. How many more marbles did ${x} have than ${y} at the start?`,...numChoices(r,2*g,[g,g+1,3*g,2*g+1]),
+   explain:`When ${x} gives away ${g}, ${x} goes DOWN by ${g} and ${y} goes UP by ${g}.<br>So the gap closes by ${g} + ${g} = ${2*g}.<br>Example: if ${y} started with 10, ${x} started with ${10+2*g}. After giving: both have ${10+g}. ✓<br>${x} had <b>${2*g}</b> more.`};}
+]};
+
+/* PATTERNS */
+T.patterns={1:[
+ r=>{const k=pick(r,[2,3,5,10]),s=ri(r,1,15),seq=[0,1,2,3].map(i=>s+i*k),ans=s+4*k;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[ans+1,ans-1,ans+k,ans-k]),
+   explain:`Each number is <b>${k} more</b> than the one before: ${seq.map((v,i)=>i?`+${k}`:"").filter(Boolean).join(", ")}.<br>${seq[3]} + ${k} = <b>${ans}</b>.`};},
+ r=>{const L=ri(r,2,3),unit=shuffle(r,SHAPES).slice(0,L).map(t=>({t,c:pick(r,PALV)}));const n=ri(r,5,8),items=[];for(let i=0;i<n;i++)items.push(unit[i%L]);const ans=unit[n%L];
+   const ch=shapeChoices(r,ans,unit.concat(SHAPES.map(t=>({t,c:pick(r,PALV)}))));
+   return {text:`The shapes repeat in a pattern. Which shape comes next?`,svg:rowSVG(items,true),choices:ch.choices,answer:ch.answer,labels:ch.labels,
+   explain:`Find the part that repeats: <b>${unit.map(itemName).join(" → ")}</b>, then it starts again.<br>The last shape is the ${itemName(items[n-1])}, so next comes the <b>${itemName(ans)}</b>.`};},
+ r=>{const k=pick(r,[2,3,4,5]),s=ri(r,25,40),seq=[0,1,2,3].map(i=>s-i*k),ans=s-4*k;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[ans+1,ans-1,ans+k,ans-k]),
+   explain:`Each number is <b>${k} less</b> than the one before.<br>${seq[3]} − ${k} = <b>${ans}</b>.`};}
+],2:[
+ r=>{const s=ri(r,1,10),seq=[s];for(let i=1;i<5;i++)seq.push(seq[i-1]+i);const ans=seq[4]+5;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[seq[4]+4,ans+1,seq[4]+6,seq[4]+1]),
+   explain:`Look at how much it grows each time: +1, +2, +3, +4. The jump gets 1 bigger every time!<br>So the next jump is +5: ${seq[4]} + 5 = <b>${ans}</b>.`};},
+ r=>{const L=ri(r,3,4),unit=shuffle(r,SHAPES).slice(0,L).map(t=>({t,c:pick(r,PALV)})),n=ri(r,12,25),ans=unit[(n-1)%L];
+   const items=[];for(let i=0;i<L*2;i++)items.push(unit[i%L]);const ch=shapeChoices(r,ans,unit);const full=Math.floor((n-1)/L)*L;
+   return {text:`This pattern keeps going forever. Which shape is in place number ${n}?`,svg:rowSVG(items,false),choices:ch.choices,answer:ch.answer,labels:ch.labels,
+   explain:`The pattern repeats every <b>${L}</b> shapes.<br>Places ${L}, ${2*L}, ${3*L}, … are the last shape of a group.<br>Place ${full} ends a group${full===0?" (well, place 0 is before the start)":""}, so place ${n} is shape number ${(n-1)%L+1} of the group: the <b>${itemName(ans)}</b>.`};},
+ r=>{const a=ri(r,3,6),b=ri(r,1,a-1),s=ri(r,2,10),seq=[s];for(let i=1;i<6;i++)seq.push(seq[i-1]+(i%2?a:-b));const ans=seq[5]+a;
+   return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[seq[5]-b,ans+1,seq[5]+a-b,ans-1]),
+   explain:`The pattern takes turns: <b>+${a}</b>, then <b>−${b}</b>, then +${a}, −${b}, …<br>The last step was −${b}, so now it's +${a}: ${seq[5]} + ${a} = <b>${ans}</b>.`};}
+],3:[
+ r=>{const sh=shuffle(r,SHAPES).slice(0,3).map(t=>({t,c:pick(r,PALV)})),unit=[sh[0],sh[1],sh[1],sh[2]],N=ri(r,15,30);let cnt=0;for(let i=0;i<N;i++)if(unit[i%4]===sh[1])cnt++;
+   const full=Math.floor(N/4),left=N%4,leftB=[0,0,1,2][left];
+   return {text:`This pattern repeats over and over. How many ${itemName(sh[1])}s are there among the first ${N} shapes?`,svg:rowSVG(unit.concat(unit),false),...numChoices(r,cnt,[Math.floor(N/4),cnt+1,cnt-1,Math.floor(N/2)]),
+   explain:`One group has 4 shapes and <b>2</b> ${itemName(sh[1])}s.<br>${N} shapes = ${full} full groups${left?` + ${left} more shape${left>1?"s":""}`:""}.<br>${full} groups × 2 = ${full*2}${left?`, and the extra ${left} shape${left>1?"s have":" has"} ${leftB} more`:""}.<br>Total: <b>${cnt}</b>.`};},
+ r=>{const a=ri(r,1,3),b=ri(r,a,4),seq=[a,b];for(let i=2;i<6;i++)seq.push(seq[i-1]+seq[i-2]);const ans=seq[4]+seq[5];
+   return {text:`In this list, each number (after the first two) is made in the same way. What comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[seq[5]+(seq[5]-seq[4]),ans+1,2*seq[5],ans-1]),
+   explain:`Each number is the <b>sum of the two numbers before it</b>:<br>${seq.slice(2).map((v,i)=>`${seq[i]} + ${seq[i+1]} = ${v}`).join("<br>")}<br>Next: ${seq[4]} + ${seq[5]} = <b>${ans}</b>.`};},
+ r=>{const n=ri(r,5,7),ans=n*(n+1)/2;
+   return {text:`Figure 1 has 1 dot. Figure 2 has 3 dots (a triangle with rows of 1 and 2). Figure 3 has 6 dots (rows of 1, 2 and 3). How many dots does Figure ${n} have?`,...numChoices(r,ans,[ans-n+1,ans+1,n*n,2*n+1,ans-1]),
+   explain:`Each new figure adds one more row, and the new row is 1 longer.<br>Figure ${n} has rows of ${Array.from({length:n},(_,i)=>i+1).join(", ")}.<br>${Array.from({length:n},(_,i)=>i+1).join(" + ")} = <b>${ans}</b>.`};}
+]};
+
+/* SHAPES & GEOMETRY */
+T.shapes={1:[
+ r=>{const t=ri(r,1,4),s=ri(r,1,4);
+   return {text:`How many sides do ${plural(t,"triangles")} and ${plural(s,"squares")} have altogether?`,...numChoices(r,3*t+4*s,[t+s,4*t+3*s,3*t+4*s+1,3*t+4*s-1]),
+   explain:`A triangle has 3 sides and a square has 4 sides.<br>Triangles: ${t} × 3 = ${3*t}<br>Squares: ${s} × 4 = ${4*s}<br>Total: ${3*t} + ${4*s} = <b>${3*t+4*s}</b>.`};},
+ r=>{const target=pick(r,["triangle","circle","square","star"]),k=ri(r,3,6),others=SHAPES.filter(x=>x!==target),types=[];for(let i=0;i<k;i++)types.push(target);const m=ri(r,4,7);for(let i=0;i<m;i++)types.push(pick(r,others));
+   return {text:`How many ${target}s are in the picture?`,svg:mixedSVG(r,types),...numChoices(r,k,[k+1,k-1,k+m,m]),
+   explain:`Look only at the ${target}s and ignore the colors and sizes. Touch each one as you count.<br>There are <b>${k}</b> ${target}s. The other ${m} shapes are not ${target}s.`};},
+ r=>{const opts={triangle:3,square:4,pentagon:5,hexagon:6},k=pick(r,[3,4,5,6]),ans=Object.keys(opts).find(x=>opts[x]===k);
+   return {text:`Which shape has exactly ${k} corners?`,...textChoices(r,ans,["circle","triangle","square","pentagon","hexagon","octagon"]),
+   explain:`Count corners: triangle 3, square 4, pentagon 5, hexagon 6, octagon 8, circle 0.<br>So the shape with ${k} corners is the <b>${ans}</b>.`};}
+],2:[
+ r=>{const R=ri(r,2,4),C=ri(r,3,6);
+   return {text:`How many small squares make up this rectangle?`,svg:gridSVG(R,C),...numChoices(r,R*C,[R+C,R*C-1,R*C+1,2*(R+C)]),
+   explain:`There are ${R} rows with ${C} squares in each row.<br>${Array(R).fill(C).join(" + ")} = <b>${R*C}</b>.`};},
+ r=>{const a=ri(r,2,9),b=ri(r,a+1,12),[x]=names(r,1),p=2*(a+b);
+   return {text:`A rectangle is ${a} cm wide and ${b} cm long. ${x} the ant walks all the way around its edge once. How many centimeters does ${x} walk?`,...numChoices(r,p,[a+b,a*b,p+2,2*a+b]),
+   explain:`A rectangle has 4 sides: two of ${b} cm and two of ${a} cm.<br>${b} + ${a} + ${b} + ${a} = <b>${p}</b> cm.<br>(${a+b} is only half the way around!)`};},
+ r=>{const s=ri(r,2,6),ans=8*s;
+   return {text:`Four small squares, each with sides of ${s} cm, are put together to make one big square. How long is the edge around the big square?`,...numChoices(r,ans,[4*s,16*s,ans-s,2*s*2+s]),
+   explain:`The big square is 2 small squares wide, so each big side is ${s} + ${s} = ${2*s} cm.<br>The big square has 4 sides: 4 × ${2*s} = <b>${ans}</b> cm.`};}
+],3:[
+ r=>{const [R,C]=pick(r,[[2,2],[2,3],[3,3],[2,4],[3,4]]);let tot=0,parts=[];for(let k=1;k<=Math.min(R,C);k++){const c=(R-k+1)*(C-k+1);tot+=c;parts.push(`${k}×${k} squares: ${c}`);}
+   return {text:`How many squares of any size can you find in this picture?`,svg:gridSVG(R,C),...numChoices(r,tot,[R*C,R*C+1,tot+1,tot-1]),
+   explain:`Don't forget the bigger squares made from several small ones!<br>${parts.join("<br>")}<br>Total: <b>${tot}</b>.`};},
+ r=>{const k=ri(r,1,3),n=k+1,ans=n*(n+1)/2,parts=[];for(let s=1;s<=n;s++)parts.push(`made of ${s} piece${s>1?"s":""}: ${n-s+1}`);
+   return {text:`How many triangles of any size are in this picture?`,svg:fanSVG(k),...numChoices(r,ans,[n,n+1,ans+1,ans-1,2*n]),
+   explain:`The bottom is split into ${n} pieces. Every triangle uses one or more pieces that sit next to each other.<br>Triangles ${parts.join("<br>Triangles ")}<br>Total: ${Array.from({length:n},(_,i)=>n-i).join(" + ")} = <b>${ans}</b>.`};},
+ r=>{const n=ri(r,4,7),ans=3*n+1;
+   return {text:`This row of 3 squares is made with 10 matchsticks. How many matchsticks are needed for a row of ${n} squares made the same way?`,svg:matchSVG(3),...numChoices(r,ans,[4*n,3*n,ans+1,4*n-1]),
+   explain:`The first square needs 4 sticks. Every new square shares one side, so it needs only <b>3 more</b> sticks.<br>${n} squares: 4 + ${n-1} × 3 = 4 + ${3*(n-1)} = <b>${ans}</b>.<br>(Check with the picture: 4 + 3 + 3 = 10 ✓)`};}
+]};
+
+/* LOGIC */
+T.logic={1:[
+ r=>{const [a,b,c]=names(r,3),askTall=r()<0.5;
+   return {text:`${a} is taller than ${b}. ${c} is shorter than ${b}. Who is the ${askTall?"tallest":"shortest"}?`,...textChoices(r,askTall?a:c,[a,b,c,"They are all the same","We cannot tell"].filter(x=>x!==(askTall?a:c))),
+   explain:`Put them in order from tallest to shortest:<br>${a} is taller than ${b}, and ${b} is taller than ${c}.<br>${a} → ${b} → ${c}<br>So the ${askTall?"tallest":"shortest"} is <b>${askTall?a:c}</b>.`};},
+ r=>{const c=ri(r,1,4),b=ri(r,1,4),ans=4*c+2*b;
+   return {text:`How many legs do ${plural(c,"cats")} and ${plural(b,"birds")} have altogether?`,...numChoices(r,ans,[c+b,2*c+4*b,ans+2,ans-2]),
+   explain:`A cat has 4 legs and a bird has 2 legs.<br>Cats: ${c} × 4 = ${4*c}<br>Birds: ${b} × 2 = ${2*b}<br>Total: <b>${ans}</b>.`};},
+ r=>{const n=ri(r,8,15),k=ri(r,2,n-2),[x]=names(r,1);
+   return {text:`${n} children stand in a line. ${x} is ${ord(k)} from the front. How many children are behind ${x}?`,...numChoices(r,n-k,[n-k+1,n-k-1,k,k-1]),
+   explain:`${k} children are at the front, counting ${x} too.<br>Everyone else is behind: ${n} − ${k} = <b>${n-k}</b>.`};}
+],2:[
+ r=>{const f=ri(r,3,9),b=ri(r,3,9),[x]=names(r,1),ans=f+b-1;
+   return {text:`Children stand in a line. ${x} is ${ord(f)} from the front and ${ord(b)} from the back. How many children are in the line?`,...numChoices(r,ans,[f+b,f+b+1,ans-1,Math.abs(f-b)]),
+   explain:`If we add ${f} + ${b} = ${f+b}, we have counted ${x} <b>twice</b> (once from each end).<br>So take 1 away: ${f+b} − 1 = <b>${ans}</b>.`};},
+ r=>{const c=ri(r,2,7),d=ri(r,2,6),ans=2*c+4*d;
+   return {text:`A farm has ${c} chickens and ${d} dogs. How many legs are there altogether?`,...numChoices(r,ans,[c+d,2*(c+d),4*(c+d),ans+2]),
+   explain:`Chickens: ${c} × 2 = ${2*c} legs<br>Dogs: ${d} × 4 = ${4*d} legs<br>Total: ${2*c} + ${4*d} = <b>${ans}</b>.`};},
+ r=>{const C=ri(r,2,4),cols=["red","blue","green","yellow"].slice(0,C);
+   return {text:`A drawer has lots of socks: ${cols.slice(0,-1).join(", ")} and ${cols[C-1]}. In the dark, what is the smallest number of socks you must take to be <b>sure</b> to get two of the same color?`,...numChoices(r,C+1,[2,C,C+2,2*C]),
+   explain:`Think of the unluckiest case: each sock you take is a new color.<br>With ${C} colors you could get ${C} different socks first.<br>The very next sock MUST match one of them. So you need ${C} + 1 = <b>${C+1}</b>.`};}
+],3:[
+ r=>{const n=ri(r,4,6),ans=n*(n-1)/2;
+   return {text:`${n} friends meet. Each friend shakes hands with every other friend exactly once. How many handshakes are there?`,...numChoices(r,ans,[n*(n-1),n,2*n,ans+1]),
+   explain:`Friend 1 shakes ${n-1} hands. Friend 2 has already shaken with Friend 1, so only ${n-2} new ones. And so on.<br>${Array.from({length:n-1},(_,i)=>n-1-i).join(" + ")} = <b>${ans}</b>.<br>(${n} × ${n-1} = ${n*(n-1)} counts each handshake twice.)`};},
+ r=>{const h=ri(r,6,12),g=ri(r,2,h-2),L=2*h+2*g;
+   return {text:`In a yard there are chickens and dogs. Together they have ${h} heads and ${L} legs. How many dogs are there?`,...numChoices(r,g,[h-g,L/4|0,g+1,g-1]),
+   explain:`Pretend every animal is a chicken: ${h} × 2 = ${2*h} legs.<br>But there are ${L} legs, which is ${L-2*h} extra.<br>Each dog has 2 extra legs, so dogs = ${L-2*h} ÷ 2 = <b>${g}</b>.<br>Check: ${h-g} chickens × 2 + ${g} dogs × 4 = ${2*(h-g)} + ${4*g} = ${L} ✓`};},
+ r=>{const a=ri(r,5,10),b=ri(r,2,6),y=ri(r,2,6),S=a+b+2*y,[x,z]=names(r,2);
+   return {text:`${x} is ${a} years old and ${z} is ${b}. In how many years will their ages add up to ${S}?`,...numChoices(r,y,[S-a-b,y+1,y-1,2*y+1]),
+   explain:`Right now their ages add up to ${a} + ${b} = ${a+b}.<br>Every year, <b>both</b> get 1 year older, so the total grows by 2.<br>We need ${S} − ${a+b} = ${S-a-b} more, so ${S-a-b} ÷ 2 = <b>${y}</b> years.`};}
+]};
+
+/* TIME, MONEY & MEASURING */
+T.measure={1:[
+ r=>{const h=ri(r,1,12),m=pick(r,[0,30]),ans=fmt(h,m),alt=[fmt(h%12+1,m),fmt(h,m?0:30),fmt((h+5)%12+1,m),fmt(h===1?12:h-1,m),fmt(12,h*5%60)];
+   return {text:`What time does this clock show?`,svg:clockSVG(h,m),...textChoices(r,ans,alt),
+   explain:`The <b>short black hand</b> shows the hour and the <b>long red hand</b> shows the minutes.<br>${m===0?`The long hand points straight up at 12, so it is exactly "o'clock". The short hand points at ${h}.`:`The long hand points down at 6, which means 30 minutes (half past). The short hand is halfway between ${h} and ${h%12+1}.`}<br>Time: <b>${ans}</b>.`};},
+ r=>{const h=ri(r,6,12),k=ri(r,2,5),ans=(h+k-1)%12+1,o=x=>x+" o'clock",w=x=>((x-1)%12+12)%12+1;
+   return {text:`It is ${h} o'clock now. What time will it be in ${k} hours?`,...textChoices(r,o(ans),[...new Set([o(w(ans+1)),o(w(ans-1)),o(w(h-k)),o(w(ans+2)),o(w(ans-2)),o(w(ans+3))])].filter(x=>x!==o(ans)).slice(0,4)),
+   explain:`Count forward on the clock, one hour at a time:<br>${Array.from({length:k},(_,i)=>w(h+i+1)).join(" → ")}<br>${h+k>12?"After 12 the clock starts again at 1. ":""}It will be <b>${o(ans)}</b>.`};},
+ r=>{const a=ri(r,1,5),b=ri(r,1,9),ans=10*a+b;
+   return {text:`How many cents is this: ${plural(a,"dimes")} and ${plural(b,"pennies")}? (A dime is 10 cents. A penny is 1 cent.)`,svg:coinsSVG(Array(a).fill(10).concat(Array(b).fill(1))),...numChoices(r,ans,[a+b,10*b+a,ans+10,ans-1]),
+   explain:`Dimes: ${Array(a).fill(10).join(" + ")} = ${10*a} cents<br>Pennies: ${b} cents<br>Total: ${10*a} + ${b} = <b>${ans}</b> cents.`};}
+],2:[
+ r=>{const w=ri(r,0,6),D=ri(r,8,20),ans=DAYS[(w+D)%7];
+   return {text:`Today is ${DAYS[w]}. What day of the week will it be ${D} days from today?`,...textChoices(r,ans,DAYS),
+   explain:`Every 7 days it is ${DAYS[w]} again.<br>${D} = ${Math.floor(D/7)===1?"7":`7 + 7`}${D%7?` + ${D%7}`:""}.<br>So go ${D%7} day${D%7===1?"":"s"} past ${DAYS[w]}${D%7?": "+Array.from({length:D%7},(_,i)=>DAYS[(w+i+1)%7]).join(" → "):""}.<br>Answer: <b>${ans}</b>.`};},
+ r=>{const a=ri(r,1,4),b=ri(r,1,4),c=ri(r,1,6),ans=10*a+5*b+c;
+   return {text:`How many cents do you have with ${plural(a,"dimes")}, ${plural(b,"nickels")} and ${plural(c,"pennies")}? (Dime = 10¢, nickel = 5¢, penny = 1¢)`,svg:coinsSVG(Array(a).fill(10).concat(Array(b).fill(5),Array(c).fill(1))),...numChoices(r,ans,[a+b+c,10*a+b+c,ans+5,ans-5]),
+   explain:`Dimes: ${a} × 10 = ${10*a}¢<br>Nickels: ${b} × 5 = ${5*b}¢<br>Pennies: ${c} × 1 = ${c}¢<br>Total: <b>${ans}¢</b>.`};},
+ r=>{const p=ri(r,3,17)*5,[x]=names(r,1),ans=100-p;
+   return {text:`A toy costs ${p} cents. ${x} pays with a 1-dollar bill (100 cents). How much change does ${x} get?`,...numChoices(r,ans,[ans+10,ans-10,ans+5,p]),
+   explain:`Count up from ${p} to 100:<br>${p} → ${Math.ceil((p+1)/10)*10} is ${Math.ceil((p+1)/10)*10-p}, then ${Math.ceil((p+1)/10)*10} → 100 is ${100-Math.ceil((p+1)/10)*10}.<br>${Math.ceil((p+1)/10)*10-p} + ${100-Math.ceil((p+1)/10)*10} = <b>${ans}</b> cents.`};}
+],3:[
+ r=>{const w=ri(r,0,6),D=ri(r,15,31),ans=DAYS[(w+D-1)%7],same=[1,8,15,22,29].filter(x=>x<=D);
+   return {text:`The 1st day of a month is a ${DAYS[w]}. What day of the week is the ${ord(D)} of that month?`,...textChoices(r,ans,DAYS),
+   explain:`Adding 7 days gives the same weekday, so the ${same.map(ord).join(", ")} are all ${DAYS[w]}s.<br>The ${ord(D)} is ${D-same[same.length-1]} day${D-same[same.length-1]===1?"":"s"} after the ${ord(same[same.length-1])}.<br>Answer: <b>${ans}</b>.`};},
+ r=>{const h=ri(r,1,8),m=pick(r,[0,15,30,45]),M=pick(r,[75,90,105,120,135]),tot=h*60+m+M,eh=Math.floor(tot/60),em=tot%60,ans=fmt((eh-1)%12+1,em);
+   const alts=[fmt(h+1,(m+M)%60),fmt(eh,(em+15)%60),fmt(eh+1,em),fmt(h+Math.floor(M/100),m+M%100<60?m+M%100:em),fmt(eh,(em+45)%60)];
+   return {text:`A movie starts at ${fmt(h,m)} and lasts ${M} minutes. At what time does it end?`,...textChoices(r,ans,alts),
+   explain:`${M} minutes = ${Math.floor(M/60)} hour${Math.floor(M/60)>1?"s":""} and ${M%60} minutes (1 hour = 60 minutes).<br>${fmt(h,m)} + ${Math.floor(M/60)} hour${Math.floor(M/60)>1?"s":""} = ${fmt(h+Math.floor(M/60),m)}<br>${fmt(h+Math.floor(M/60),m)} + ${M%60} minutes = <b>${ans}</b>.`};},
+ r=>{const a=ri(r,2,4),b=ri(r,2,3);
+   return {text:`On a balance scale, 1 melon weighs the same as ${a} apples. 1 pumpkin weighs the same as ${b} melons. How many apples weigh the same as 1 pumpkin?`,svg:`<div class="pics">${balanceSVG([{txt:"🍉"}],Array(a).fill({txt:"🍎"}),0)}${balanceSVG([{txt:"🎃"}],Array(b).fill({txt:"🍉"}),0)}</div>`,...numChoices(r,a*b,[a+b,a*b+1,a,b*b+a]),
+   explain:`Swap each melon for ${a} apples.<br>1 pumpkin = ${b} melons = ${Array(b).fill(a).join(" + ")} apples = <b>${a*b}</b> apples.`};}
+]};
+
+/* SPATIAL THINKING */
+T.spatial={1:[
+ r=>{const sym=["A","H","M","O","T","U","V","W","X","Y"],non=["B","C","D","E","F","G","J","K","L","N","P","R","S","Z"],ans=pick(r,sym);
+   return {text:`Which letter looks exactly the same when you look at it in a mirror (flipped left-to-right)?`,...textChoices(r,ans,shuffle(r,non)),
+   explain:`Imagine a line straight down the middle of the letter. If the left half and the right half match, the mirror shows the same letter.<br><b>${ans}</b> matches on both sides. The others face one way (like B, C, F, or S), so in a mirror they look backwards.`};},
+ r=>{const t=ri(r,1,6);
+   return {text:`On a dice, the numbers on opposite faces always add up to 7. If the top face shows ${t}, what number is on the bottom face?`,svg:dieSVG(t),...numChoices(r,7-t,[t,6-t+2,(7-t)%6+1,(t%6)+1].filter(x=>x>=1&&x<=6&&x!==7-t)),
+   explain:`Top + bottom = 7.<br>${t} + ? = 7, so the bottom shows <b>${7-t}</b>.<br>Opposite pairs: 1 & 6, 2 & 5, 3 & 4.`};},
+ r=>{const n=ri(r,3,4),hs=Array.from({length:n},()=>ri(r,1,4)),s=hs.reduce((a,b)=>a+b,0);
+   return {text:`How many cubes are there in these towers altogether?`,svg:stacksSVG(r,hs),...numChoices(r,s,[s+1,s-1,n,s+2]),
+   explain:`Count each tower from left to right: ${hs.join(", ")}.<br>${hs.join(" + ")} = <b>${s}</b>.`};}
+],2:[
+ r=>{const n=ri(r,4,6),ans=n*(n+1)/2;
+   return {text:`This staircase is built from cubes. How many cubes are used?`,svg:stairsSVG(n),...numChoices(r,ans,[n*n,2*n,ans-1,ans+n]),
+   explain:`Count each column from left to right: ${Array.from({length:n},(_,i)=>i+1).join(", ")}.<br>${Array.from({length:n},(_,i)=>i+1).join(" + ")} = <b>${ans}</b>.`};},
+ r=>{const a=2,b=ri(r,2,3),c=ri(r,2,4),ans=a*b*c;
+   return {text:`A box is filled with cubes in ${a} layers. Each layer has ${b} rows with ${c} cubes in each row. How many cubes are in the box?`,...numChoices(r,ans,[b*c,a+b+c,ans+c,ans-b]),
+   explain:`One layer: ${b} rows × ${c} = ${b*c} cubes.<br>${a} layers: ${b*c} + ${b*c} = <b>${ans}</b> cubes.`};},
+ r=>{let t=ri(r,1,6),f;do{f=ri(r,1,6);}while(f===t||f===7-t);
+   return {text:`A dice is on the table. The top shows ${t} and the front shows ${f}. Opposite faces add up to 7. What number is on the face touching the table?`,...numChoices(r,7-t,[7-f,t,f,7-t+1].filter(x=>x>=1&&x<=6)),
+   explain:`The face touching the table is the <b>bottom</b>, which is opposite the top.<br>Top + bottom = 7 → ${t} + ? = 7 → <b>${7-t}</b>.<br>The front number (${f}) doesn't matter here. It's there to trick you!`};}
+],3:[
+ r=>{const t=ri(r,1,6);
+   return {text:`A dice is on a table with ${t} on top. Opposite faces add up to 7. What is the sum of the numbers on the 4 side faces (not the top, not the bottom)?`,...numChoices(r,14,[21-t,21,15,7+t]),
+   explain:`All six faces add up to 1 + 2 + 3 + 4 + 5 + 6 = 21.<br>Top + bottom = ${t} + ${7-t} = 7.<br>Sides: 21 − 7 = <b>14</b>.<br>Fun fact: the answer is always 14, whatever is on top!`};},
+ r=>{const t=ri(r,1,6),ans=14-t;
+   return {text:`Two dice are stacked on a table, one on top of the other. The top face shows ${t}. Opposite faces add up to 7. What is the sum of the 3 faces you cannot see that are touching each other or the table?`,...numChoices(r,ans,[14,7-t,ans+1,21-t]),
+   explain:`The hidden faces are:<br>• bottom of the top dice: opposite ${t} → ${7-t}<br>• top and bottom of the lower dice: they are opposite faces → add up to 7<br>Total: ${7-t} + 7 = <b>${ans}</b>.`};},
+ r=>{const v=ri(r,0,1);
+   return v?{text:`A big cube is built from 27 small cubes (3 × 3 × 3). The outside of the big cube is painted red. How many small cubes have NO paint at all?`,...numChoices(r,1,[0,3,8,9]),
+   explain:`Only cubes that touch the outside get paint. The only cube that doesn't touch the outside is the one hidden in the very <b>center</b>.<br>27 − 26 outside cubes = <b>1</b>.`}
+   :{text:`A big cube is built from 27 small cubes (3 × 3 × 3). The outside is painted blue. How many small cubes have paint on exactly 3 faces?`,...numChoices(r,8,[4,6,12,27]),
+   explain:`A small cube gets paint on 3 faces only if it sits at a <b>corner</b> of the big cube (it touches 3 outside walls).<br>A cube has <b>8</b> corners, so the answer is 8.`};}
+]};
+
+/* ================= extra picture helpers ================= */
+const LCOL=["#ef4444","#3b82f6","#16a34a","#9333ea","#ea580c"];
+const CNAME={"#ef4444":"red","#3b82f6":"blue","#16a34a":"green","#9333ea":"purple","#ea580c":"orange"};
+function coinsSVG(coins){const spec={25:{r:25,f:"#cbd5e1",t:"25¢"},10:{r:17,f:"#e2e8f0",t:"10¢"},5:{r:21,f:"#d1d5db",t:"5¢"},1:{r:19,f:"#f59e0b",t:"1¢"}};
+  const rows=[];for(let i=0;i<coins.length;i+=7)rows.push(coins.slice(i,i+7));let b="",W=0;
+  rows.forEach((row,k)=>{let x=8;const cy=32+k*58;row.forEach(v=>{const s=spec[v];b+=`<circle cx="${x+s.r}" cy="${cy}" r="${s.r}" fill="${s.f}" stroke="#475569" stroke-width="2"/><text x="${x+s.r}" y="${cy+5}" text-anchor="middle" font-size="${s.r>18?14:12}" font-weight="800" fill="#1e293b">${s.t}</text>`;x+=2*s.r+8;});W=Math.max(W,x);});
+  return svgWrap(W+4,rows.length*58+8,b);}
+function balanceSVG(L,R,tilt){const d=tilt*14,yl=56+d,yr=56-d;let b=`<polygon points="150,58 134,150 166,150" fill="#94a3b8"/><rect x="104" y="148" width="92" height="8" rx="4" fill="#64748b"/><line x1="56" y1="${yl}" x2="244" y2="${yr}" stroke="#475569" stroke-width="6" stroke-linecap="round"/>`;
+  const pan=(cx,cy,items)=>{let s=`<line x1="${cx}" y1="${cy}" x2="${cx-36}" y2="${cy+40}" stroke="#94a3b8" stroke-width="2"/><line x1="${cx}" y1="${cy}" x2="${cx+36}" y2="${cy+40}" stroke="#94a3b8" stroke-width="2"/><path d="M${cx-48} ${cy+40} Q${cx} ${cy+64} ${cx+48} ${cy+40} Z" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>`;
+    const n=items.length,w=Math.min(26,84/Math.max(1,n-1));items.forEach((it,i)=>{const x=cx-(n-1)*w/2+i*w;s+=it.txt?`<text x="${x}" y="${cy+38}" text-anchor="middle" font-size="24">${it.txt}</text>`:shape(it.t,it.c,x,cy+28,24);});return s;};
+  return svgWrap(300,162,b+pan(56,yl,L)+pan(244,yr,R));}
+function dieFace(n,x,y,s){const P={1:[[.5,.5]],2:[[.27,.27],[.73,.73]],3:[[.25,.25],[.5,.5],[.75,.75]],4:[[.27,.27],[.73,.27],[.27,.73],[.73,.73]],5:[[.25,.25],[.75,.25],[.5,.5],[.25,.75],[.75,.75]],6:[[.27,.22],[.73,.22],[.27,.5],[.73,.5],[.27,.78],[.73,.78]]};
+  let b=`<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${s*.16}" fill="#fff" stroke="#1e293b" stroke-width="3"/>`;P[n].forEach(([a,c])=>b+=`<circle cx="${x+a*s}" cy="${y+c*s}" r="${s*.085}" fill="#1e293b"/>`);return b;}
+function dieSVG(n){return svgWrap(110,104,dieFace(n,20,6,70)+`<text x="55" y="100" text-anchor="middle" font-size="13" fill="#64748b">top face</text>`);}
+function bundlesSVG(t,o){let b="",x=10;for(let i=0;i<t;i++){for(let j=0;j<10;j++)b+=`<line x1="${x+j*3.4}" y1="10" x2="${x+j*3.4}" y2="90" stroke="#b45309" stroke-width="2.6" stroke-linecap="round"/>`;b+=`<rect x="${x-4}" y="44" width="${9*3.4+8}" height="10" rx="3" fill="#ef4444"/>`;x+=50;}
+  x+=10;for(let j=0;j<o;j++){b+=`<line x1="${x}" y1="10" x2="${x}" y2="90" stroke="#b45309" stroke-width="2.6" stroke-linecap="round"/>`;x+=13;}return svgWrap(x+6,100,b);}
+function twoRowsSVG(a,c){let b="";for(let i=0;i<a;i++)b+=shape("circle","#ef4444",26+i*38,26,30);for(let i=0;i<c;i++)b+=shape("circle","#3b82f6",26+i*38,70,30);return svgWrap(Math.max(a,c)*38+16,96,b);}
+function eqSVG(rows){let b="";rows.forEach(([syms,val],i)=>{const y=34+i*58;syms.forEach((s,k)=>{const cx=34+k*72;b+=shape(s.t,s.c,cx,y,40);if(k<syms.length-1)b+=`<text x="${cx+36}" y="${y+11}" font-size="30" font-weight="800" fill="#475569" text-anchor="middle">+</text>`;});
+  b+=`<text x="${34+(syms.length-1)*72+30}" y="${y+11}" font-size="30" font-weight="800" fill="#1e293b">= ${val}</text>`;});return svgWrap(330,rows.length*58+12,b);}
+function lfigSVG(){const s=20;let b="",ox=14;[1,2,3].forEach(k=>{const base=14+3*s;for(let i=0;i<k;i++)b+=cube(ox+i*s,base-s,s,"#38bdf8");for(let j=1;j<k;j++)b+=cube(ox,base-s-j*s,s,"#38bdf8");
+  b+=`<text x="${ox+k*s/2}" y="${base+22}" text-anchor="middle" font-size="14" font-weight="700" fill="#475569">Figure ${k}</text>`;ox+=k*s+46;});return svgWrap(ox,14+3*s+30,b);}
+function gridBody(cells,n,col,sz,ox,oy){const c=sz/n;let b="";for(let i=0;i<n*n;i++)b+=`<rect x="${ox+(i%n)*c}" y="${oy+Math.floor(i/n)*c}" width="${c}" height="${c}" fill="${cells[i]?col:"#fff"}" stroke="#334155" stroke-width="1.5"/>`;return b;}
+const patGrid=(cells,n,col)=>`<svg class="ico" viewBox="0 0 76 76" width="76" height="76">${gridBody(cells,n,col,72,2,2)}</svg>`;
+function rulerSVG(s,e){const u=36,ox=18;let b=`<rect x="${ox-10}" y="60" width="${12*u+20}" height="44" rx="6" fill="#fde68a" stroke="#b45309" stroke-width="2"/>`;
+  for(let i=0;i<=12;i++){b+=`<line x1="${ox+i*u}" y1="60" x2="${ox+i*u}" y2="78" stroke="#78350f" stroke-width="2"/><text x="${ox+i*u}" y="97" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">${i}</text>`;if(i<12)b+=`<line x1="${ox+i*u+u/2}" y1="60" x2="${ox+i*u+u/2}" y2="69" stroke="#78350f" stroke-width="1.5"/>`;}
+  const x1=ox+s*u,x2=ox+e*u;b+=`<rect x="${x1}" y="28" width="${x2-x1-22}" height="22" fill="#3b82f6"/><rect x="${x1}" y="28" width="10" height="22" fill="#f9a8d4"/><polygon points="${x2-22},28 ${x2},39 ${x2-22},50" fill="#fcd34d"/><line x1="${x1}" y1="50" x2="${x1}" y2="60" stroke="#475569" stroke-dasharray="3 2"/><line x1="${x2}" y1="39" x2="${x2}" y2="60" stroke="#475569" stroke-dasharray="3 2"/>`;
+  return svgWrap(12*u+40,110,b);}
+function lShapeSVG(a,b2,c){const k=Math.min(26,300/Math.max(a,b2)),W=a*k,H=b2*k,C=c*k,ox=64,oy=14;
+  let b=`<polygon points="${ox},${oy} ${ox+W-C},${oy} ${ox+W-C},${oy+C} ${ox+W},${oy+C} ${ox+W},${oy+H} ${ox},${oy+H}" fill="#bbf7d0" stroke="#15803d" stroke-width="3"/>`;
+  b+=`<text x="${ox+W/2}" y="${oy+H+24}" text-anchor="middle" font-size="16" font-weight="800" fill="#15803d">${a} cm</text><text x="${ox-8}" y="${oy+H/2}" text-anchor="end" font-size="16" font-weight="800" fill="#15803d">${b2} cm</text>`;
+  b+=`<rect x="${ox+W-C}" y="${oy}" width="${C}" height="${C}" fill="none" stroke="#94a3b8" stroke-dasharray="5 4" stroke-width="2"/><text x="${ox+W-C/2}" y="${oy+C/2+5}" text-anchor="middle" font-size="13" fill="#64748b">${c}×${c}</text>`;
+  return svgWrap(W+80,H+44,b);}
+
+/* ================= reusable template factories ================= */
+const F={};
+F.path=(nm,maxStep)=>r=>{const C=6,R=4,opp={R:"L",L:"R",U:"D",D:"U"};let sx,sy,x,y,moves,ok;
+  do{sx=ri(r,0,C-1);sy=ri(r,0,R-1);x=sx;y=sy;moves=[];ok=true;
+    for(let i=0;i<nm;i++){const prev=moves.length?moves[moves.length-1][0]:null;const ds=["R","L","U","D"].filter(d=>d!==prev&&d!==opp[prev]&&(d==="R"?x<C-1:d==="L"?x>0:d==="U"?y>0:y<R-1));
+      if(!ds.length){ok=false;break;}const d=pick(r,ds),lim=d==="R"?C-1-x:d==="L"?x:d==="U"?y:R-1-y,st=ri(r,1,Math.min(maxStep,lim));moves.push([d,st]);
+      if(d==="R")x+=st;if(d==="L")x-=st;if(d==="U")y-=st;if(d==="D")y+=st;}}while(!ok||(x===sx&&y===sy));
+  const sim=f=>{let a=sx,b=sy;for(const [d,s] of moves){const dd=f(d);if(dd==="R")a+=s;if(dd==="L")a-=s;if(dd==="U")b-=s;if(dd==="D")b+=s;}return [a,b];};
+  const inb=([a,b])=>a>=0&&a<C&&b>=0&&b<R,key=([a,b])=>a+","+b,taken=new Set([key([x,y]),key([sx,sy])]),spots=[[x,y]];
+  const add=c=>{if(spots.length<5&&inb(c)&&!taken.has(key(c))){taken.add(key(c));spots.push(c);}};
+  add(sim(d=>({R:"L",L:"R"}[d]||d)));add(sim(d=>({U:"D",D:"U"}[d]||d)));shuffle(r,[[x+1,y],[x-1,y],[x,y+1],[x,y-1],[x+1,y+1],[x-1,y-1],[x+1,y-1]]).forEach(add);
+  while(spots.length<5)add([ri(r,0,C-1),ri(r,0,R-1)]);
+  const letters=shuffle(r,["A","B","C","D","E"]),ans=letters[0],arrow={R:"→",L:"←",U:"↑",D:"↓"},word={R:"right",L:"left",U:"up",D:"down"},s=48;
+  let b="";for(let i=0;i<R;i++)for(let j=0;j<C;j++)b+=`<rect x="${6+j*s}" y="${6+i*s}" width="${s}" height="${s}" fill="${(i+j)%2?"#f0fdf4":"#ecfeff"}" stroke="#94a3b8"/>`;
+  b+=`<text x="${6+sx*s+s/2}" y="${6+sy*s+s/2+12}" text-anchor="middle" font-size="32">🦘</text>`;
+  spots.forEach(([a,c],i)=>b+=`<circle cx="${6+a*s+s/2}" cy="${6+c*s+s/2}" r="17" fill="${LCOL[i]}"/><text x="${6+a*s+s/2}" y="${6+c*s+s/2+7}" text-anchor="middle" font-size="20" font-weight="900" fill="#fff">${letters[i]}</text>`);
+  return {text:`The kangaroo hops ${moves.map(([d,st])=>`${st} ${word[d]}`).join(", then ")}. On which letter does it land?<div class="eq">${moves.map(([d,st])=>arrow[d].repeat(st)).join("  ")}</div>`,svg:svgWrap(C*s+12,R*s+12,b),...textChoices(r,ans,letters.slice(1),true),
+    explain:`Start at the kangaroo and move one hop at a time, one square per hop:<br>${moves.map(([d,st])=>`${arrow[d]} ${st} square${st>1?"s":""} ${word[d]}`).join("<br>")}<br>It lands on <b>${ans}</b>. Be careful not to mix up left/right or up/down!`};};
+F.mirror=(n,kmin,kmax)=>r=>{const N=n*n,id=(a,c)=>a*n+c,lr=c=>c.map((_,i)=>c[id(Math.floor(i/n),n-1-i%n)]),ud=c=>c.map((_,i)=>c[id(n-1-Math.floor(i/n),i%n)]),rot=c=>c.map((_,i)=>c[id(n-1-i%n,Math.floor(i/n))]);
+  let cells,cand;do{cells=Array(N).fill(0);shuffle(r,[...Array(N).keys()]).slice(0,ri(r,kmin,kmax)).forEach(i=>cells[i]=1);cand=[lr(cells),cells,ud(cells),rot(cells),ud(lr(cells))];}while(new Set(cand.map(String)).size<5);
+  const correct=cand[0],ds=cand.slice(1),col=pick(r,["#3b82f6","#ef4444","#16a34a","#9333ea"]),all=shuffle(r,ds.concat([correct]));
+  const orig=`<svg class="qsvg" viewBox="0 0 170 128" style="max-width:220px">${gridBody(cells,n,col,120,4,4)}<rect x="140" y="0" width="10" height="128" rx="3" fill="#7dd3fc"/><text x="160" y="70" font-size="14" fill="#0369a1" transform="rotate(90 160 70)">mirror</text></svg>`;
+  return {text:`A mirror stands on the right side of this picture. Which picture do you see in the mirror?`,svg:orig,choices:all.map(c=>patGrid(c,n,col)),answer:all.findIndex(c=>String(c)===String(correct)),
+    explain:`A mirror swaps <b>left and right</b>, but top stays top and bottom stays bottom.<br>So every colored square stays in the same <b>row</b> and jumps to the opposite side: the left column becomes the right column.<br>Check each row: the picture you pick must have the same number of colored squares in every row as the original. One of the wrong pictures is the original itself, one is upside down, and one is turned.`};};
+F.eq=kind=>r=>{const sy=shuffle(r,["star","circle","triangle","square","diamond"]).slice(0,3).map((t,i)=>({t,c:LCOL[i]})),nm=s=>`${CNAME[s.c]} ${s.t}`;
+  if(kind===1){const a=ri(r,2,9);let b;do{b=ri(r,1,9);}while(b===a);
+    return {text:`Same shapes stand for the same number. What number is the ${nm(sy[1])}?`,svg:eqSVG([[[sy[0],sy[0]],2*a],[[sy[0],sy[1]],a+b]]),...numChoices(r,b,[a,a+b,2*a,a+b-a/2|0]),
+      explain:`First line: two ${nm(sy[0])}s make ${2*a}, so one ${nm(sy[0])} is ${2*a} ÷ 2 = ${a}.<br>Second line: ${a} + ${nm(sy[1])} = ${a+b}, so the ${nm(sy[1])} is ${a+b} − ${a} = <b>${b}</b>.`};}
+  if(kind===2){const a=ri(r,2,9),b=ri(r,1,9),c=ri(r,1,9);
+    return {text:`Same shapes stand for the same number. What number is the ${nm(sy[2])}?`,svg:eqSVG([[[sy[0],sy[0]],2*a],[[sy[0],sy[1]],a+b],[[sy[1],sy[2]],b+c]]),...numChoices(r,c,[b,a,b+c,c+1,a+c]),
+      explain:`Solve one line at a time, from the top:<br>${nm(sy[0])}: ${2*a} ÷ 2 = ${a}<br>${nm(sy[1])}: ${a+b} − ${a} = ${b}<br>${nm(sy[2])}: ${b+c} − ${b} = <b>${c}</b>`};}
+  const a=ri(r,2,12),b=ri(r,2,12),c=ri(r,2,12),x=a+b,y=b+c,z=a+c,tot=a+b+c;
+  return {text:`Same shapes stand for the same number. What do the three shapes add up to together?`,svg:eqSVG([[[sy[0],sy[1]],x],[[sy[1],sy[2]],y],[[sy[0],sy[2]],z]]),...numChoices(r,tot,[x+y+z,tot+1,tot-1,Math.max(x,y,z)]),
+    explain:`Add all three lines: every shape appears exactly <b>twice</b>.<br>${x} + ${y} + ${z} = ${x+y+z} = 2 × (all three shapes)<br>So the three shapes together = ${x+y+z} ÷ 2 = <b>${tot}</b>.<br>(The shapes are ${a}, ${b} and ${c}.)`};};
+F.heavy=()=>r=>{const it=shuffle(r,["circle","square","triangle","star"]).slice(0,3).map((t,i)=>({t,c:LCOL[i]})),nm=s=>`the ${CNAME[s.c]} ${s.t}`;
+  const sc=(h,l)=>r()<.5?balanceSVG([h],[l],1):balanceSVG([l],[h],-1),askH=r()<.5,ans=askH?it[0]:it[2];
+  const pics=shuffle(r,[sc(it[0],it[1]),sc(it[1],it[2])]);
+  return {text:`Look at the two balance scales. The heavier side always goes down. Which shape is the ${askH?"heaviest":"lightest"}?`,svg:`<div class="pics">${pics.join("")}</div>`,...textChoices(r,nm(ans),[...it.filter(x=>x!==ans).map(nm),"They all weigh the same","We can't tell"]),
+    explain:`Read each scale: the side that goes <b>down</b> is heavier.<br>${nm(it[0])} is heavier than ${nm(it[1])}.<br>${nm(it[1])} is heavier than ${nm(it[2])}.<br>Order from heaviest to lightest: ${it.map(nm).join(" → ")}.<br>So the ${askH?"heaviest":"lightest"} is <b>${nm(ans)}</b>.`};};
+const ANIMALS=[["🐶","dog"],["🐱","cat"],["🐰","rabbit"],["🐻","bear"],["🐼","panda"],["🦊","fox"],["🐸","frog"],["🐵","monkey"]];
+F.animals=()=>r=>{const row=shuffle(r,ANIMALS).slice(0,6);let i,k,dir;do{i=ri(r,0,5);k=ri(r,1,3);dir=r()<.5?1:-1;}while(i+dir*k<0||i+dir*k>5);const t=i+dir*k,lab=j=>row[j][0]+" "+row[j][1];
+  const pref=[i-dir*k,i+dir*(k+1),i+dir*(k-1),t+dir,t-dir,0,1,2,3,4,5].filter(j=>j>=0&&j<6&&j!==t);const ds=[...new Set(pref)].slice(0,4).map(lab);
+  let b="";row.forEach((a,j)=>b+=`<text x="${36+j*62}" y="50" text-anchor="middle" font-size="44">${a[0]}</text>`);
+  return {text:`Which animal is ${k} place${k>1?"s":""} to the <b>${dir>0?"right":"left"}</b> of the ${row[i][1]} ${row[i][0]}?`,svg:svgWrap(380,66,b),...textChoices(r,lab(t),ds),
+    explain:`Find the ${row[i][1]} first. Then count ${k} step${k>1?"s":""} to the ${dir>0?"right":"left"}: ${Array.from({length:k},(_,m)=>row[i+dir*(m+1)][1]).join(" → ")}.<br>Answer: <b>${lab(t)}</b>.`};};
+F.ruler=offset=>r=>{const s=offset?ri(r,1,4):0,len=ri(r,3,Math.min(8,12-s)),e=s+len,n=numChoices(r,len,[e,len+1,len-1,s+e]);
+  return {text:offset?`The pencil does not start at 0. How long is the pencil?`:`How long is the pencil?`,svg:rulerSVG(s,e),choices:n.choices.map(c=>c+" cm"),answer:n.answer,
+    explain:offset?`The pencil starts at ${s} and ends at ${e}.<br>Length = end − start = ${e} − ${s} = <b>${len} cm</b>.<br>(If you just read ${e}, you forgot that it doesn't start at 0!)`:`The pencil starts at 0 and its tip reaches ${e}. So it is <b>${len} cm</b> long.`};};
+F.seq=(steps,smin,smax,down)=>r=>{const k=pick(r,steps),s=ri(r,smin,smax),seq=[0,1,2,3].map(i=>down?s-i*k:s+i*k),ans=down?s-4*k:s+4*k;
+  return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[ans+1,ans-1,ans+k,ans-k]),explain:`Each number is <b>${k} ${down?"less":"more"}</b> than the one before.<br>${seq[3]} ${down?"−":"+"} ${k} = <b>${ans}</b>.`};};
+F.grow=(smax)=>r=>{const s=ri(r,1,smax),st=ri(r,1,3),seq=[s];for(let i=1;i<5;i++)seq.push(seq[i-1]+st+i-1);const nx=st+4,ans=seq[4]+nx;
+  return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[ans-1,ans+1,seq[4]+nx-1+0===ans-1?ans+2:seq[4]+nx-1,2*seq[4]-seq[3]]),
+    explain:`Look at the jumps: ${seq.slice(1).map((v,i)=>"+"+(v-seq[i])).join(", ")}. Each jump is 1 bigger than the last.<br>Next jump: +${nx}. ${seq[4]} + ${nx} = <b>${ans}</b>.`};};
+F.word=(w,nmin,nmax)=>r=>{const n=ri(r,nmin,nmax),L=w.length,ans=w[(n-1)%L],letters=[...new Set(w.split(""))];const full=Math.floor((n-1)/L)*L;
+  return {text:`The word <b>${w}</b> is written again and again: ${w}${w}${w}… What is the ${ord(n)} letter?`,...textChoices(r,ans,letters.length>=5?letters:letters.concat(["X","Z","Q"]),true),
+    explain:`The word has <b>${L}</b> letters, so the pattern repeats every ${L} letters.<br>${full} = ${L} × ${full/L}, so letter ${full} is the end of a word.<br>Letter ${n} is the ${ord(n-full)} letter of ${w}: <b>${ans}</b>.`};};
+F.fan=(kmin,kmax)=>r=>{const k=ri(r,kmin,kmax),n=k+1,ans=n*(n+1)/2;
+  return {text:`How many triangles of any size are in this picture?`,svg:fanSVG(k),...numChoices(r,ans,[n,2*n,ans+1,ans-1,ans-n]),
+    explain:`The bottom edge is split into ${n} pieces. Each triangle uses a group of pieces that sit next to each other.<br>${Array.from({length:n},(_,s)=>`Using ${s+1} piece${s?"s":""}: ${n-s}`).join("<br>")}<br>Total: ${Array.from({length:n},(_,s)=>n-s).join(" + ")} = <b>${ans}</b>.`};};
+F.squares=sizes=>r=>{const [R,C]=pick(r,sizes);let tot=0,parts=[];for(let k=1;k<=Math.min(R,C);k++){const c=(R-k+1)*(C-k+1);tot+=c;parts.push(`${k}×${k} squares: ${c}`);}
+  return {text:`How many squares of any size can you find in this picture?`,svg:gridSVG(R,C),...numChoices(r,tot,[R*C,tot+1,tot-1,R*C+Math.min(R,C)]),explain:`Count each size separately:<br>${parts.join("<br>")}<br>Total: <b>${tot}</b>.`};};
+F.rects=sizes=>r=>{const [R,C]=pick(r,sizes),h=C*(C+1)/2,v=R*(R+1)/2,ans=h*v;
+  return {text:`How many rectangles of any size can you find in this picture? (Squares count as rectangles too.)`,svg:gridSVG(R,C),...numChoices(r,ans,[R*C,ans-R*C,ans+R,h+v]),
+    explain:`A rectangle is chosen by picking 2 of the vertical lines and 2 of the horizontal lines.<br>${C+1} vertical lines → ${h} ways to pick 2 of them.<br>${R+1} horizontal lines → ${v} ways${R===1?" (just the top and bottom)":""}.<br>${h} × ${v} = <b>${ans}</b>.`};};
+F.handshake=(a,b)=>r=>{const n=ri(r,a,b),ans=n*(n-1)/2;return {text:`${n} friends meet. Each friend shakes hands with every other friend exactly once. How many handshakes are there?`,...numChoices(r,ans,[n*(n-1),n,2*n,ans+1]),
+  explain:`Friend 1 shakes ${n-1} hands, friend 2 has ${n-2} new ones, and so on.<br>${Array.from({length:n-1},(_,i)=>n-1-i).join(" + ")} = <b>${ans}</b>.<br>(${n} × ${n-1} = ${n*(n-1)} counts every handshake twice.)`};};
+F.headsLegs=(a,b,animal,legs)=>r=>{const h=ri(r,a,b),g=ri(r,2,h-2),L=2*h+(legs-2)*g;
+  return {text:`A farm has chickens and ${animal}s. Together they have ${h} heads and ${L} legs. How many ${animal}s are there?`,...numChoices(r,g,[h-g,Math.floor(L/legs),g+1,g-1]),
+    explain:`Pretend every animal is a chicken: ${h} × 2 = ${2*h} legs.<br>The real count is ${L}, so there are ${L-2*h} extra legs.<br>Each ${animal} has ${legs-2} extra legs: ${L-2*h} ÷ ${legs-2} = <b>${g}</b>.<br>Check: ${h-g} × 2 + ${g} × ${legs} = ${L} ✓`};};
+F.sumDiff=(ymin,ymax,dmax)=>r=>{const Y=ri(r,ymin,ymax),D=ri(r,2,dmax),X=Y+D,Tt=X+Y,[x,y]=names(r,2);
+  return {text:`${x} and ${y} have ${Tt} stickers together. ${x} has ${D} more than ${y}. How many stickers does ${x} have?`,...numChoices(r,X,[Y,Tt-D,Tt/2|0,X+D]),
+    explain:`Take away the extra ${D}: ${Tt} − ${D} = ${Tt-D}. Now both would have the same amount: ${Tt-D} ÷ 2 = ${Y} (that's ${y}).<br>${x} has ${Y} + ${D} = <b>${X}</b>.<br>Check: ${X} + ${Y} = ${Tt} ✓`};};
+F.weekday=(a,b)=>r=>{const w=ri(r,0,6),D=ri(r,a,b),ans=DAYS[(w+D)%7],q=Math.floor(D/7),m=D%7;
+  return {text:`Today is ${DAYS[w]}. What day of the week will it be ${D} days from today?`,...textChoices(r,ans,DAYS),
+    explain:`Every 7 days it is ${DAYS[w]} again.<br>${D} = 7 × ${q}${m?` + ${m}`:""}, so after ${7*q} days it is ${DAYS[w]} again${m?`, then go ${m} more day${m>1?"s":""}`:""}.<br>Answer: <b>${ans}</b>.`};};
+F.monthDay=()=>r=>{const w=ri(r,0,6),D=ri(r,15,31),ans=DAYS[(w+D-1)%7],same=[1,8,15,22,29].filter(x=>x<=D),last=same[same.length-1];
+  return {text:`The 1st day of a month is a ${DAYS[w]}. What day of the week is the ${ord(D)} of that month?`,...textChoices(r,ans,DAYS),
+    explain:`Adding 7 days gives the same weekday, so the ${same.map(ord).join(", ")} are all ${DAYS[w]}s.<br>The ${ord(D)} is ${D-last} day${D-last===1?"":"s"} after the ${ord(last)}: <b>${ans}</b>.`};};
+F.clock=quarters=>r=>{const h=ri(r,1,12),m=pick(r,quarters?[0,15,30,45]:[0,30]),ans=fmt(h,m),alt=[fmt(h%12+1,m),fmt(h,(m+15)%60),fmt(h,(m+45)%60),fmt(h===1?12:h-1,m),fmt(m/5||12,h*5%60)];
+  return {text:`What time does this clock show?`,svg:clockSVG(h,m),...textChoices(r,ans,alt),
+    explain:`The <b>long red hand</b> shows minutes: each number on the clock means 5 minutes, so pointing at ${m/5||12} means ${m} minutes.<br>The <b>short black hand</b> shows the hour. ${m?`It has moved past ${h}, but not yet to ${h%12+1}, so the hour is still ${h}.`:`It points right at ${h}.`}<br>Time: <b>${ans}</b>.`};};
+F.painted=(n,which)=>r=>{const k=which==="rand"?pick(r,[0,1,2,3]):which,v={3:8,2:12*(n-2),1:6*(n-2)*(n-2),0:(n-2)**3}[k],col=pick(r,["red","blue","green"]);
+  const why={3:`Only <b>corner</b> cubes touch 3 outside faces. A cube has 8 corners, so <b>8</b>.`,2:`Cubes with exactly 2 painted faces sit on the <b>edges</b>, but not the corners. A cube has 12 edges and each has ${n}−2 = ${n-2} such cubes: 12 × ${n-2} = <b>${v}</b>.`,
+    1:`Cubes with exactly 1 painted face are in the <b>middle part of each face</b>: a ${n-2}×${n-2} square = ${(n-2)**2} per face. 6 faces × ${(n-2)**2} = <b>${v}</b>.`,0:`Unpainted cubes are hidden <b>inside</b>: a ${n-2}×${n-2}×${n-2} cube = <b>${v}</b>.`}[k];
+  return {text:`A big cube is built from ${n**3} small cubes (${n} × ${n} × ${n}). The outside of the big cube is painted ${col}. How many small cubes have ${k===0?"NO paint at all":`paint on exactly ${k} face${k>1?"s":""}`}?`,
+    ...numChoices(r,v,[8,12*(n-2),6*(n-2)**2,(n-2)**3,n*n,6*n*n].filter(x=>x!==v)),explain:why};};
+F.socks=()=>r=>{const R=ri(r,3,8),B=ri(r,3,8),G=ri(r,2,6),ans=B+G+2;
+  return {text:`A drawer has ${R} red, ${B} blue and ${G} green socks. In the dark, how many socks must you take out to be <b>sure</b> you have 2 red socks?`,...numChoices(r,ans,[3,R+1,B+G,B+G+1,R+B+G]),
+    explain:`Think about the unluckiest case: you pull out every blue and green sock first: ${B} + ${G} = ${B+G}.<br>Then you still need 2 red ones: ${B+G} + 2 = <b>${ans}</b>.`};};
+F.venn=(a,b)=>r=>{const both=ri(r,2,a),x=both+ri(r,2,b),y=both+ri(r,2,b),ans=x+y-both;
+  return {text:`In a class, every child has a cat, a dog, or both. ${x} children have a cat, ${y} have a dog, and ${both} have both. How many children are in the class?`,...numChoices(r,ans,[x+y,x+y+both,ans+1,x+y-2*both]),
+    explain:`If we add ${x} + ${y} = ${x+y}, the ${both} children with both pets are counted <b>twice</b>.<br>So subtract them once: ${x+y} − ${both} = <b>${ans}</b>.`};};
+F.lineFB=(a,b)=>r=>{const f=ri(r,a,b),bk=ri(r,a,b),[x]=names(r,1),ans=f+bk-1;
+  return {text:`Children stand in a line. ${x} is ${ord(f)} from the front and ${ord(bk)} from the back. How many children are in the line?`,...numChoices(r,ans,[f+bk,f+bk+1,ans-1]),
+    explain:`${f} + ${bk} = ${f+bk} counts ${x} twice (once from each end). So subtract 1: <b>${ans}</b>.`};};
+F.order4=()=>r=>{const p=names(r,4);// p[0] tallest ... p[3] shortest
+  const facts=shuffle(r,[`${p[1]} is taller than ${p[2]}.`,`${p[0]} is taller than ${p[1]}.`,`${p[3]} is shorter than ${p[2]}.`]),askT=r()<.5,ans=askT?p[0]:p[3];
+  return {text:`${facts.join(" ")} Who is the ${askT?"tallest":"shortest"}?`,...textChoices(r,ans,[...p.filter(x=>x!==ans),"We can't tell"]),
+    explain:`Put the facts together into one line, tallest first:<br>${p.join(" → ")}<br>The ${askT?"tallest":"shortest"} is <b>${ans}</b>.`};};
+F.lily=()=>r=>{const N=ri(r,10,30),two=r()<.4;
+  return two?{text:`A water lily doubles in size every day. One lily covers a whole pond on day ${N}. If we started with <b>two</b> lilies instead, on which day would the pond be covered?`,...numChoices(r,N-1,[N/2|0,N-2,N,N+1]),
+    explain:`Two lilies are the same as one lily that is one day ahead (one lily on day 2 has doubled into the size of two).<br>So everything happens one day earlier: day <b>${N-1}</b>.`}
+   :{text:`A water lily doubles in size every day. On day ${N} it covers the whole pond. On which day did it cover half of the pond?`,...numChoices(r,N-1,[N/2|0,N-2,N/2+1|0,N+1]),
+    explain:`It doubles every day. So the day before the pond is full, it was half the size: day ${N} − 1 = <b>${N-1}</b>.<br>(Day ${N/2|0} is the trap answer!)`};};
+F.boxCubes=(a,b)=>r=>{const x=ri(r,a,b),y=ri(r,a,b),z=ri(r,2,b),ans=x*y*z;
+  return {text:`How many small 1 cm cubes fit inside a box that is ${x} cm long, ${y} cm wide and ${z} cm high?`,...numChoices(r,ans,[x+y+z,x*y,ans+x*y,2*(x*y+y*z+x*z)]),
+    explain:`One layer on the bottom: ${x} × ${y} = ${x*y} cubes.<br>There are ${z} layers: ${x*y} × ${z} = <b>${ans}</b>.`};};
+F.diceStack=(k)=>r=>{const t=ri(r,1,6),ans=7*(k-1)+(7-t);
+  return {text:`${k} dice are stacked in a tower on a table. The top face shows ${t}. Opposite faces add up to 7. What is the sum of all the faces you cannot see that touch another dice or the table?`,svg:dieSVG(t),...numChoices(r,ans,[7*k,ans+t,ans-1,21-t]),
+    explain:`Hidden faces: the bottom of the top dice (opposite ${t} → ${7-t})${k>1?`, and then for each of the other ${k-1} dice both its top and bottom, which are opposite faces adding to 7`:""}.<br>${7-t}${k>1?` + ${Array(k-1).fill(7).join(" + ")}`:""} = <b>${ans}</b>.`};};
+F.lPerim=()=>r=>{const a=ri(r,6,12),b=ri(r,5,10),c=ri(r,2,Math.min(a,b)-2),p=2*(a+b);
+  return {text:`A ${c}×${c} square is cut out of the corner of a ${a} cm by ${b} cm rectangle. What is the perimeter (distance all the way around) of the shape that is left?`,svg:lShapeSVG(a,b,c),...numChoices(r,p,[p-2*c,p+2*c,a*b-c*c,p-c]),
+    explain:`Cutting a corner removes two short edges (${c} + ${c}) but adds two new edges of exactly the same length.<br>So the perimeter is the same as the whole rectangle: 2 × (${a} + ${b}) = <b>${p} cm</b>.`};};
+F.lArea=()=>r=>{const a=ri(r,6,12),b=ri(r,5,10),c=ri(r,2,Math.min(a,b)-2),ans=a*b-c*c;
+  return {text:`A ${c}×${c} square is cut out of the corner of a ${a} cm by ${b} cm rectangle. What is the area of the shape that is left (in square cm)?`,svg:lShapeSVG(a,b,c),...numChoices(r,ans,[a*b,2*(a+b),a*b-c,ans+c*c-c]),
+    explain:`Whole rectangle: ${a} × ${b} = ${a*b}.<br>Cut-out square: ${c} × ${c} = ${c*c}.<br>Left: ${a*b} − ${c*c} = <b>${ans}</b> square cm.`};};
+
+/* ================= LEVEL 1: picture questions (appended, keeps old tests unchanged) ================= */
+T.numbers[1].push(r=>{const a=ri(r,6,12),c=ri(r,3,a-2);return {text:`How many more red balls are there than blue balls?`,svg:twoRowsSVG(a,c),...numChoices(r,a-c,[a+c,a,c,a-c+1,a-c-1]),
+  explain:`Match each blue ball with a red ball right above it. ${c} pairs are matched.<br>The red balls left over are the extra ones: ${a} − ${c} = <b>${a-c}</b>.`};});
+T.numbers[2].push(r=>{const t=ri(r,2,6),o=ri(r,1,9),ans=10*t+o;return {text:`Each bundle has 10 sticks tied together. How many sticks are there in all?`,svg:bundlesSVG(t,o),...numChoices(r,ans,[10*o+t,t+o,ans+10,ans-1]),
+  explain:`${t} bundles of 10 = ${10*t} sticks.<br>${o} loose stick${o>1?"s":""}.<br>${10*t} + ${o} = <b>${ans}</b>.`};});
+T.arith[2].push(F.eq(1));T.arith[3].push(F.eq(2));
+T.patterns[2].push(r=>{const n=ri(r,5,8),ans=2*n-1;return {text:`The figures keep growing in the same way. How many squares will Figure ${n} have?`,svg:lfigSVG(),...numChoices(r,ans,[2*n,n*n,2*n+1,ans-2]),
+  explain:`Figure 1: 1 square, Figure 2: 3 squares, Figure 3: 5 squares. Each new figure adds <b>2</b> squares (one on top, one on the right).<br>Keep adding 2: ${Array.from({length:n},(_,i)=>2*i+1).join(", ")}.<br>Figure ${n} has <b>${ans}</b> squares.`};});
+T.shapes[2].push(r=>{const t=ri(r,2,4),s=ri(r,2,4),c=ri(r,1,3),types=[...Array(t).fill("triangle"),...Array(s).fill("square"),...Array(c).fill("circle")],ans=3*t+4*s;
+  return {text:`How many corners do all the shapes in the picture have altogether?`,svg:mixedSVG(r,types),...numChoices(r,ans,[ans+c,t+s+c,ans+1,ans-1]),
+  explain:`Triangles have 3 corners, squares have 4, and circles have <b>none</b>!<br>Triangles: ${t} × 3 = ${3*t}<br>Squares: ${s} × 4 = ${4*s}<br>Circles: 0<br>Total: <b>${ans}</b>.`};});
+T.shapes[3].push(r=>{const v=ri(r,0,1);
+  if(v)return {text:`How many triangles of any size are in this picture?`,svg:svgWrap(170,170,`<rect x="10" y="10" width="150" height="150" fill="#ede9fe" stroke="#6d28d9" stroke-width="3"/><line x1="10" y1="10" x2="160" y2="160" stroke="#6d28d9" stroke-width="3"/><line x1="160" y1="10" x2="10" y2="160" stroke="#6d28d9" stroke-width="3"/>`),...numChoices(r,8,[4,6,2,10]),
+    explain:`Small triangles (one piece each): 4.<br>Big triangles made of 2 small ones (each half of the square, cut by one diagonal): 4.<br>Total: 4 + 4 = <b>8</b>.`};
+  return {text:`How many triangles of any size are in this picture?`,svg:svgWrap(200,176,`<polygon points="100,10 10,166 190,166" fill="#fef3c7" stroke="#b45309" stroke-width="3" stroke-linejoin="round"/><polygon points="55,88 145,88 100,166" fill="#fde68a" stroke="#b45309" stroke-width="3" stroke-linejoin="round"/>`),...numChoices(r,5,[4,3,6,7]),
+    explain:`There are 4 small triangles: top, left, right and the upside-down one in the middle.<br>Plus the 1 big triangle around everything.<br>4 + 1 = <b>5</b>.`};});
+T.logic[1].push(F.animals());T.logic[2].push(F.heavy());
+T.measure[1].push(F.ruler(false));T.measure[2].push(F.ruler(true));
+T.spatial[1].push(F.path(2,3));T.spatial[2].push(F.mirror(3,3,4));T.spatial[3].push(F.path(4,3));
+
+/* ================= LEVEL 2 (Grades 3–4) ================= */
+const T2={numbers:{},arith:{},patterns:{},shapes:{},logic:{},measure:{},spatial:{}};
+const PLACES=[["thousands",1000],["hundreds",100],["tens",10]];
+T2.numbers[1]=[
+ r=>{const ds=shuffle(r,[1,2,3,4,5,6,7,8,9]).slice(0,4),N=+ds.join(""),pi=ri(r,0,2),d=ds[pi],v=d*PLACES[pi][1];
+  return {text:`What is the value of the digit ${d} in the number ${N.toLocaleString("en-US")}?`,...numChoices(r,v,[d,v*10,v/10,d*1000===v?d*100:d*1000]),
+   explain:`Read the places from the right: ones, tens, hundreds, thousands.<br>In ${N}, the ${d} is in the <b>${PLACES[pi][0]}</b> place, so it means ${d} × ${PLACES[pi][1]} = <b>${v}</b>.`};},
+ r=>{const N=ri(r,101,989),ans=Math.round(N/10)*10;return {text:`Round ${N} to the nearest ten.`,...numChoices(r,ans,[Math.floor(N/10)*10===ans?ans+10:Math.floor(N/10)*10,Math.round(N/100)*100,ans-10,ans+20]),
+   explain:`Look at the ones digit: ${N%10}. ${N%10>=5?"5 or more means round <b>up</b>":"Less than 5 means round <b>down</b>"}.<br>${N} → <b>${ans}</b>.`};},
+ F.seq([4,6,7,8,9,11,12],5,40,false)];
+T2.numbers[2]=[
+ r=>{const A=ri(r,100,300),B=A+ri(r,20,80),ans=B-A+1;return {text:`How many whole numbers are there from ${A} to ${B} (including both)?`,...numChoices(r,ans,[B-A,B-A+2,B-A-1]),explain:`${B} − ${A} = ${B-A}, then add 1 because both ends count: <b>${ans}</b>.`};},
+ r=>{const k=ri(r,3,9),N=ri(r,30,100),ans=Math.floor(N/k);return {text:`How many numbers from 1 to ${N} are multiples of ${k}?`,...numChoices(r,ans,[ans+1,ans-1,Math.ceil(N/k)===ans?ans+2:Math.ceil(N/k),k]),
+   explain:`The multiples are ${k}, ${2*k}, ${3*k}, …, ${ans*k}. The last one is ${ans} × ${k} = ${ans*k} (the next, ${(ans+1)*k}, is too big).<br>So there are <b>${ans}</b>.`};},
+ r=>{const S=ri(r,2,4),list=[];for(let n=100;n<1000;n++)if(String(n).split("").reduce((a,c)=>a+ +c,0)===S)list.push(n);
+  return {text:`How many three-digit numbers have digits that add up to ${S}?`,...numChoices(r,list.length,[list.length-1,list.length+1,S,S*3]),explain:`The first digit can't be 0. List them carefully:<br>${list.join(", ")}<br>That's <b>${list.length}</b> numbers.`};}];
+T2.numbers[3]=[
+ r=>{const [set,ans]=pick(r,[[[2,3],7],[[2,3,4],13],[[3,4],13],[[2,5],11],[[3,5],16],[[2,3,5],31],[[4,5],21]]);
+  return {text:`What is the smallest number bigger than 1 that leaves a remainder of 1 when divided by ${set.join(", ").replace(/, (\d+)$/," and $1")}?`,...numChoices(r,ans,[ans-1,ans+1,set.reduce((a,b)=>a*b,1)+1===ans?ans*2-1:set.reduce((a,b)=>a*b,1)+1,ans+set[0]]),
+   explain:`If a number leaves remainder 1, then that number minus 1 divides evenly.<br>So (number − 1) must be a multiple of ${set.join(", ")}. The smallest such multiple is ${ans-1}.<br>Number = ${ans-1} + 1 = <b>${ans}</b>.`};},
+ r=>{const [a,b]=pick(r,[[2,3],[3,4],[2,5],[3,5],[4,6],[2,7]]),list=[];for(let n=10;n<100;n++)if(n%a===0&&n%b===0)list.push(n);
+  return {text:`How many two-digit numbers can be divided evenly by both ${a} and ${b}?`,...numChoices(r,list.length,[list.length+1,list.length-1,Math.floor(99/(a*b)),Math.floor(90/a)]),explain:`A number divisible by both ${a} and ${b} must be a multiple of ${list[1]-list[0]}.<br>Two-digit ones: ${list.join(", ")}<br>That's <b>${list.length}</b>.`};},
+ r=>{const D=ri(r,2,9),list=[];for(let n=1;n<=100;n++)if(String(n).includes(String(D)))list.push(n);
+  return {text:`How many numbers from 1 to 100 have at least one digit ${D}?`,...numChoices(r,list.length,[20,10,18,list.length+2]),explain:`Ones place: ${D}, 1${D}, 2${D}, … , 9${D} → 10 numbers.<br>Tens place: ${D}0 to ${D}9 → 10 numbers.<br>But ${D}${D} was counted twice, so 10 + 10 − 1 = <b>${list.length}</b>.`};}];
+T2.arith[1]=[
+ r=>{const p=ri(r,3,9),n=ri(r,4,9),[x]=names(r,1);return {text:`${x} buys ${p} packs of stickers. Each pack has ${n} stickers. How many stickers does ${x} have?`,...numChoices(r,p*n,[p+n,p*n+n,p*n-p,(p+1)*n]),explain:`${p} packs × ${n} stickers = <b>${p*n}</b>.`};},
+ r=>{const k=ri(r,3,8),q=ri(r,4,12),N=k*q;return {text:`${N} cookies are shared equally among ${k} friends. How many cookies does each friend get?`,...numChoices(r,q,[q+1,q-1,N-k,k]),explain:`Sharing equally means dividing: ${N} ÷ ${k} = <b>${q}</b>.<br>Check: ${k} × ${q} = ${N} ✓`};},
+ r=>{const P=ri(r,120,320),R=ri(r,35,P-40),[x]=names(r,1);return {text:`A book has ${P} pages. ${x} has read ${R} pages. How many pages are left?`,...numChoices(r,P-R,[P+R,P-R+10,P-R-10,P-R+1]),explain:`${P} − ${R} = <b>${P-R}</b>.<br>Check: ${R} + ${P-R} = ${P} ✓`};}];
+T2.arith[2]=[
+ r=>{const x=ri(r,3,12),a=ri(r,2,9),b=ri(r,1,Math.min(20,x*a-1)),c=x*a-b;return {text:`What number goes in the box?<div class="eq">▢ × ${a} − ${b} = ${c}</div>`,...numChoices(r,x,[x+1,x-1,c+b,(c-b)/a|0]),
+  explain:`Work backwards. Undo "− ${b}" by adding: ${c} + ${b} = ${c+b}.<br>Undo "× ${a}" by dividing: ${c+b} ÷ ${a} = <b>${x}</b>.<br>Check: ${x} × ${a} − ${b} = ${c} ✓`};},
+ r=>{const k=ri(r,2,5),p=ri(r,3,9)*5,D=k*p<190?pick(r,[2,5]):5,[x]=names(r,1),ans=D*100-k*p;return {text:`${x} buys ${k} pens. Each pen costs ${p} cents. ${x} pays with ${D} dollars. How much change, in cents, does ${x} get?`,...numChoices(r,ans,[D*100-p,k*p,ans+5,ans-10]),
+  explain:`Cost: ${k} × ${p} = ${k*p} cents.<br>${D} dollars = ${D*100} cents.<br>Change: ${D*100} − ${k*p} = <b>${ans}</b> cents.`};},
+ F.eq(2)];
+T2.arith[3]=[F.sumDiff(15,45,20),
+ r=>{const m=ri(r,8,40),S=3*m;return {text:`Three numbers in a row (like 4, 5, 6) add up to ${S}. What is the biggest of the three numbers?`,...numChoices(r,m+1,[m,m+2,m-1,S/2|0]),explain:`The middle number is the average: ${S} ÷ 3 = ${m}.<br>The numbers are ${m-1}, ${m}, ${m+1}, so the biggest is <b>${m+1}</b>.`};},
+ r=>{let u,d,N,m,pos;do{u=ri(r,4,7);d=ri(r,1,u-2);N=ri(r,20,40);pos=0;m=0;for(;;){m++;pos+=u;if(pos>=N)break;pos-=d;}}while(Math.ceil(N/(u-d))===m);const before=(m-1)*(u-d);
+  return {text:`A snail climbs a ${N} m wall. Each day it climbs ${u} m, and each night it slides down ${d} m. On which day does it reach the top?`,...numChoices(r,m,[Math.ceil(N/(u-d)),m+1,m-1,Math.ceil(N/u)]),
+   explain:`Each full day and night it gains ${u} − ${d} = ${u-d} m.<br>After ${m-1} days and nights it is at ${before} m.<br>On day ${m} it climbs ${u}: ${before} + ${u} = ${before+u} ≥ ${N}. It's at the top, so no sliding!<br>Answer: day <b>${m}</b>.`};}];
+T2.patterns[1]=[F.seq([3,4,5,6,7],50,90,true),
+ r=>{const L=ri(r,3,4),unit=shuffle(r,SHAPES).slice(0,L).map(t=>({t,c:pick(r,PALV)})),n=ri(r,6,9),items=[];for(let i=0;i<n;i++)items.push(unit[i%L]);const ans=unit[n%L],ch=shapeChoices(r,ans,unit);
+  return {text:`The shapes repeat in a pattern. Which shape comes next?`,svg:rowSVG(items,true),choices:ch.choices,answer:ch.answer,labels:ch.labels,explain:`The repeating part is ${unit.map(itemName).join(" → ")}. After the ${itemName(items[n-1])} comes the <b>${itemName(ans)}</b>.`};},
+ r=>{const b=ri(r,2,3),s=ri(r,1,3),seq=[s];for(let i=1;i<5;i++)seq.push(seq[i-1]*b);return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,seq[4]*b,[seq[4]+seq[3],seq[4]+b,seq[4]*b+1,2*seq[4]-seq[3]+seq[4]]),
+  explain:`Each number is the one before <b>times ${b}</b>.<br>${seq[4]} × ${b} = <b>${seq[4]*b}</b>.`};}];
+T2.patterns[2]=[F.grow(12),F.word("KANGAROO",20,90),
+ r=>{const a=ri(r,4,9),b=ri(r,1,a-2),s=ri(r,5,20),seq=[s];for(let i=1;i<6;i++)seq.push(seq[i-1]+(i%2?a:-b));const ans=seq[5]+a;
+  return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[seq[5]-b,ans+1,seq[5]+a-b,ans-1]),explain:`The steps take turns: <b>+${a}</b>, <b>−${b}</b>, +${a}, −${b}, …<br>The last step was −${b}, so now +${a}: ${seq[5]} + ${a} = <b>${ans}</b>.`};}];
+T2.patterns[3]=[
+ r=>{const n=ri(r,6,10);return {text:`Figure 1 is a square of 1 dot. Figure 2 is a 2×2 square of 4 dots. Figure 3 is a 3×3 square of 9 dots. How many dots does Figure ${n} have?`,...numChoices(r,n*n,[2*n,n*n-1,(n-1)*(n-1)+n,n*(n+1)]),explain:`Figure ${n} is a ${n}×${n} square: ${n} rows of ${n} dots = ${n} × ${n} = <b>${n*n}</b>.`};},
+ r=>{const a=ri(r,1,4),b=ri(r,a,6),seq=[a,b];for(let i=2;i<6;i++)seq.push(seq[i-1]+seq[i-2]);const ans=seq[4]+seq[5];return {text:`Each number (after the first two) is made the same way. What comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,ans,[2*seq[5],ans+1,seq[5]+seq[5]-seq[4],ans-1]),
+  explain:`Each number is the <b>sum of the two before it</b>: ${seq[3]} + ${seq[4]} = ${seq[5]}.<br>Next: ${seq[4]} + ${seq[5]} = <b>${ans}</b>.`};},
+ r=>{const sh=shuffle(r,SHAPES).slice(0,3).map(t=>({t,c:pick(r,PALV)})),unit=[sh[0],sh[1],sh[1],sh[2],sh[2],sh[2]],N=ri(r,25,60);let cnt=0;for(let i=0;i<N;i++)if(unit[i%6]===sh[2])cnt++;const full=Math.floor(N/6),left=N%6;
+  return {text:`This pattern repeats over and over. How many ${itemName(sh[2])}s are among the first ${N} shapes?`,svg:rowSVG(unit,false),...numChoices(r,cnt,[Math.floor(N/2),cnt+1,cnt-1,full*3+left]),
+   explain:`One group has 6 shapes with 3 ${itemName(sh[2])}s.<br>${N} = ${full} groups × 6 + ${left}.<br>${full} × 3 = ${full*3}, plus ${cnt-full*3} in the last ${left} shape${left===1?"":"s"}.<br>Total: <b>${cnt}</b>.`};}];
+T2.shapes[1]=[
+ r=>{const a=ri(r,3,12),b=ri(r,a+1,15),p=2*(a+b);return {text:`A rectangle is ${a} cm wide and ${b} cm long. What is its perimeter (distance all the way around)?`,...numChoices(r,p,[a+b,a*b,p+2,2*a+b]),explain:`Perimeter = ${b} + ${a} + ${b} + ${a} = <b>${p} cm</b>.`};},
+ r=>{const R=ri(r,3,5),C=ri(r,4,7);return {text:`Each small square is 1 square cm. What is the area of this rectangle?`,svg:gridSVG(R,C),...numChoices(r,R*C,[R+C,2*(R+C),R*C-R,R*C+C]),explain:`Area = rows × columns = ${R} × ${C} = <b>${R*C}</b> square cm.`};},
+ r=>{const t=ri(r,2,5),s=ri(r,2,4),p=ri(r,1,3),ans=3*t+4*s+5*p;return {text:`How many sides do ${t} triangles, ${s} squares and ${p} pentagons have altogether?`,...numChoices(r,ans,[t+s+p,ans-p,ans+1,3*t+4*s]),explain:`${t} × 3 + ${s} × 4 + ${p} × 5 = ${3*t} + ${4*s} + ${5*p} = <b>${ans}</b>.`};}];
+T2.shapes[2]=[
+ r=>{const k=ri(r,3,6),s=ri(r,2,5),ans=2*s*(k+1);return {text:`${k} squares, each with sides of ${s} cm, are placed in a row touching each other (like the picture). What is the perimeter of the long rectangle they make?`,svg:gridSVG(1,k),...numChoices(r,ans,[4*s*k,2*s*k,ans+2*s,s*(k+1)]),
+  explain:`The long rectangle is ${k} × ${s} = ${k*s} cm long and ${s} cm tall.<br>Perimeter = 2 × (${k*s} + ${s}) = <b>${ans} cm</b>.<br>(${4*s*k} counts the inside edges too, but those aren't on the outside!)`};},
+ F.squares([[3,3],[3,4],[2,5]]),F.mirror(4,4,6)];
+T2.shapes[3]=[F.lPerim(),F.fan(3,4),F.rects([[1,4],[1,5],[1,6],[2,2],[2,3]])];
+T2.logic[1]=[F.order4(),F.lineFB(4,12),F.animals()];
+T2.logic[2]=[F.venn(6,8),F.socks(),F.heavy()];
+T2.logic[3]=[F.handshake(6,10),F.headsLegs(8,20,"cow",4),F.lily()];
+T2.measure[1]=[F.clock(true),r=>{const h=ri(r,1,4),m=ri(r,5,55);return {text:`How many minutes are in ${h} hour${h>1?"s":""} and ${m} minutes?`,...numChoices(r,60*h+m,[h*100+m,h+m,60*h,60*h+m+10]),explain:`1 hour = 60 minutes. ${h} × 60 = ${60*h}. ${60*h} + ${m} = <b>${60*h+m}</b> minutes.`};},F.ruler(true)];
+T2.measure[2]=[F.weekday(20,60),
+ r=>{const q=ri(r,1,3),d=ri(r,1,4),n=ri(r,1,3),p=ri(r,0,4),ans=25*q+10*d+5*n+p;return {text:`How much money is shown, in cents?`,svg:coinsSVG([...Array(q).fill(25),...Array(d).fill(10),...Array(n).fill(5),...Array(p).fill(1)]),...numChoices(r,ans,[q+d+n+p,ans+5,ans-10,ans+25]),
+  explain:`Quarters: ${q} × 25 = ${25*q}¢<br>Dimes: ${d} × 10 = ${10*d}¢<br>Nickels: ${n} × 5 = ${5*n}¢${p?`<br>Pennies: ${p}¢`:""}<br>Total: <b>${ans}¢</b>.`};},
+ r=>{const h1=ri(r,1,9),m1=pick(r,[0,10,15,20,30,40,45]),dur=ri(r,3,15)*10,t2=h1*60+m1+dur,ans=dur;return {text:`A soccer practice starts at ${fmt(h1,m1)} and ends at ${fmt(Math.floor(t2/60),t2%60)}. How many minutes long is it?`,...numChoices(r,ans,[ans+10,ans-10,ans+40,Math.floor(t2/60)*100+t2%60-(h1*100+m1)]),
+  explain:`Count up: from ${fmt(h1,m1)} to ${fmt(Math.floor(t2/60),t2%60)}.<br>${Math.floor(dur/60)?`${Math.floor(dur/60)} hour${Math.floor(dur/60)>1?"s":""} = ${60*Math.floor(dur/60)} minutes, plus ${dur%60} minutes.`:`${dur} minutes.`}<br>Total: <b>${ans} minutes</b>. (Remember: 1 hour is 60 minutes, not 100!)`};}];
+T2.measure[3]=[F.monthDay(),
+ r=>{const h=ri(r,1,9),m=pick(r,[0,10,20,30,40,50]),M=ri(r,9,17)*10,tot=h*60+m+M,eh=Math.floor(tot/60),em=tot%60,ans=fmt((eh-1)%12+1,em);
+  return {text:`A train leaves at ${fmt(h,m)} and the trip takes ${M} minutes. At what time does it arrive?`,...textChoices(r,ans,[fmt(h+Math.floor(M/100),(m+M%100)%60),fmt(eh,(em+10)%60),fmt(eh+1,em),fmt(eh-1||12,em),fmt(eh,(em+50)%60)]),
+   explain:`${M} minutes = ${Math.floor(M/60)} hour${Math.floor(M/60)>1?"s":""} and ${M%60} minutes.<br>${fmt(h,m)} + ${Math.floor(M/60)} h = ${fmt(h+Math.floor(M/60),m)}, then + ${M%60} min = <b>${ans}</b>.`};},
+ r=>{const a=ri(r,2,4),b=ri(r,2,3),c=ri(r,2,3);return {text:`1 pear weighs the same as ${a} plums. 1 melon weighs the same as ${b} pears. 1 pumpkin weighs the same as ${c} melons. How many plums weigh the same as 1 pumpkin?`,...numChoices(r,a*b*c,[a+b+c,a*b+c,a*b*c+a,a*c]),
+  explain:`1 melon = ${b} pears = ${b} × ${a} = ${a*b} plums.<br>1 pumpkin = ${c} melons = ${c} × ${a*b} = <b>${a*b*c}</b> plums.`};}];
+T2.spatial[1]=[
+ r=>{const t=ri(r,1,6);return {text:`Opposite faces of a dice add up to 7. The top face is shown. What number is on the bottom face?`,svg:dieSVG(t),...numChoices(r,7-t,[t,(t%6)+1,6-t||6].filter(x=>x>=1&&x<=6&&x!==7-t)),
+  explain:`Count the dots on top: ${t}. Opposite pairs are 1 & 6, 2 & 5, 3 & 4.<br>Bottom = 7 − ${t} = <b>${7-t}</b>.`};},
+ T.spatial[1][0],r=>{const n=ri(r,4,5),hs=Array.from({length:n},()=>ri(r,1,5)),s=hs.reduce((a,b)=>a+b,0);return {text:`How many cubes are in these towers altogether?`,svg:stacksSVG(r,hs),...numChoices(r,s,[s+1,s-1,n*5,s+2]),explain:`Count each tower: ${hs.join(" + ")} = <b>${s}</b>.`};}];
+T2.spatial[2]=[F.path(3,3),F.boxCubes(2,4),r=>{const n=ri(r,6,9),ans=n*(n+1)/2;return {text:`A staircase is built from cubes like this, but with ${n} steps. How many cubes are used?`,svg:stairsSVG(4),...numChoices(r,ans,[n*n,2*n,ans-n,ans+1]),explain:`Step columns have 1, 2, 3, … , ${n} cubes.<br>${Array.from({length:n},(_,i)=>i+1).join(" + ")} = <b>${ans}</b>.`};}];
+T2.spatial[3]=[F.painted(3,"rand"),F.diceStack(3),F.path(5,3)];
+
+/* ================= LEVEL 3 (Grades 5–6) ================= */
+const T3={numbers:{},arith:{},patterns:{},shapes:{},logic:{},measure:{},spatial:{}};
+const dsum=n=>String(n).split("").reduce((a,c)=>a+ +c,0);
+T3.numbers[1]=[
+ r=>{let good;do{good=ri(r,120,990);}while(good%9);const bad=[];while(bad.length<4){const x=ri(r,120,990);if(x%9&&!bad.includes(x)&&Math.abs(dsum(x)-dsum(good))<4)bad.push(x);}
+  return {text:`Which of these numbers can be divided evenly by 9?`,...textChoices(r,String(good),bad.map(String),true),explain:`A number is divisible by 9 when its <b>digit sum</b> is divisible by 9.<br>${good}: ${String(good).split("").join(" + ")} = ${dsum(good)} ✓<br>The others have digit sums ${bad.map(dsum).join(", ")}, which are not multiples of 9.<br>Answer: <b>${good}</b>.`};},
+ r=>{const N=ri(r,1050,9940),ans=Math.round(N/100)*100;return {text:`Round ${N.toLocaleString("en-US")} to the nearest hundred.`,...numChoices(r,ans,[Math.round(N/10)*10,Math.round(N/1000)*1000===ans?ans+100:Math.round(N/1000)*1000,ans-100,ans+100]),
+  explain:`Look at the tens digit: ${Math.floor(N/10)%10}. ${Math.floor(N/10)%10>=5?"5 or more → round up":"less than 5 → round down"}.<br>${N} → <b>${ans}</b>.`};},
+ r=>{const a=ri(r,12,40),b=ri(r,3,9),c=ri(r,2,9),d=ri(r,1,9),ans=a+b*c-d,wrong=(a+b)*c-d;return {text:`What is the value of this expression?<div class="eq">${a} + ${b} × ${c} − ${d}</div>`,...numChoices(r,ans,[wrong,a+b*(c-d),ans+d,ans+1]),
+  explain:`Multiply <b>before</b> adding and subtracting.<br>${b} × ${c} = ${b*c}<br>${a} + ${b*c} − ${d} = <b>${ans}</b>.<br>(Going left to right gives ${wrong}, which is wrong!)`};}];
+T3.numbers[2]=[
+ r=>{const [a,b]=pick(r,[[2,3],[3,5],[2,5],[4,6],[3,4]]),N=ri(r,40,100);let c=0;for(let n=1;n<=N;n++)if(n%a===0||n%b===0)c++;const A=Math.floor(N/a),B=Math.floor(N/b),l=a*b/(a===4&&b===6?2:1),AB=Math.floor(N/l);
+  return {text:`How many numbers from 1 to ${N} are multiples of ${a} or of ${b} (or both)?`,...numChoices(r,c,[A+B,c+1,c-1,A+B-2*AB]),
+   explain:`Multiples of ${a}: ${A}. Multiples of ${b}: ${B}.<br>Numbers that are multiples of both (multiples of ${l}) were counted twice: ${AB}.<br>${A} + ${B} − ${AB} = <b>${c}</b>.`};},
+ r=>{const k=ri(r,7,19),ans=Math.ceil(100/k)*k;return {text:`What is the smallest three-digit number that is a multiple of ${k}?`,...numChoices(r,ans,[ans-k,ans+k,100+k,ans+1].filter(x=>x>0)),explain:`${k} × ${Math.ceil(100/k)-1} = ${(Math.ceil(100/k)-1)*k} (only two digits).<br>${k} × ${Math.ceil(100/k)} = <b>${ans}</b>, the first one with three digits.`};},
+ r=>{const P=pick(r,[6,8,12,18,20]),list=[];for(let n=100;n<1000;n++)if(String(n).split("").reduce((a,c)=>a*+c,1)===P)list.push(n);
+  return {text:`How many three-digit numbers have digits that multiply to ${P}?`,...numChoices(r,list.length,[list.length-3,list.length+3,list.length-1,list.length+1].filter(x=>x>0)),explain:`Find groups of three digits that multiply to ${P}, then count all their orders:<br>${list.join(", ")}<br>That's <b>${list.length}</b>.`};}];
+T3.numbers[3]=[
+ r=>{const [A,B]=pick(r,[[100,200],[100,300],[200,500],[1000,2000],[300,600]]),list=[];for(let n=A;n<=B;n++){const s=String(n);if(s===s.split("").reverse().join(""))list.push(n);}
+  return {text:`A palindrome reads the same forwards and backwards, like 343. How many palindromes are there from ${A} to ${B}?`,...numChoices(r,list.length,[list.length+1,list.length-1,(B-A)/10,list.length*2]),
+   explain:`${String(A).length===3?"A 3-digit palindrome looks like ABA: once the first digit is chosen, the middle digit can be 0–9.":"A 4-digit palindrome looks like ABBA: it's set by its first two digits."}<br>${list.length<=12?list.join(", "):list.slice(0,5).join(", ")+", …, "+list.slice(-2).join(", ")}<br>Count: <b>${list.length}</b>.`};},
+ r=>{const b=pick(r,[2,3,7,8]),n=ri(r,10,50),cyc=[];let v=b%10;while(!cyc.includes(v)){cyc.push(v);v=v*b%10;}const ans=cyc[(n-1)%cyc.length];
+  return {text:`What is the last digit of ${b}<sup>${n}</sup> (${b} multiplied by itself ${n} times)?`,...numChoices(r,ans,cyc.filter(x=>x!==ans).concat([b,0,5])),
+   explain:`Look at the last digits of ${b}¹, ${b}², ${b}³, …: ${cyc.join(", ")}, then it repeats every ${cyc.length}.<br>${n} = ${cyc.length} × ${Math.floor((n-1)/cyc.length)} + ${(n-1)%cyc.length+1}, so we take position ${(n-1)%cyc.length+1} in the cycle: <b>${ans}</b>.`};},
+ r=>{const m=pick(r,[2,3,4,7,8]),list=[];for(let n=10;n<100;n++)if(n===m*dsum(n))list.push(n);
+  return {text:`How many two-digit numbers are exactly ${m} times the sum of their own digits? (For example, ${list[0]} = ${m} × (${String(list[0]).split("").join(" + ")}).)`,...numChoices(r,list.length,[list.length+1,list.length+2,0,list.length+3].filter(x=>x!==list.length)),
+   explain:`Write the number as 10a + b. We need 10a + b = ${m}(a + b), so ${10-m}a = ${m-1}b.<br>Try each tens digit a = 1, 2, … and check:<br>${list.join(", ")}<br>That's <b>${list.length}</b>.`};}];
+T3.arith[1]=[
+ r=>{const [n,d]=pick(r,[[1,4],[3,4],[2,3],[1,5],[3,5],[5,6],[3,8]]),k=ri(r,2,9)*d,ans=k/d*n;return {text:`What is ${n}/${d} of ${k}?`,...numChoices(r,ans,[k/d,k-ans,ans+n,k*n/(d+1)|0]),explain:`First find 1/${d}: ${k} ÷ ${d} = ${k/d}.<br>Then ${n}/${d} is ${n} of those: ${n} × ${k/d} = <b>${ans}</b>.`};},
+ r=>{const n=ri(r,4,5),avg=ri(r,8,30),xs=[];for(let i=0;i<n-1;i++)xs.push(avg+ri(r,-6,6));xs.push(avg*n-xs.reduce((a,b)=>a+b,0));if(xs[n-1]<1)xs[n-1]+=0;
+  return {text:`What is the average of these numbers?<div class="eq">${xs.join(", ")}</div>`,...numChoices(r,avg,[avg+1,avg-1,avg*n,Math.max(...xs)-Math.min(...xs)]),explain:`Add them: ${xs.join(" + ")} = ${avg*n}.<br>Divide by how many there are (${n}): ${avg*n} ÷ ${n} = <b>${avg}</b>.`};},
+ r=>{const p=ri(r,12,48),k=ri(r,4,9),x=ri(r,1,k-2),ans=p*k-x*p;return {text:`A notebook costs ${p} cents. Mia buys ${k} notebooks, then returns ${x} of them. How much did she spend in the end, in cents?`,...numChoices(r,ans,[p*k,p*(k+x),ans+p,ans-p]),explain:`She keeps ${k} − ${x} = ${k-x} notebooks.<br>${k-x} × ${p} = <b>${ans}</b> cents.`};}];
+T3.arith[2]=[
+ r=>{const n=4,A=ri(r,10,30),B=A+ri(r,1,5),ans=5*B-4*A;return {text:`The average of 4 numbers is ${A}. When a 5th number is added, the average becomes ${B}. What is the 5th number?`,...numChoices(r,ans,[B,ans-B+A,2*B-A,ans+5]),explain:`The 4 numbers add up to 4 × ${A} = ${4*A}.<br>The 5 numbers add up to 5 × ${B} = ${5*B}.<br>5th number = ${5*B} − ${4*A} = <b>${ans}</b>.`};},
+ F.eq(3),
+ r=>{const [n,d]=pick(r,[[2,5],[1,3],[3,7],[2,3],[3,5],[1,4]]),k=ri(r,2,8),girls=(d-n)*k,tot=d*k;return {text:`In a class, ${n}/${d} of the students are boys. There are ${girls} girls. How many students are in the class?`,...numChoices(r,tot,[girls+n,girls*d/n|0,tot+k,girls+n*k]),
+  explain:`If ${n}/${d} are boys, then ${d-n}/${d} are girls.<br>${d-n} parts = ${girls}, so 1 part = ${girls} ÷ ${d-n} = ${k}.<br>The whole class is ${d} parts: ${d} × ${k} = <b>${tot}</b>.`};}];
+T3.arith[3]=[
+ r=>{const a=ri(r,1,20),b=a+ri(r,9,40),n=b-a+1,ans=n*(a+b)/2;if(!Number.isInteger(ans))return T3.arith[3][0](r);return {text:`What is the sum of all the whole numbers from ${a} to ${b}?`,...numChoices(r,ans,[ans+b,ans-a,(b-a)*(a+b)/2|0,b*(b+1)/2]),
+  explain:`Pair them from the outside in: ${a} + ${b} = ${a+b}, ${a+1} + ${b-1} = ${a+b}, … Every pair adds to ${a+b}.<br>There are ${n} numbers, so ${n} ÷ 2 = ${n/2} pairs.<br>${n/2} × ${a+b} = <b>${ans}</b>.`};},
+ r=>{const [a,b]=pick(r,[[3,6],[4,12],[6,12],[10,15],[6,3],[12,4],[2,6],[20,30]]),ans=a*b/(a+b);return {text:`One tap fills a tank in ${a} hours. Another tap fills the same tank in ${b} hours. If both taps are open together, how many hours does it take to fill the tank?`,...numChoices(r,ans,[(a+b)/2|0,a+b,Math.min(a,b),ans+1]),
+  explain:(()=>{const V=a*b/gcd(a,b),x=V/a,y=V/b;return `Pretend the tank holds ${V} liters (a number both ${a} and ${b} divide into).<br>Tap 1 fills ${V} ÷ ${a} = ${x} L per hour. Tap 2 fills ${V} ÷ ${b} = ${y} L per hour.<br>Together: ${x} + ${y} = ${x+y} L per hour.<br>Time: ${V} ÷ ${x+y} = <b>${ans}</b> hour${ans>1?"s":""}.`;})()};},
+ F.sumDiff(40,120,40)];
+function gcd(a,b){return b?gcd(b,a%b):a;}
+T3.patterns[1]=[F.seq([7,9,11,13,15,25],20,80,false),
+ r=>{const a=ri(r,2,9),d=ri(r,3,9),n=ri(r,10,20),ans=a+(n-1)*d;return {text:`The list starts ${a}, ${a+d}, ${a+2*d}, ${a+3*d}, … What is the ${ord(n)} number?`,...numChoices(r,ans,[a+n*d,ans-a,n*d,ans+1]),explain:`From the 1st to the ${ord(n)} number there are ${n-1} jumps of ${d}.<br>${a} + ${n-1} × ${d} = ${a} + ${(n-1)*d} = <b>${ans}</b>.`};},
+ r=>{const b=pick(r,[2,3]),s=ri(r,1,5),seq=[s];for(let i=1;i<5;i++)seq.push(seq[i-1]*b);return {text:`What number comes next?<div class="eq">${seq.join(", ")}, ?</div>`,...numChoices(r,seq[4]*b,[seq[4]+seq[3],2*seq[4]-seq[3],seq[4]*b+b,seq[4]*b-1]),explain:`Each number is <b>× ${b}</b>: ${seq[4]} × ${b} = <b>${seq[4]*b}</b>.`};}];
+T3.patterns[2]=[F.word("MATHKANGAROO",50,200),
+ r=>{const a=ri(r,3,9),d=ri(r,3,8),k=ri(r,15,40),X=a+(k-1)*d;return {text:`The list ${a}, ${a+d}, ${a+2*d}, ${a+3*d}, … keeps going. In which position is the number ${X}?`,...numChoices(r,k,[k-1,k+1,Math.floor(X/d),k+2]),explain:`From ${a} to ${X} is ${X-a}, which is ${X-a} ÷ ${d} = ${k-1} jumps.<br>Position = jumps + 1 = <b>${k}</b>.`};},
+ F.grow(25)];
+T3.patterns[3]=[
+ r=>{const N=ri(r,40,250);let c=0;for(let i=1;i<=N;i++)c+=String(i).length;const one=9,two=Math.min(N,99)-9,three=Math.max(0,N-99);
+  return {text:`Leo writes all the numbers from 1 to ${N}. How many digits does he write?`,...numChoices(r,c,[N,c+1,c-three||c+9,2*N]),explain:`1–9: 9 numbers × 1 digit = 9<br>10–${Math.min(N,99)}: ${two} numbers × 2 digits = ${2*two}${three?`<br>100–${N}: ${three} numbers × 3 digits = ${3*three}`:""}<br>Total: <b>${c}</b>.`};},
+ r=>{const n=ri(r,8,20),ans=n*n;return {text:`What is the sum of the first ${n} odd numbers? (1 + 3 + 5 + … )`,...numChoices(r,ans,[n*(n+1),2*n-1,ans+n,ans-1]),explain:`Look: 1 = 1, 1+3 = 4, 1+3+5 = 9, 1+3+5+7 = 16. The sums are square numbers!<br>So the first ${n} odd numbers add up to ${n} × ${n} = <b>${ans}</b>.`};},
+ r=>{const n=ri(r,8,15),ans=n*(n+1)/2;return {text:`Dots are stacked in triangles: 1, 3, 6, 10, … How many dots are in the ${ord(n)} triangle?`,...numChoices(r,ans,[n*n,ans-n,ans+n+1,2*n]),explain:`Each triangle adds a new row that is 1 longer: triangle ${n} has rows 1, 2, …, ${n}.<br>1 + 2 + … + ${n} = ${n} × ${n+1} ÷ 2 = <b>${ans}</b>.`};}];
+T3.shapes[1]=[
+ r=>{const a=ri(r,30,90),b=ri(r,20,150-a),c=180-a-b;return {text:`Two angles of a triangle are ${a}° and ${b}°. What is the third angle?`,...numChoices(r,c,[360-a-b,c+10,c-10,90]),explain:`The three angles of any triangle add up to <b>180°</b>.<br>180 − ${a} − ${b} = <b>${c}°</b>.`};},
+ r=>{const s=ri(r,4,12),A=s*s,ans=4*s;return {text:`A square has an area of ${A} square cm. What is its perimeter?`,...numChoices(r,ans,[A/4|0,2*s,A,ans+4]),explain:`Area = side × side, and ${s} × ${s} = ${A}, so each side is ${s} cm.<br>Perimeter = 4 × ${s} = <b>${ans} cm</b>.`};},
+ r=>{const a=ri(r,4,15),b=ri(r,3,12);return {text:`A rectangle is ${a} cm by ${b} cm. What is its area in square cm?`,...numChoices(r,a*b,[2*(a+b),a+b,a*b+a,a*b-b]),explain:`Area = length × width = ${a} × ${b} = <b>${a*b}</b> square cm.`};}];
+T3.shapes[2]=[F.lArea(),F.squares([[4,4],[3,5],[4,5]]),
+ r=>{const h=ri(r,1,11),ang=Math.min(30*h,360-30*h);return {text:`What is the smaller angle between the hour hand and the minute hand of a clock at exactly ${h}:00?`,svg:clockSVG(h,0),...numChoices(r,ang,[30*h===ang?360-30*h:30*h,ang+30,ang-30,h*5].filter(x=>x>0)),
+  explain:`The 12 numbers split the circle (360°) into 12 equal parts of 360 ÷ 12 = 30°.<br>At ${h}:00 the hands are ${Math.min(h,12-h)} numbers apart: ${Math.min(h,12-h)} × 30 = <b>${ang}°</b>.`};}];
+T3.shapes[3]=[F.rects([[2,2],[2,3],[2,4],[3,3]]),F.fan(4,5),F.lPerim()];
+T3.logic[1]=[F.venn(10,15),F.order4(),F.lineFB(10,25)];
+T3.logic[2]=[F.handshake(8,14),
+ r=>{const n=pick(r,[8,12,16,20,24,32,40,50]);return {text:`In a knock-out tournament, every match has one loser, and that player is out. ${n} players start. How many matches are played until there is a champion?`,...numChoices(r,n-1,[n/2,n,2*n-2,n/2+1]),explain:`Every match knocks out exactly one player. To get one champion, ${n} − 1 = ${n-1} players must be knocked out.<br>So there are <b>${n-1}</b> matches.`};},
+ r=>{const c=ri(r,3,6),k=ri(r,2,4),ans=c*(k-1)+1;return {text:`A bag has lots of marbles in ${c} different colors. Without looking, what is the smallest number you must take to be sure you have ${k} marbles of the same color?`,...numChoices(r,ans,[c*k,c+k,ans-1,ans+c]),
+  explain:`Unluckiest case: you get ${k-1} of every color first: ${c} × ${k-1} = ${c*(k-1)} marbles, and still no ${k} the same.<br>The next marble must make ${k} of some color: ${c*(k-1)} + 1 = <b>${ans}</b>.`};}];
+T3.logic[3]=[F.headsLegs(15,40,"rabbit",4),F.lily(),
+ r=>{let c,k,m,y;do{c=ri(r,4,12);k=pick(r,[3,4,5,6,7]);m=pick(r,[2,3]);y=(k*c-m*c)/(m-1);}while(!Number.isInteger(y)||y<1||y>30||k<=m);const M=k*c;
+  return {text:`A mother is ${M} years old and her son is ${c}. In how many years will the mother be exactly ${m} times as old as her son?`,...numChoices(r,y,[y+1,y-1,M-m*c,y*2]),
+   explain:`In y years: mother = ${M} + y, son = ${c} + y. We need ${M} + y = ${m} × (${c} + y).<br>${M} + y = ${m*c} + ${m}y → ${M-m*c} = ${m-1}y → y = <b>${y}</b>.<br>Check: mother ${M+y}, son ${c+y}, and ${m} × ${c+y} = ${M+y} ✓`};}];
+T3.measure[1]=[
+ r=>{const [q,u1,f]=pick(r,[["km","m",1000],["kg","g",1000],["m","cm",100],["L","mL",1000]]);const a=ri(r,2,9),b=ri(r,1,f/10-1)*(f===100?1:10),ans=a*f+b;
+  return {text:`How many ${u1} are in ${a} ${q} and ${b} ${u1}?`,...numChoices(r,ans,[a*f/10+b,a+b,a*f,ans+f]),explain:`1 ${q} = ${f} ${u1}, so ${a} ${q} = ${a*f} ${u1}.<br>${a*f} + ${b} = <b>${ans}</b> ${u1}.`};},
+ F.clock(true),
+ r=>{const h1=ri(r,7,10),m1=pick(r,[0,15,20,30,40,45]),dur=ri(r,8,30)*10,t2=h1*60+m1+dur;return {text:`A school trip leaves at ${fmt(h1,m1)} a.m. and returns at ${fmt((Math.floor(t2/60)-1)%12+1,t2%60)} ${Math.floor(t2/60)>=12?"p.m.":"a.m."}. How long is the trip in minutes?`,...numChoices(r,dur,[dur+40,dur-10,dur+60,dur+10]),
+  explain:`From ${fmt(h1,m1)} to ${fmt(Math.floor(t2/60),t2%60)} (24-hour style) is ${Math.floor(dur/60)} hour${Math.floor(dur/60)===1?"":"s"} and ${dur%60} minutes.<br>${Math.floor(dur/60)} × 60 + ${dur%60} = <b>${dur}</b> minutes.`};}];
+T3.measure[2]=[F.weekday(50,400),
+ r=>{const v=ri(r,4,12)*5,t=pick(r,[2,3,4]),half=r()<.5;const ans=half?v*t+v/2:v*t;if(!Number.isInteger(ans))return T3.measure[2][1](r);return {text:`A car drives at ${v} km per hour. How far does it go in ${t}${half?" and a half":""} hours?`,...numChoices(r,ans,[half?v*t:ans+v/2,v+t,ans+v,ans-v]),
+  explain:`Distance = speed × time.<br>${v} × ${t} = ${v*t} km${half?`, plus half an hour: ${v} ÷ 2 = ${v/2} km`:""}.<br>Total: <b>${ans} km</b>.`};},
+ r=>{const l=ri(r,8,20),w=ri(r,4,l-1),ans=2*(l+w);return {text:`A garden is ${l} m long and ${w} m wide. How many meters of fence are needed to go all the way around it?`,...numChoices(r,ans,[l*w,l+w,ans+2,2*l+w]),explain:`Fence = perimeter = 2 × (${l} + ${w}) = <b>${ans} m</b>.`};}];
+T3.measure[3]=[F.monthDay(),
+ r=>{const loss=pick(r,[2,3,4,5]),h=ri(r,3,8),start=8,real=start+h,shown=real*60-loss*h,ans=fmt((Math.floor(shown/60)-1)%12+1,shown%60);
+  return {text:`A clock loses ${loss} minutes every hour. It is set to the correct time at 8:00 a.m. What time does it show when the real time is ${(real-1)%12+1}:00 ${real>=12?"p.m.":"a.m."}?`,...textChoices(r,ans,[fmt((real-1)%12+1,0),fmt((real-1)%12+1,loss),fmt((Math.floor((real*60+loss*h)/60)-1)%12+1,(real*60+loss*h)%60),fmt((Math.floor((real*60-loss)/60)-1)%12+1,(real*60-loss)%60)]),
+   explain:`From 8:00 to ${(real-1)%12+1}:00 is ${h} hours.<br>It loses ${loss} × ${h} = ${loss*h} minutes in total, so it is ${loss*h} minutes <b>behind</b>.<br>${(real-1)%12+1}:00 − ${loss*h} minutes = <b>${ans}</b>.`};},
+ r=>{const a=ri(r,2,5),b=ri(r,2,4),c=ri(r,2,3);return {text:`On a balance: 1 pear = ${a} plums, 1 melon = ${b} pears, 1 pumpkin = ${c} melons. How many plums weigh as much as 2 pumpkins?`,...numChoices(r,2*a*b*c,[a*b*c,2*(a+b+c),2*a*b*c+a,a*b*c+2]),
+  explain:`1 melon = ${b} × ${a} = ${a*b} plums.<br>1 pumpkin = ${c} × ${a*b} = ${a*b*c} plums.<br>2 pumpkins = 2 × ${a*b*c} = <b>${2*a*b*c}</b> plums.`};}];
+T3.spatial[1]=[
+ r=>{const [w,ans,ds]=pick(r,[["faces",6,[8,12,4,5]],["edges",12,[6,8,10,24]],["corners (vertices)",8,[6,12,4,10]]]);return {text:`How many ${w} does a cube have?`,...numChoices(r,ans,ds),explain:`A cube has <b>6 faces</b> (like a dice), <b>12 edges</b> (4 on top, 4 on the bottom, 4 going up and down) and <b>8 corners</b> (4 on top, 4 on the bottom).<br>So the answer is <b>${ans}</b>.`};},
+ F.diceStack(2),F.mirror(4,5,7)];
+T3.spatial[2]=[F.painted(4,"rand"),F.boxCubes(3,7),F.path(5,4)];
+T3.spatial[3]=[F.painted(5,"rand"),F.diceStack(4),
+ r=>{const n=ri(r,3,6),ans=n**3-(n-2)**3;return {text:`A ${n}×${n}×${n} cube is built from small cubes. Then all the small cubes you could see from outside (on any face) are removed. How many small cubes are removed?`,...numChoices(r,ans,[6*n*n,n**3,(n-2)**3,ans-8]),
+  explain:`Total cubes: ${n}³ = ${n**3}.<br>The hidden inside part is a ${n-2}×${n-2}×${n-2} cube = ${(n-2)**3}.<br>Removed = ${n**3} − ${(n-2)**3} = <b>${ans}</b>.<br>(${6*n*n} counts the edge and corner cubes more than once.)`};}];
+
+/* ================= API ================= */
+const CATS={numbers:{name:"Numbers & Counting",emoji:"🔢",color:"#3b82f6"},arith:{name:"Adding & Taking Away",emoji:"➕",color:"#22c55e"},patterns:{name:"Patterns",emoji:"🔁",color:"#a855f7"},
+  shapes:{name:"Shapes & Geometry",emoji:"🔺",color:"#f97316"},logic:{name:"Logic Puzzles",emoji:"🧩",color:"#ec4899"},measure:{name:"Time & Money",emoji:"⏰",color:"#14b8a6"},spatial:{name:"Seeing in 3D",emoji:"🎲",color:"#eab308"}};
+const CAT_KEYS=Object.keys(CATS);
+function catsFor(level){if(level===1)return CATS;const c=JSON.parse(JSON.stringify(CATS));c.numbers.name="Numbers";c.arith.name=level===3?"Calculations & Fractions":"Calculations & Word Problems";c.arith.emoji="✖️";c.measure.name="Time & Measuring";return c;}
+const POINTS={1:3,2:4,3:5};
+const LEVELS={1:{T,per:8,label:"Level 1",grades:"Grades 1–2"},2:{T:T2,per:8,label:"Level 2",grades:"Grades 3–4"},3:{T:T3,per:10,label:"Level 3",grades:"Grades 5–6"}};
+function makeQ(r,cat,d,used,TT,maxT){const list=TT[cat][d].slice(0,maxT||99);let idx=list.map((_,i)=>i).filter(i=>!used.has(cat+d+i));if(!idx.length)idx=list.map((_,i)=>i);
+  const i=pick(r,idx);used.add(cat+d+i);const q=list[i](r);return Object.assign({cat,d,pts:POINTS[d],tpl:cat+d+i},q);}
+function makeTest(level,n,ver){const L=LEVELS[level],r=mulberry32(9001+n*7919+(level===1?0:level*100003)),used=new Set(),qs=[],maxT=level===1&&ver===1?3:99;
+  for(const d of [1,2,3]){let cats=shuffle(r,CAT_KEYS);cats=L.per===8?cats.concat([pick(r,CAT_KEYS)]):cats.concat(shuffle(r,CAT_KEYS).slice(0,L.per-7));for(const c of shuffle(r,cats))qs.push(makeQ(r,c,d,used,L.T,maxT));}
+  return qs;}
+function makePractice(level,cat,seed,count){const TT=LEVELS[level].T,r=mulberry32(seed),used=new Set(),ds=[1,1,1,2,2,2,2,3,3,3].slice(0,count||10),qs=[];
+  for(const d of ds)qs.push(makeQ(r,cat,d,used,TT));return qs;}
+
+const API={makeTest,makePractice,CATS,catsFor,CAT_KEYS,POINTS,LEVELS,T,T2,T3};
+if(typeof module!=="undefined")module.exports=API;else root.KQ=API;
+})(this);
+</script>
+<script>(function(){
+"use strict";
+const {makeTest:mkTest,makePractice,catsFor,CAT_KEYS,LEVELS}=window.KQ;
+const KIDS=[{name:"Gia",av:"🦋",level:1},{name:"Aria",av:"🌸",level:1},{name:"Ananya",av:"🌟",level:2},{name:"Sahana",av:"🚀",level:3}];
+const KEY="hopmath-level1-v1";
+const LETTERS="ABCDE";
+const NUM_TESTS=10;
+const LV=()=>kid().level, PER=()=>LEVELS[LV()].per, NQ=()=>PER()*3, MAX=()=>PER()*12, CATS_=()=>catsFor(LV());
+const testVer=a=>a&&a.v?a.v:1; // attempts/in-progress saved before levels existed are version 1
+const makeTest=(n,v)=>mkTest(LV(),n,v||2);
+const $=s=>document.querySelector(s);
+const app=()=>$("#app");
+
+/* ---------- storage ---------- */
+let DB;
+function blank(){const p={};KIDS.forEach(k=>p[k.name]={attempts:{},practice:{},inProgress:{},instant:true});return {profiles:p,current:null};}
+function load(){try{const s=localStorage.getItem(KEY);DB=s?JSON.parse(s):blank();}catch(e){DB=blank();}
+  load2();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
+const P=()=>DB.profiles[DB.current];
+const kid=()=>KIDS.find(k=>k.name===DB.current);
+
+/* ---------- scoring helpers ---------- */
+function grade(qs,answers){let score=0;const byPts={3:[0,0],4:[0,0],5:[0,0]},byCat={};answers=answers||[];
+  qs.forEach((q,i)=>{const ok=answers[i]===q.answer;if(ok)score+=q.pts;byPts[q.pts][1]++;if(ok)byPts[q.pts][0]++;
+    byCat[q.cat]=byCat[q.cat]||[0,0];byCat[q.cat][1]++;if(ok)byCat[q.cat][0]++;});
+  return {score,byPts,byCat,correct:qs.filter((q,i)=>answers[i]===q.answer).length};}
+const starsFor=pct=>pct>=85?3:pct>=65?2:pct>=40?1:0;
+const starStr=(n,of=3)=>"⭐".repeat(n)+"☆".repeat(of-n);
+function latest(t){const a=P().attempts[t];return a&&a.length?a[a.length-1]:null;}
+function best(t){const a=P().attempts[t];return a&&a.length?Math.max(...a.map(x=>x.score)):null;}
+function skillStats(){const s={};CAT_KEYS.forEach(c=>s[c]=[0,0]);
+  for(let t=1;t<=NUM_TESTS;t++){const a=latest(t);if(!a)continue;const g=grade(makeTest(t,testVer(a)),a.answers);for(const c in g.byCat){s[c][0]+=g.byCat[c][0];s[c][1]+=g.byCat[c][1];}}
+  for(const c in P().practice){const p=P().practice[c];s[c][0]+=p[0];s[c][1]+=p[1];}
+  return s;}
+function weakList(stats,limit){return CAT_KEYS.filter(c=>stats[c][1]>=3&&stats[c][0]/stats[c][1]<0.7).sort((a,b)=>stats[a][0]/stats[a][1]-stats[b][0]/stats[b][1]).slice(0,limit||3);}
+const pct=(a,b)=>b?Math.round(100*a/b):0;
+const fmtTime=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- common UI ---------- */
+let timerId=null;
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function header(extra){return `<div class="top"><div class="brand"><span class="roo">🦘</span> Hop Math ${DB.current?`<span class="pill" style="background:#f97316">${LEVELS[LV()].label}</span>`:""}</div>
+  <div class="row">${extra||""}${DB.current?`<button class="btn alt small" data-act="home">🏠 Home</button><button class="btn alt small" data-act="switch">${kid().av} ${esc(DB.current)} ▾</button>`:""}</div></div>`;}
+function confetti(){const box=document.createElement("div");box.className="confetti";const e=["🎉","⭐","🦘","🎈","✨","🌟"];
+  for(let i=0;i<40;i++){const s=document.createElement("span");s.textContent=e[i%e.length];s.style.left=Math.random()*100+"vw";s.style.animationDelay=Math.random()*1.2+"s";box.appendChild(s);}
+  document.body.appendChild(box);setTimeout(()=>box.remove(),4500);}
+function choiceHTML(q,i,cls){return `<button class="ch ${cls||""}" data-ch="${i}"><span class="lt">${LETTERS[i]}</span><span>${q.choices[i]}</span></button>`;}
+const answerLabel=(q,i)=>i==null?"(no answer)":`(${LETTERS[i]})`+(q.labels?" "+q.labels[i]:String(q.choices[i]).startsWith("<svg")?"":" "+q.choices[i]);
+
+/* ---------- screens ---------- */
+function screenProfiles(){stopTimer();DB.current=null;save();
+  app().innerHTML=header()+`<div class="card" style="text-align:center"><h1>Who's practicing today?</h1><p class="muted">Tap your name to start hopping! 🦘</p></div>
+  <div class="profiles">${KIDS.map((k,i)=>{const p=DB.profiles[k.name],done=Object.keys(p.attempts).length;
+    return `<button class="prof p${i}" data-kid="${esc(k.name)}"><span class="av">${k.av}</span><span class="nm">${esc(k.name)}</span><span class="lv">${LEVELS[k.level].label} · ${LEVELS[k.level].grades}</span><span>${done} of ${NUM_TESTS} tests done</span></button>`;}).join("")}</div>
+  <div class="card" style="margin-top:16px"><h2>For grown-ups</h2>
+  <p class="muted" style="font-size:16px">Progress is saved automatically in this browser on this device. To move progress to another device, or to keep a safe copy, use backup and restore.</p>
+  <div class="row"><button class="btn alt small" data-act="export">⬇️ Download backup</button><label class="btn alt small" style="display:inline-block">⬆️ Restore backup<input type="file" accept="application/json" id="imp" hidden></label></div></div>
+  <div class="foot">Original practice questions in the style of Kangaroo math contests.</div>`;}
+
+function screenHome(){stopTimer();const p=P(),CATS=CATS_(),stats=skillStats(),weak=weakList(stats),tried=CAT_KEYS.filter(c=>stats[c][1]>0);if(p.instant===undefined)p.instant=true;
+  const tests=Array.from({length:NUM_TESTS},(_,i)=>i+1).map(t=>{const b=best(t),ip=p.inProgress[t];
+    if(b!=null)return `<button class="tcard done" data-test="${t}"><span class="tn">Test ${t}</span><span class="stars">${starStr(starsFor(pct(b,MAX())))}</span><br><b>${b}</b>/${MAX()}<br><span class="muted" style="font-size:14px">Tap to see or retry</span></button>`;
+    if(ip)return `<button class="tcard prog" data-test="${t}"><span class="tn">Test ${t}</span>⏳ In progress<br><span class="muted" style="font-size:14px">${Object.keys(ip.answers).length}/${NQ()} answered</span></button>`;
+    return `<button class="tcard" data-test="${t}"><span class="tn">Test ${t}</span>🆕 Start<br><span class="muted" style="font-size:14px">${NQ()} questions</span></button>`;}).join("");
+  let weakHTML;
+  if(!tried.length)weakHTML=`<p class="muted">Finish a test and I'll find the skills to practice. 🔍</p>`;
+  else if(weak.length)weakHTML=`<p>These skills need a little more practice:</p><div class="weak">${weak.map(c=>`<button class="btn orange" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name} (${pct(...stats[c])}%)</button>`).join("")}</div>`;
+  else {const low=tried.sort((a,b)=>stats[a][0]/stats[a][1]-stats[b][0]/stats[b][1])[0];weakHTML=`<p>Super work! No weak spots right now. 🎉 Want a challenge in your lowest skill?</p><button class="btn orange" data-prac="${low}">${CATS[low].emoji} ${CATS[low].name}</button>`;}
+  app().innerHTML=header()+`<div class="card"><h1>Hi ${esc(DB.current)}! ${kid().av}</h1><p class="muted" style="margin:0">${LEVELS[LV()].label} (${LEVELS[LV()].grades}). Each test has ${NQ()} questions: ${PER()} worth 3 points, ${PER()} worth 4 points and ${PER()} worth 5 points. Best score: ${MAX()}. Wrong answers don't lose points, so always pick an answer!</p>
+  <div class="modes"><button class="mode ${p.instant?"on":""}" data-mode="1"><b>💡 Learning mode</b><br><span>See if each answer is right, with the explanation, as soon as you tap it.</span></button><button class="mode ${p.instant?"":"on"}" data-mode="0"><b>🏁 Contest mode</b><br><span>Like the real contest: answers and explanations at the end.</span></button></div></div>
+  <div class="card"><h2>📝 Practice tests</h2><div class="tests">${tests}</div></div>
+  <div class="card"><h2>🎯 Practice my weak spots</h2>${weakHTML}</div>
+  <div class="card"><h2>📊 My skills</h2>${CAT_KEYS.map(c=>{const [a,b]=stats[c];return `<div class="skill"><span>${CATS[c].emoji} ${CATS[c].name}</span><div class="bar"><i style="width:${pct(a,b)}%;background:${CATS[c].color}"></i></div><b>${b?pct(a,b)+"%":"–"}</b></div>`;}).join("")}
+  <p class="muted" style="font-size:15px">Want to practice any skill? Pick one:</p><div class="weak">${CAT_KEYS.map(c=>`<button class="btn alt small" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name}</button>`).join("")}</div></div>`;}
+
+/* --- test --- */
+let T=null; // {n,qs,answers,idx,elapsed}
+function openTest(n){const p=P();
+  if(best(n)!=null&&!p.inProgress[n]){showResults(n,p.attempts[n].length-1);return;}
+  startTest(n);}
+function startTest(n){const p=P();const ip=p.inProgress[n]||{answers:{},idx:0,elapsed:0,v:2,instant:p.instant!==false};p.inProgress[n]=ip;save();
+  T={n,qs:makeTest(n,testVer(ip)),ip};renderQ();stopTimer();timerId=setInterval(()=>{T.ip.elapsed++;const el=$("#tm");if(el)el.textContent="⏱ "+fmtTime(T.ip.elapsed);if(T.ip.elapsed%10===0)save();},1000);}
+function renderQ(){const {qs,ip,n}=T,i=ip.idx,q=qs[i],sel=ip.answers[i],N=qs.length,learn=!!ip.instant,shown=learn&&sel!=null,ok=sel===q.answer;const pc={3:"var(--p3)",4:"var(--p4)",5:"var(--p5)"}[q.pts];
+  const answered=Object.keys(ip.answers).length;
+  app().innerHTML=header(`<span class="timer" id="tm">⏱ ${fmtTime(ip.elapsed)}</span>`)+`<div class="card">
+   <div class="qhead"><span class="qnum">Test ${n} · Question ${i+1} of ${N}</span><span class="pill" style="background:${pc}">${q.pts} points</span></div>
+   <div class="bar" style="margin-bottom:14px"><i style="width:${pct(answered,N)}%;background:linear-gradient(90deg,#f472b6,#7c3aed)"></i></div>
+   <div class="qtext">${q.text}</div>${q.svg||""}
+   <div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,shown?(k===q.answer?"right":k===sel?"wrong":""):sel===k?"sel":"")).join("")}</div>
+   ${shown?`<div class="feedback ${ok?"ok":"no"}"><b>${ok?`🎉 Correct! +${q.pts} points`:"🤔 Not quite. The answer is "+esc(answerLabel(q,q.answer))+"."}</b><div class="expl">💡 <b>How to solve it:</b><br>${q.explain}</div></div>`:""}
+   <div class="nav"><button class="btn alt" data-act="prev" ${i===0?"disabled":""}>⬅ Back</button>
+   ${i<N-1?`<button class="btn" data-act="next">Next ➡</button>`:`<button class="btn green" data-act="finish">✅ Finish test</button>`}</div>
+   <div class="dots">${qs.map((_,k)=>`<button class="dot ${ip.answers[k]!=null?"ans":""} ${k===i?"cur":""}" data-go="${k}">${k+1}</button>`).join("")}</div>
+   <div class="row" style="justify-content:space-between;margin-top:12px"><span class="muted" style="font-size:15px">${answered}/${N} answered · ${learn?"💡 Learning mode":"🏁 Contest mode"} · Suggested time: 75 min</span><button class="linkbtn" data-act="finish">Finish now</button></div></div>`;
+  if(shown&&T.justAnswered){T.justAnswered=false;$(".feedback").scrollIntoView({behavior:"smooth",block:"nearest"});}else window.scrollTo({top:0});}
+function finishTest(){const {qs,ip,n}=T,un=qs.length-Object.keys(ip.answers).length;
+  if(un&&!confirm(`You still have ${un} question${un>1?"s":""} without an answer. Wrong answers don't lose points, so it's smart to guess!\n\nFinish the test anyway?`))return;
+  stopTimer();const answers=qs.map((_,i)=>ip.answers[i]!=null?ip.answers[i]:null),g=grade(qs,answers),p=P();
+  p.attempts[n]=p.attempts[n]||[];p.attempts[n].push({date:new Date().toISOString(),score:g.score,answers,time:ip.elapsed,v:testVer(ip),instant:!!ip.instant});delete p.inProgress[n];save();
+  showResults(n,p.attempts[n].length-1,true);}
+
+function showResults(n,ai,fresh){stopTimer();const p=P(),CATS=CATS_(),att=p.attempts[n][ai],qs=makeTest(n,testVer(att)),g=grade(qs,att.answers),M=MAX(),K=PER(),pc=pct(g.score,M),st=starsFor(pc);
+  const msg=pc>=85?"Amazing! You're a math superstar! 🌟":pc>=65?"Great job! You're hopping high! 🦘":pc>=40?"Good effort! Practice makes you stronger! 💪":"Nice try! Let's practice together and grow! 🌱";
+  const weakHere=CAT_KEYS.filter(c=>g.byCat[c]&&g.byCat[c][0]/g.byCat[c][1]<0.7).sort((a,b)=>g.byCat[a][0]/g.byCat[a][1]-g.byCat[b][0]/g.byCat[b][1]);
+  const hist=p.attempts[n].length>1?`<p class="muted" style="font-size:15px">Tries on this test: ${p.attempts[n].map((a,k)=>k===ai?`<b>${a.score}</b>`:a.score).join(" → ")}</p>`:"";
+  app().innerHTML=header()+`<div class="card score"><div class="tag">Test ${n} results</div><div style="font-size:60px">${pc>=65?"🏆":"🦘"}</div>
+   <div class="big">${g.score}<span style="font-size:30px;color:var(--muted)"> / ${M}</span></div><div class="bigstars">${starStr(st)}</div>
+   <h2 style="margin:8px 0 4px">${msg}</h2><p class="muted" style="margin:0">${g.correct} of ${qs.length} correct · Time ${fmtTime(att.time)}${att.instant?" · 💡 Learning mode":""}</p>${hist}</div>
+  <div class="card"><h2>🧮 How your score was counted</h2><table class="pts"><tr><th>Question type</th><th>Correct</th><th>Points each</th><th>Points earned</th></tr>
+   ${[3,4,5].map(k=>`<tr><td><span class="pill" style="background:var(--p${k})">${k}-point</span> (questions ${(k-3)*K+1}–${(k-2)*K})</td><td>${g.byPts[k][0]} of ${K}</td><td>${k}</td><td><b>${g.byPts[k][0]*k}</b> of ${K*k}</td></tr>`).join("")}
+   <tr><td><b>Total</b></td><td><b>${g.correct} of ${qs.length}</b></td><td></td><td><b>${g.score}</b> of ${M}</td></tr></table>
+   <p class="muted" style="font-size:15px">Harder questions are worth more points. Stars: ⭐⭐⭐ 85% or more (${Math.ceil(M*.845)}+ points), ⭐⭐ 65% or more (${Math.ceil(M*.645)}+), ⭐ 40% or more (${Math.ceil(M*.395)}+).</p></div>
+  <div class="card"><h2>📊 Skills in this test</h2>${CAT_KEYS.filter(c=>g.byCat[c]).map(c=>{const [a,b]=g.byCat[c];return `<div class="skill"><span>${CATS[c].emoji} ${CATS[c].name}</span><div class="bar"><i style="width:${pct(a,b)}%;background:${CATS[c].color}"></i></div><b>${a}/${b}</b></div>`;}).join("")}
+   ${weakHere.length?`<h2 style="margin-top:16px">🎯 Let's practice</h2><p>You can get stronger at these. Each practice gives you 10 new questions with help after every answer.</p><div class="weak">${weakHere.map(c=>`<button class="btn orange" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name}</button>`).join("")}</div>`:`<p style="margin-top:12px">🎉 No weak spots in this test. Fantastic!</p>`}</div>
+  <div class="card"><h2>🔍 Check every answer</h2><div class="row"><button class="btn alt small" data-filter="wrong">Show only mistakes</button><button class="btn alt small" data-filter="all">Show all</button></div></div>
+  <div id="review">${qs.map((q,i)=>{const a=att.answers[i],ok=a===q.answer,cls=a==null?"skip":ok?"ok":"no";
+    return `<div class="rev ${cls}" data-ok="${ok?1:0}"><div class="qhead"><span class="qnum">${ok?"✅":a==null?"⚪":"❌"} Question ${i+1}</span><span><span class="pill" style="background:${CATS[q.cat].color}">${CATS[q.cat].emoji} ${CATS[q.cat].name}</span> <span class="pill" style="background:var(--p${q.pts})">${q.pts} pts</span></span></div>
+     <div class="qtext">${q.text}</div>${q.svg||""}<div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,k===q.answer?"right":k===a?"wrong":"")).join("")}</div>
+     <p style="margin:10px 0 0"><b>Your answer:</b> ${esc(answerLabel(q,a))}${ok?"":` · <b>Correct:</b> ${esc(answerLabel(q,q.answer))}`}</p>
+     <div class="expl">💡 <b>How to solve it:</b><br>${q.explain}</div></div>`;}).join("")}</div>
+  <div class="card row" style="justify-content:center"><button class="btn" data-retry="${n}">🔄 Try Test ${n} again</button>${n<NUM_TESTS?`<button class="btn green" data-test="${n+1}">Next: Test ${n+1} ➡</button>`:""}<button class="btn alt" data-act="home">🏠 Home</button></div>`;
+  window.scrollTo({top:0});if(fresh&&pc>=65)confetti();}
+
+/* --- practice --- */
+let PR=null;
+function startPractice(cat){stopTimer();PR={cat,qs:makePractice(LV(),cat,Date.now()%1e9),i:0,picked:null,right:0};renderP();}
+function renderP(){const CATS=CATS_(),{cat,qs,i,picked}=PR,q=qs[i],done=picked!=null,ok=picked===q.answer;
+  app().innerHTML=header()+`<div class="card"><div class="qhead"><span class="qnum">${CATS[cat].emoji} ${CATS[cat].name} practice · ${i+1} of ${qs.length}</span><span class="pill" style="background:var(--p${q.pts})">${["","Easy","Medium","Tricky"][q.d]}</span></div>
+   <div class="bar" style="margin-bottom:14px"><i style="width:${pct(i,qs.length)}%;background:${CATS[cat].color}"></i></div>
+   <div class="qtext">${q.text}</div>${q.svg||""}
+   <div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,done?(k===q.answer?"right":k===picked?"wrong":""):"")).join("")}</div>
+   ${done?`<div class="feedback ${ok?"ok":"no"}"><b>${ok?"🎉 Correct! Great thinking!":"🤔 Not quite. The answer is "+esc(answerLabel(q,q.answer))+"."}</b><div class="expl">💡 <b>How to solve it:</b><br>${q.explain}</div></div>
+   <div class="nav"><span class="muted">Score so far: ${PR.right}/${i+1}</span><button class="btn" data-act="pnext">${i<qs.length-1?"Next ➡":"See my result 🏁"}</button></div>`:`<p class="muted" style="font-size:15px;margin-bottom:0">Tap an answer. You'll see the explanation right away.</p>`}</div>`;
+  if(done)$(".feedback").scrollIntoView({behavior:"smooth",block:"nearest"});else window.scrollTo({top:0});}
+function pickP(k){if(PR.picked!=null)return;PR.picked=k;const ok=k===PR.qs[PR.i].answer;if(ok)PR.right++;
+  const s=P().practice;s[PR.cat]=s[PR.cat]||[0,0];s[PR.cat][1]++;if(ok)s[PR.cat][0]++;save();renderP();}
+function nextP(){if(PR.i<PR.qs.length-1){PR.i++;PR.picked=null;renderP();return;}
+  const CATS=CATS_(),{cat,right,qs}=PR,pc=pct(right,qs.length),stats=skillStats()[cat];
+  app().innerHTML=header()+`<div class="card score"><div style="font-size:60px">${pc>=70?"🌟":"💪"}</div><div class="big">${right}<span style="font-size:30px;color:var(--muted)"> / ${qs.length}</span></div>
+   <h2>${pc>=90?"Wow, you mastered it!":pc>=70?"Great practice!":"Good work! Every try makes your brain stronger."}</h2>
+   <p class="muted">${CATS[cat].emoji} ${CATS[cat].name}: overall skill is now <b>${pct(...stats)}%</b></p>
+   <div class="row" style="justify-content:center"><button class="btn orange" data-prac="${cat}">🔁 10 more questions</button><button class="btn alt" data-act="home">🏠 Home</button></div></div>`;
+  if(pc>=70)confetti();}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+  if(d.kid){DB.current=d.kid;save();screenHome();return;}
+  if(d.act==="home"){if(T&&timerId)save();screenHome();return;}
+  if(d.act==="switch"){save();screenProfiles();return;}
+  if(d.act==="export"){const blob=new Blob([JSON.stringify(DB,null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="hop-math-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();return;}
+  if(d.test){openTest(+d.test);return;}
+  if(d.retry){delete P().inProgress[d.retry];save();startTest(+d.retry);return;}
+  if(d.prac){startPractice(d.prac);return;}
+  if(d.filter){document.querySelectorAll("#review .rev").forEach(r=>r.style.display=d.filter==="wrong"&&r.dataset.ok==="1"?"none":"");return;}
+  if(d.act==="pnext"){nextP();return;}
+  if(d.mode!=null){P().instant=d.mode==="1";save();screenHome();return;}
+  if(d.ch!=null){if(PR&&$(".qnum")&&$(".qnum").textContent.includes("practice")){pickP(+d.ch);return;}
+    if(T&&!b.closest(".rev")){if(T.ip.instant&&T.ip.answers[T.ip.idx]!=null)return;T.ip.answers[T.ip.idx]=+d.ch;T.justAnswered=true;save();renderQ();}return;}
+  if(!T)return;
+  if(d.act==="prev"){T.ip.idx--;save();renderQ();}
+  else if(d.act==="next"){T.ip.idx++;save();renderQ();}
+  else if(d.go!=null){T.ip.idx=+d.go;save();renderQ();}
+  else if(d.act==="finish")finishTest();
+});
+document.addEventListener("change",e=>{if(e.target.id!=="imp")return;const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{try{const x=JSON.parse(rd.result);if(!x.profiles)throw 0;if(!confirm("Replace the progress on this device with the backup?"))return;DB=x;load2();save();screenProfiles();alert("Backup restored! ✅");}catch(err){alert("Sorry, that file doesn't look like a Hop Math backup.");}};rd.readAsText(f);});
+function load2(){KIDS.forEach(k=>{if(!DB.profiles[k.name])DB.profiles[k.name]={attempts:{},practice:{},inProgress:{},instant:true};});}
+window.addEventListener("beforeunload",save);
+
+load();if(DB.current&&DB.profiles[DB.current])screenHome();else screenProfiles();
+})();
+</script>
+</body></html>
