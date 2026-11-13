@@ -88,6 +88,10 @@ table.pts th:first-child,table.pts td:first-child{text-align:left}
 .ch .ico{width:64px;height:64px}
 @media (max-width:560px){.modes{grid-template-columns:1fr}}
 .prof.p4{background:linear-gradient(135deg,#14b8a6,#8b5cf6)}
+.prof.p5{background:linear-gradient(135deg,#a16207,#f59e0b)}.prof.p6{background:linear-gradient(135deg,#dc2626,#7c3aed)}
+.hotcard{border:3px solid #fdba74;background:linear-gradient(180deg,#fff7ed,#fff)}
+.tcard.hot{border-color:#fdba74}
+.pill[style*="--p"]{white-space:nowrap}
 </style></head>
 <body><div class="wrap" id="app"></div>
 <script>/* Kangaroo-style Level 1 question generator (original questions). */
@@ -762,6 +766,115 @@ T3.spatial[3]=[F.painted(5,"rand"),F.diceStack(4),
  r=>{const n=ri(r,3,6),ans=n**3-(n-2)**3;return {text:`A ${n}×${n}×${n} cube is built from small cubes. Then all the small cubes you could see from outside (on any face) are removed. How many small cubes are removed?`,...numChoices(r,ans,[6*n*n,n**3,(n-2)**3,ans-8]),
   explain:`Total cubes: ${n}³ = ${n**3}.<br>The hidden inside part is a ${n-2}×${n-2}×${n-2} cube = ${(n-2)**3}.<br>Removed = ${n**3} − ${(n-2)**3} = <b>${ans}</b>.<br>(${6*n*n} counts the edge and corner cubes more than once.)`};}];
 
+/* ================= CHALLENGE (very hard) templates: difficulty 4 ================= */
+F.twoTimes=()=>r=>{const k=ri(r,3,12),m=pick(r,[2,3]),Tt=(m+1)*k,[x,y]=names(r,2);
+  return {text:`${x} has ${m===2?"twice":"three times"} as many marbles as ${y}. Together they have ${Tt} marbles. How many marbles does ${x} have?`,...numChoices(r,m*k,[k,Tt/2|0,Tt-k+1,m*k+m]),
+    explain:`Draw it as boxes: ${y} = 1 box, ${x} = ${m} boxes. Together that is ${m+1} equal boxes = ${Tt}.<br>1 box = ${Tt} ÷ ${m+1} = ${k}.<br>${x} has ${m} boxes: ${m} × ${k} = <b>${m*k}</b>.`};};
+F.coinWays=()=>r=>{const A=pick(r,[20,25,30,35,40,45,50]);let ways=[];for(let d=0;d*10<=A;d++){const rest=A-10*d;if(rest%5===0)ways.push([d,rest/5]);}
+  return {text:`In how many different ways can you make ${A}¢ using only dimes (10¢) and nickels (5¢)? (You don't have to use both kinds.)`,...numChoices(r,ways.length,[ways.length-1,ways.length+1,A/5,A/10|0]),
+    explain:`Count by the number of dimes, then fill the rest with nickels:<br>${ways.map(([d,n])=>`${d} dime${d===1?"":"s"} + ${n} nickel${n===1?"":"s"}`).join("<br>")}<br>That's <b>${ways.length}</b> ways.`};};
+F.digitDiff=()=>r=>{const D=ri(r,2,7),list=[];for(let n=10;n<100;n++)if(Math.abs(Math.floor(n/10)-n%10)===D)list.push(n);
+  return {text:`How many two-digit numbers have digits that are ${D} apart (like ${list[0]}, where ${Math.floor(list[0]/10)} and ${list[0]%10} differ by ${D})?`,...numChoices(r,list.length,[list.length-1,list.length+1,(list.length/2)|0,10-D]),
+    explain:`Tens digit bigger: ${list.filter(n=>Math.floor(n/10)>n%10).join(", ")}<br>Ones digit bigger: ${list.filter(n=>Math.floor(n/10)<n%10).join(", ")||"none"}<br>Total: <b>${list.length}</b>.`};};
+F.smallestSum=()=>r=>{const S=ri(r,15,26);let n=1;while(dsum(n)!==S)n++;
+  return {text:`What is the smallest whole number whose digits add up to ${S}?`,...numChoices(r,n,[+String(n).split("").reverse().join(""),n+9,n+90,+("9".repeat(Math.floor(S/9))+(S%9||""))].filter(x=>x!==n)),
+    explain:`To make the number as small as possible, use as <b>few digits</b> as you can, so make the digits big: use 9s.<br>${S} = ${String(n).split("").join(" + ")}.<br>Put the smallest digit first: <b>${n}</b>.`};};
+F.threeDigit=()=>r=>{const zero=r()<.5;const ds=zero?[0,...shuffle(r,[1,2,3,4,5,6,7,8,9]).slice(0,2)]:shuffle(r,[1,2,3,4,5,6,7,8,9]).slice(0,3);const set=new Set();
+  for(const a of ds)for(const b of ds)for(const c of ds)if(a!==b&&b!==c&&a!==c&&a!==0)set.add(""+a+b+c);const list=[...set].sort();
+  return {text:`How many different three-digit numbers can you make using the digits ${ds.join(", ")}, each exactly once?`,...numChoices(r,list.length,[6,4,3,9,list.length===6?8:5]),
+    explain:`${zero?"Careful: a number can't start with 0!<br>":""}List them all:<br>${list.join(", ")}<br>That's <b>${list.length}</b>.`};};
+F.triJumps=()=>r=>{const N=ri(r,20,60);let s=0,k=0;while(s<N){k++;s+=k;}
+  return {text:`A kangaroo jumps 1 meter, then 2 meters, then 3 meters, and so on (each jump is 1 meter longer). After how many jumps has it gone at least ${N} meters in total?`,...numChoices(r,k,[k-1,k+1,Math.ceil(N/2),Math.ceil(N/3)]),
+    explain:`Keep a running total:<br>${Array.from({length:k},(_,i)=>`after jump ${i+1}: ${(i+1)*(i+2)/2} m`).join("<br>")}<br>The first total of at least ${N} is after jump <b>${k}</b>.`};};
+F.fibMissing=()=>r=>{const a=ri(r,1,6),x=ri(r,2,9),s=[a,x,a+x,a+2*x,2*a+3*x];
+  return {text:`In this list, every number after the first two is the sum of the two numbers before it. What is the missing second number?<div class="eq">${a}, ?, ?, ?, ${s[4]}</div>`,...numChoices(r,x,[x+1,x-1,s[4]-a,Math.round((s[4]-a)/2)]),
+    explain:`Call the missing number ▢. Then the list is ${a}, ▢, ${a}+▢, ${a}+2▢, 2×${a}+3▢.<br>So ${2*a} + 3 × ▢ = ${s[4]} → 3 × ▢ = ${s[4]-2*a} → ▢ = <b>${x}</b>.<br>Check: ${s.join(", ")} ✓`};};
+F.repeatBig=()=>r=>{const sh=shuffle(r,SHAPES).slice(0,3).map(t=>({t,c:pick(r,PALV)})),unit=[sh[0],sh[1],sh[0],sh[2],sh[2]],N=ri(r,30,70),tgt=pick(r,[0,2]);const want=sh[tgt===0?0:2];let cnt=0;for(let i=0;i<N;i++)if(unit[i%5]===want)cnt++;
+  const full=Math.floor(N/5),left=N%5;
+  return {text:`This pattern repeats again and again. How many ${itemName(want)}s are there among the first ${N} shapes?`,svg:rowSVG(unit,false),...numChoices(r,cnt,[full*2,cnt+1,cnt-1,Math.round(N*2/5)+2]),
+    explain:`One group has 5 shapes with <b>2</b> ${itemName(want)}s.<br>${N} = ${full} groups × 5 + ${left}.<br>${full} × 2 = ${full*2}, plus ${cnt-full*2} in the leftover ${left} shape${left===1?"":"s"}.<br>Total: <b>${cnt}</b>.`};};
+F.matchGrid=()=>r=>{const n=ri(r,4,7),ans=5*n+2;
+  return {text:`A grid with 2 rows of ${n} squares is made from matchsticks (like the picture, but ${n} squares long). Squares next to each other share sticks. How many matchsticks are needed?`,svg:gridSVG(2,3),...numChoices(r,ans,[8*n,6*n+2,ans-2,7*n]),
+    explain:`Count the flat (across) sticks: 3 rows of lines × ${n} = ${3*n}.<br>Count the standing (up-down) sticks: ${n+1} lines × 2 = ${2*(n+1)}.<br>Total: ${3*n} + ${2*(n+1)} = <b>${ans}</b>.<br>(The picture shows 3 squares: 9 + 8 = 17 sticks.)`};};
+F.ageSum=()=>r=>{const a=ri(r,6,12),d=ri(r,2,5),b=a-d,y=ri(r,2,6),S=a+b,F2=S+2*y,[x,z]=names(r,2);
+  return {text:`${x} is ${d} years older than ${z}. Right now their ages add up to ${S}. How old will ${x} be when their ages add up to ${F2}?`,...numChoices(r,a+y,[a,a+2*y,b+y,(F2/2)|0]),
+    explain:`Now: ${x} + ${z} = ${S} and ${x} is ${d} older, so ${x} = (${S} + ${d}) ÷ 2 = ${a}, ${z} = ${b}.<br>Each year the total grows by 2. From ${S} to ${F2} is ${F2-S}, so ${y} years pass.<br>${x} will be ${a} + ${y} = <b>${a+y}</b>.`};};
+F.after=()=>r=>{const h=ri(r,1,10),m=pick(r,[5,10,20,25,35,40,50,55]),M=pick(r,[95,105,125,135,145,155,170]),tot=h*60+m+M,ans=fmt((Math.floor(tot/60)-1)%12+1,tot%60);
+  return {text:`It is ${fmt(h,m)} now. What time will it be in ${M} minutes?`,...textChoices(r,ans,[fmt(h+1,(m+M-60)%60),fmt(h+Math.floor(M/100),(m+M%100)%60),fmt(Math.floor(tot/60),(tot%60+10)%60),fmt((Math.floor(tot/60))%12+1,tot%60),fmt(Math.floor(tot/60)-1||12,tot%60),fmt((Math.floor(tot/60))%12+1,(tot%60+50)%60),fmt(h,(m+M)%60)]),
+    explain:`${M} minutes = ${Math.floor(M/60)} hour${Math.floor(M/60)>1?"s":""} and ${M%60} minutes.<br>${fmt(h,m)} + ${Math.floor(M/60)} h → ${fmt(h+Math.floor(M/60),m)}.<br>+ ${M%60} min → <b>${ans}</b>. (Remember 60 minutes make an hour.)`};};
+T.numbers[4]=[F.digitDiff(),F.smallestSum(),F.threeDigit()];
+T.arith[4]=[F.eq(3),F.twoTimes(),F.coinWays()];
+T.patterns[4]=[F.triJumps(),F.fibMissing(),F.repeatBig()];
+T.shapes[4]=[F.squares([[3,3],[3,4],[4,4]]),F.rects([[1,4],[1,5],[2,2],[2,3]]),F.matchGrid(),F.fan(3,4)];
+T.logic[4]=[F.headsLegs(6,12,"dog",4),F.socks(),F.ageSum(),F.lily()];
+T.measure[4]=[F.monthDay(),F.weekday(30,100),F.after(),T2.measure[3][2]];
+T.spatial[4]=[F.painted(3,"rand"),F.diceStack(3),F.path(5,3),F.mirror(4,5,7)];
+
+/* --- Level 3 challenge (Grade 5, tough) --- */
+F.neither=()=>r=>{const [a,b]=pick(r,[[2,3],[2,5],[3,5],[3,4],[4,6]]),N=pick(r,[60,90,100,120]);let c=0;for(let n=1;n<=N;n++)if(n%a&&n%b)c++;const l=a*b/gcd(a,b),A=Math.floor(N/a),B=Math.floor(N/b),AB=Math.floor(N/l);
+  return {text:`How many numbers from 1 to ${N} are divisible by <b>neither</b> ${a} nor ${b}?`,...numChoices(r,c,[N-A-B,N-A-B+2*AB,c+AB,A+B-AB]),
+    explain:`Divisible by ${a}: ${A}. By ${b}: ${B}. By both (multiples of ${l}): ${AB}.<br>Divisible by at least one: ${A} + ${B} − ${AB} = ${A+B-AB}.<br>Neither: ${N} − ${A+B-AB} = <b>${c}</b>.`};};
+F.divisors=()=>r=>{const N=pick(r,[36,48,60,72,84,90,96,100,120,144]),ds=[];for(let d=1;d<=N;d++)if(N%d===0)ds.push(d);
+  return {text:`How many whole numbers divide ${N} exactly (including 1 and ${N})?`,...numChoices(r,ds.length,[ds.length-1,ds.length+2,ds.length-2,ds.length/2]),
+    explain:`Find them in pairs that multiply to ${N}:<br>${ds.slice(0,Math.ceil(ds.length/2)).map(d=>`${d} × ${N/d}`).join("<br>")}<br>Divisors: ${ds.join(", ")} → <b>${ds.length}</b>.`};};
+F.nines=()=>r=>{const n=ri(r,5,20),k=ri(r,2,9),num=(10n**BigInt(n)-BigInt(k)).toString(),s=dsum(num);
+  return {text:`What is the sum of the digits of 10<sup>${n}</sup> − ${k}? (10<sup>${n}</sup> is 1 followed by ${n} zeros.)`,...numChoices(r,s,[9*n,9*(n-1),s+9,s-1]),
+    explain:`10<sup>${n}</sup> − ${k} = ${num.length>14?num.slice(0,6)+"…"+num.slice(-4):num}: that's ${n-1} nines followed by ${10-k}.<br>Digit sum = 9 × ${n-1} + ${10-k} = <b>${s}</b>.`};};
+F.cats=()=>r=>{const c=ri(r,2,5),m=ri(r,2,6),t=ri(r,2,5),C=c*ri(r,2,4),Tm=t*ri(r,2,4),ans=m*(C/c)*(Tm/t);
+  return {text:`${c} cats catch ${m} mice in ${t} minutes. At the same speed, how many mice do ${C} cats catch in ${Tm} minutes?`,...numChoices(r,ans,[m*C/c,m*Tm/t,ans/2,m*C*Tm/(c+t)|0]),
+    explain:`More cats: ${C} cats is ${C/c} times as many cats → ${C/c} × ${m} = ${m*C/c} mice in ${t} minutes.<br>More time: ${Tm} minutes is ${Tm/t} times as long → ${Tm/t} × ${m*C/c} = <b>${ans}</b> mice.`};};
+F.spend=()=>r=>{const [p,q]=pick(r,[[3,4],[4,3],[2,3],[3,2],[5,4],[4,5],[2,5]]),k=ri(r,2,8),S=p*q*k,left=S*(p-1)/p*(q-1)/q;
+  return {text:`Ava spent 1/${p} of her money on a book, then 1/${q} of what was left on a snack. She has $${left} left. How much money did she start with?`,...numChoices(r,S,[left*2,S+p*q,left+S/p,S-q]),
+    explain:`Work backwards. After the snack she kept ${q-1}/${q} of the leftover money, so before the snack she had $${left} ÷ ${q-1} × ${q} = $${S*(p-1)/p}.<br>After the book she kept ${p-1}/${p} of her money, so at the start she had $${S*(p-1)/p} ÷ ${p-1} × ${p} = <b>$${S}</b>.`};};
+F.avgRemove=()=>r=>{const n=ri(r,5,9),B=ri(r,10,30),x=ri(r,B+n,B+40),A=(B*(n-1)+x)/n;if(!Number.isInteger(A))return F.avgRemove()(r);
+  return {text:`The average of ${n} numbers is ${A}. When one of the numbers is removed, the average of the rest is ${B}. What number was removed?`,...numChoices(r,x,[A-B,A,x+n,n*A-B]),
+    explain:`All ${n} numbers add up to ${n} × ${A} = ${n*A}.<br>The other ${n-1} numbers add up to ${n-1} × ${B} = ${(n-1)*B}.<br>Removed number = ${n*A} − ${(n-1)*B} = <b>${x}</b>.`};};
+F.nthDigit=()=>r=>{let s="";for(let i=1;s.length<400;i++)s+=i;const k=ri(r,40,250),ans=+s[k-1];
+  return {text:`All the numbers from 1 upward are written in one long row: 123456789101112131415… What is the ${ord(k)} digit?`,...numChoices(r,ans,[0,1,2,3,4,5,6,7,8,9].filter(d=>d!==ans)),
+    explain:(()=>{if(k<=9)return `The first 9 digits are 1–9, so the answer is <b>${ans}</b>.`;const p=k-9,num=10+Math.floor((p-1)/2),pos=(p-1)%2;return `1–9 use 9 digits. Then each two-digit number uses 2 digits.<br>${k} − 9 = ${p} more digits = ${Math.floor((p-1)/2)} full two-digit numbers plus ${pos+1} digit${pos?"s":""}.<br>So we're at the ${pos?"2nd":"1st"} digit of ${num}: <b>${ans}</b>.`;})()};};
+F.countOnes=()=>r=>{const N=ri(r,40,130);let c=0;for(let i=1;i<=N;i++)c+=String(i).split("").filter(x=>x==="1").length;
+  return {text:`Leo writes all the numbers from 1 to ${N}. How many times does he write the digit 1?`,...numChoices(r,c,[c-1,c+1,c-10,Math.floor(N/10)+1]),
+    explain:`Count the 1s in each place separately (11 has two 1s, so it counts twice!).<br>Ones place: ${(()=>{let x=0;for(let i=1;i<=N;i++)if(i%10===1)x++;return x;})()}. Tens place: ${(()=>{let x=0;for(let i=1;i<=N;i++)if(Math.floor(i/10)%10===1)x++;return x;})()}.${N>=100?` Hundreds place: ${(()=>{let x=0;for(let i=1;i<=N;i++)if(Math.floor(i/100)===1)x++;return x;})()}.`:""}<br>Total: <b>${c}</b>.`};};
+F.doubleMinus=()=>r=>{const a=ri(r,2,5),k=ri(r,7,9),s=[a];for(let i=1;i<k;i++)s.push(2*s[i-1]-1);
+  return {text:`The first number is ${a}. Each next number is "double the one before, then subtract 1": ${s.slice(0,4).join(", ")}, … What is the ${ord(k)} number?`,...numChoices(r,s[k-1],[s[k-2]*2,s[k-1]+1,s[k-2],2*s[k-1]-1]),
+    explain:`Keep going: ${s.join(", ")}.<br>(Shortcut: each number minus 1 doubles: ${s[0]-1}, ${s[1]-1}, ${s[2]-1}, …) The ${ord(k)} number is <b>${s[k-1]}</b>.`};};
+F.clockHalf=()=>r=>{const h=ri(r,1,11),raw=Math.abs(30*h-180+15),ang=Math.min(raw,360-raw);
+  return {text:`What is the smaller angle between the two hands of a clock at ${h}:30?`,svg:clockSVG(h,30),...numChoices(r,ang,[Math.abs(30*h-180)===ang?ang+30:Math.abs(30*h-180),ang+15,ang-15,360-ang].filter(x=>x>0)),
+    explain:`The minute hand points at 6 (180° from 12).<br>The hour hand is <b>halfway</b> between ${h} and ${h+1}: ${h} × 30 + 15 = ${30*h+15}°.<br>Difference: |${30*h+15} − 180| = ${raw}°${raw>180?`, and the smaller angle is 360 − ${raw} = ${ang}°`:""}. Answer: <b>${ang}°</b>.`};};
+F.stairPerim=()=>r=>{const n=ri(r,4,9),s=ri(r,1,3),ans=4*n*s;
+  return {text:`A staircase shape is made of squares with sides ${s} cm, like the picture but with ${n} steps. What is its perimeter?`,svg:stairsSVG(4),...numChoices(r,ans,[n*(n+1)/2*4*s,2*n*s,ans+2*s,3*n*s]),
+    explain:`Push the steps outward: the zig-zag edges add up to the same as a full ${n*s} × ${n*s} square's top and right sides.<br>So the perimeter equals that square's: 4 × ${n*s} = <b>${ans} cm</b>.`};};
+F.knights=()=>r=>{const P=["Ann","Bo","Cy"];let st,sol;
+  const gen=()=>{const S=[];for(let i=0;i<3;i++){const j=(i+1+ri(r,0,1))%3,t=ri(r,0,3);S.push({i,j,t});}return S;};
+  const said=s=>s.t===0?`"${P[s.j]} is a liar."`:s.t===1?`"${P[s.j]} is a knight."`:s.t===2?`"${P[s.i]} and ${P[s.j]} are both liars."`:`"Exactly one of ${P[s.j]} and me is a knight."`;
+  const truth=(s,a)=>s.t===0?!a[s.j]:s.t===1?a[s.j]:s.t===2?(!a[s.i]&&!a[s.j]):(a[s.i]!==a[s.j]);
+  for(let g=0;g<400;g++){st=gen();const sols=[];for(let m=0;m<8;m++){const a=[m&1,m&2,m&4].map(Boolean);if(st.every(s=>truth(s,a)===a[s.i]))sols.push(a);}if(sols.length===1){sol=sols[0];break;}}
+  const k=sol.filter(Boolean).length;
+  return {text:`On an island, <b>knights</b> always tell the truth and <b>liars</b> always lie.<br>${st.map(s=>`${P[s.i]} says: ${said(s)}`).join("<br>")}<br>How many of the three are knights?`,...textChoices(r,String(k),["0","1","2","3","Can't tell"].filter(x=>x!==String(k)),true),
+    explain:`Try each possibility and check that every knight's sentence is true and every liar's sentence is false.<br>The only one that works: ${P.map((p,i)=>`${p} is a ${sol[i]?"knight":"liar"}`).join(", ")}.<br>${st.map(s=>`${P[s.i]} (${sol[s.i]?"knight":"liar"}) said something ${truth(s,sol)?"true":"false"} ✓`).join("<br>")}<br>So there ${k===1?"is":"are"} <b>${k}</b> knight${k===1?"":"s"}.`};};
+F.wheels=()=>r=>{const V=ri(r,10,30),t=ri(r,3,V-3),W=2*V+t;
+  return {text:`In a park there are bicycles and tricycles, ${V} in total, with ${W} wheels altogether. How many tricycles are there?`,...numChoices(r,t,[V-t,W-2*V+1,Math.round(W/3),t+2]),
+    explain:`If all ${V} were bicycles: ${2*V} wheels. There are ${W} − ${2*V} = ${W-2*V} extra wheels.<br>Each tricycle adds 1 extra wheel, so there are <b>${t}</b> tricycles.`};};
+F.meet=()=>r=>{const a=ri(r,4,12)*5,b=ri(r,4,12)*5,t=pick(r,[2,3,4]),half=r()<.4,tt=half?t+0.5:t,D=(a+b)*tt;
+  return {text:`Two towns are ${D} km apart. Two cars leave at the same time and drive toward each other, one at ${a} km/h and the other at ${b} km/h. After how many hours do they meet?`,...textChoices(r,String(tt),[String(tt+1),String(tt-0.5),String(Math.round(D/Math.max(a,b)*10)/10),String(tt*2),String(tt+0.5)]),
+    explain:`Together they close the gap at ${a} + ${b} = ${a+b} km every hour.<br>${D} ÷ ${a+b} = <b>${tt}</b> hour${tt===1?"":"s"}.`};};
+F.avgSpeed=()=>r=>{const [a,b,ans]=pick(r,[[30,60,40],[20,30,24],[40,60,48],[10,15,12],[60,90,72],[12,24,16]]),D=a*b/gcd(a,b)*ri(r,1,2);
+  return {text:`Sam drives ${D} km to the beach at ${a} km/h and drives back the same way at ${b} km/h. What is his average speed for the whole trip?`,...numChoices(r,ans,[(a+b)/2,ans+2,ans-2,Math.max(a,b)-Math.min(a,b)]),
+    explain:`Average speed = total distance ÷ total time (not the average of the two speeds!).<br>Time there: ${D} ÷ ${a} = ${D/a} h. Time back: ${D} ÷ ${b} = ${D/b} h. Total: ${D/a+D/b} h.<br>${2*D} km ÷ ${D/a+D/b} h = <b>${ans} km/h</b>.`};};
+F.dateDay=()=>r=>{const MON=[["January",31],["March",31],["April",30],["May",31],["June",30],["July",31],["August",31],["October",31],["November",30]];const mi=ri(r,0,MON.length-2);const [m1,len]=MON[mi],m2=pick(r,[MON[mi+1][0]]),w=ri(r,0,6),d=ri(r,5,28),diff=len-1+d,ans=DAYS[(w+diff)%7];
+  return {text:`${m1} 1st is a ${DAYS[w]}. ${m1} has ${len} days. What day of the week is ${m2} ${ord(d)}?`,...textChoices(r,ans,DAYS),
+    explain:`From ${m1} 1st to ${m2} 1st is ${len} days, and from there to the ${ord(d)} is ${d-1} more: ${len} + ${d-1} = ${diff} days.<br>${diff} = 7 × ${Math.floor(diff/7)} + ${diff%7}, so move ${diff%7} day${diff%7===1?"":"s"} past ${DAYS[w]}: <b>${ans}</b>.`};};
+F.boxFit=()=>r=>{const a=ri(r,2,5)*2,b=ri(r,2,4)*2,c=ri(r,1,3)*2,ans=a*b*c/8;
+  return {text:`How many 2 cm × 2 cm × 2 cm cubes fit inside a box that is ${a} cm by ${b} cm by ${c} cm?`,...numChoices(r,ans,[a*b*c,a*b*c/2,a*b*c/4,ans+a/2]),
+    explain:`Along each edge: ${a} ÷ 2 = ${a/2}, ${b} ÷ 2 = ${b/2}, ${c} ÷ 2 = ${c/2} cubes.<br>${a/2} × ${b/2} × ${c/2} = <b>${ans}</b>. (Not ${a*b*c} ÷ 2: each cube has volume 8, not 2!)`};};
+T3.numbers[4]=[F.neither(),F.divisors(),F.nines(),T3.numbers[3][1]];
+T3.arith[4]=[F.cats(),F.spend(),F.avgRemove(),T3.arith[3][1]];
+T3.patterns[4]=[F.nthDigit(),F.countOnes(),F.doubleMinus()];
+T3.shapes[4]=[F.rects([[3,3],[2,5],[3,4]]),F.squares([[5,5],[4,6],[5,6]]),F.clockHalf(),F.stairPerim()];
+T3.logic[4]=[F.knights(),F.wheels(),T3.logic[3][2],T3.logic[2][2]];
+T3.measure[4]=[F.meet(),F.avgSpeed(),F.dateDay(),T3.measure[3][1]];
+T3.spatial[4]=[F.painted(5,"rand"),F.diceStack(5),F.boxFit(),F.mirror(5,7,10)];
+
 /* ================= API ================= */
 const CATS={numbers:{name:"Numbers & Counting",emoji:"🔢",color:"#3b82f6"},arith:{name:"Adding & Taking Away",emoji:"➕",color:"#22c55e"},patterns:{name:"Patterns",emoji:"🔁",color:"#a855f7"},
   shapes:{name:"Shapes & Geometry",emoji:"🔺",color:"#f97316"},logic:{name:"Logic Puzzles",emoji:"🧩",color:"#ec4899"},measure:{name:"Time & Money",emoji:"⏰",color:"#14b8a6"},spatial:{name:"Seeing in 3D",emoji:"🎲",color:"#eab308"}};
@@ -774,23 +887,31 @@ function makeQ(r,cat,d,used,TT,maxT){const list=TT[cat][d].slice(0,maxT||99);let
 function makeTest(level,n,ver){const L=LEVELS[level],r=mulberry32(9001+n*7919+(level===1?0:level*100003)),used=new Set(),qs=[],maxT=level===1&&ver===1?3:99;
   for(const d of [1,2,3]){let cats=shuffle(r,CAT_KEYS);cats=L.per===8?cats.concat([pick(r,CAT_KEYS)]):cats.concat(shuffle(r,CAT_KEYS).slice(0,L.per-7));for(const c of shuffle(r,cats))qs.push(makeQ(r,c,d,used,L.T,maxT));}
   return qs;}
-function makePractice(level,cat,seed,count){const TT=LEVELS[level].T,r=mulberry32(seed),used=new Set(),ds=[1,1,1,2,2,2,2,3,3,3].slice(0,count||10),qs=[];
-  for(const d of ds)qs.push(makeQ(r,cat,d,used,TT));return qs;}
+function makeChallenge(level,n){const L=LEVELS[level],r=mulberry32(777+n*104729+level*1009),used=new Set(),qs=[];
+  [[3,3],[4,4],[4,5]].forEach(([d,pts])=>{let cats=shuffle(r,CAT_KEYS).concat(shuffle(r,CAT_KEYS).slice(0,L.per-7));for(const c of shuffle(r,cats)){const q=makeQ(r,c,d,used,L.T);q.pts=pts;qs.push(q);}});
+  return qs;}
+function makePractice(level,cat,seed,count,hard){const TT=LEVELS[level].T,r=mulberry32(seed),used=new Set(),ds=(hard&&TT[cat][4]?[3,3,3,4,4,4,4,4,4,4]:[1,1,1,2,2,2,2,3,3,3]).slice(0,count||10),qs=[];
+  for(const d of ds){const q=makeQ(r,cat,d,used,TT);q.pts=POINTS[Math.min(d,3)];qs.push(q);}return qs;}
 
-const API={makeTest,makePractice,CATS,catsFor,CAT_KEYS,POINTS,LEVELS,T,T2,T3};
+const API={makeTest,makeChallenge,makePractice,CATS,catsFor,CAT_KEYS,POINTS,LEVELS,T,T2,T3};
 if(typeof module!=="undefined")module.exports=API;else root.KQ=API;
 })(this);
 </script>
 <script>(function(){
 "use strict";
-const {makeTest:mkTest,makePractice,catsFor,CAT_KEYS,LEVELS}=window.KQ;
-const KIDS=[{name:"Gia",av:"🦋",level:1},{name:"Aria",av:"🌸",level:1},{name:"Ananya",av:"🌟",level:2},{name:"Sahana",av:"🚀",level:3},{name:"Varenya",av:"🐬",level:1}];
+const {makeTest:mkTest,makeChallenge,makePractice,catsFor,CAT_KEYS,LEVELS}=window.KQ;
+const KIDS=[{name:"Gia",av:"🦋",level:1,challenge:true},{name:"Aria",av:"🌸",level:1},{name:"Ananya",av:"🌟",level:2},{name:"Sahana",av:"🚀",level:3},{name:"Varenya",av:"🐬",level:1},{name:"Bub",av:"🐻",level:1},{name:"Mit",av:"🦁",level:3,challenge:true}];
 const KEY="hopmath-level1-v1";
 const LETTERS="ABCDE";
 const NUM_TESTS=10;
 const LV=()=>kid().level, PER=()=>LEVELS[LV()].per, NQ=()=>PER()*3, MAX=()=>PER()*12, CATS_=()=>catsFor(LV());
 const testVer=a=>a&&a.v?a.v:1; // attempts/in-progress saved before levels existed are version 1
-const makeTest=(n,v)=>mkTest(LV(),n,v||2);
+const makeTest=(id,v)=>String(id)[0]==="c"?makeChallenge(LV(),+String(id).slice(1)):mkTest(LV(),+id,v||2);
+const isCh=id=>String(id)[0]==="c";
+const tlabel=id=>isCh(id)?"Challenge "+String(id).slice(1):"Test "+id;
+const regIds=()=>Array.from({length:NUM_TESTS},(_,i)=>String(i+1)), chIds=()=>Array.from({length:NUM_TESTS},(_,i)=>"c"+(i+1));
+const testIds=()=>kid().challenge?chIds().concat(regIds()):regIds();
+const nextId=id=>{const k=+String(id).replace("c","");return k<NUM_TESTS?(isCh(id)?"c":"")+(k+1):null;};
 const $=s=>document.querySelector(s);
 const app=()=>$("#app");
 
@@ -813,7 +934,7 @@ const starStr=(n,of=3)=>"⭐".repeat(n)+"☆".repeat(of-n);
 function latest(t){const a=P().attempts[t];return a&&a.length?a[a.length-1]:null;}
 function best(t){const a=P().attempts[t];return a&&a.length?Math.max(...a.map(x=>x.score)):null;}
 function skillStats(){const s={};CAT_KEYS.forEach(c=>s[c]=[0,0]);
-  for(let t=1;t<=NUM_TESTS;t++){const a=latest(t);if(!a)continue;const g=grade(makeTest(t,testVer(a)),a.answers);for(const c in g.byCat){s[c][0]+=g.byCat[c][0];s[c][1]+=g.byCat[c][1];}}
+  for(const t of testIds()){const a=latest(t);if(!a)continue;const g=grade(makeTest(t,testVer(a)),a.answers);for(const c in g.byCat){s[c][0]+=g.byCat[c][0];s[c][1]+=g.byCat[c][1];}}
   for(const c in P().practice){const p=P().practice[c];s[c][0]+=p[0];s[c][1]+=p[1];}
   return s;}
 function weakList(stats,limit){return CAT_KEYS.filter(c=>stats[c][1]>=3&&stats[c][0]/stats[c][1]<0.7).sort((a,b)=>stats[a][0]/stats[a][1]-stats[b][0]/stats[b][1]).slice(0,limit||3);}
@@ -824,7 +945,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 /* ---------- common UI ---------- */
 let timerId=null;
 function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
-function header(extra){return `<div class="top"><div class="brand"><span class="roo">🦘</span> Hop Math ${DB.current?`<span class="pill" style="background:#f97316">${LEVELS[LV()].label}</span>`:""}</div>
+function header(extra){return `<div class="top"><div class="brand"><span class="roo">🦘</span> Hop Math ${DB.current?`<span class="pill" style="background:#f97316">${LEVELS[LV()].label}${kid().challenge?" 🔥":""}</span>`:""}</div>
   <div class="row">${extra||""}${DB.current?`<button class="btn alt small" data-act="home">🏠 Home</button><button class="btn alt small" data-act="switch">${kid().av} ${esc(DB.current)} ▾</button>`:""}</div></div>`;}
 function confetti(){const box=document.createElement("div");box.className="confetti";const e=["🎉","⭐","🦘","🎈","✨","🌟"];
   for(let i=0;i<40;i++){const s=document.createElement("span");s.textContent=e[i%e.length];s.style.left=Math.random()*100+"vw";s.style.animationDelay=Math.random()*1.2+"s";box.appendChild(s);}
@@ -836,24 +957,26 @@ const answerLabel=(q,i)=>i==null?"(no answer)":`(${LETTERS[i]})`+(q.labels?" "+q
 function screenProfiles(){stopTimer();DB.current=null;save();
   app().innerHTML=header()+`<div class="card" style="text-align:center"><h1>Who's practicing today?</h1><p class="muted">Tap your name to start hopping! 🦘</p></div>
   <div class="profiles">${KIDS.map((k,i)=>{const p=DB.profiles[k.name],done=Object.keys(p.attempts).length;
-    return `<button class="prof p${i}" data-kid="${esc(k.name)}"><span class="av">${k.av}</span><span class="nm">${esc(k.name)}</span><span class="lv">${LEVELS[k.level].label} · ${LEVELS[k.level].grades}</span><span>${done} of ${NUM_TESTS} tests done</span></button>`;}).join("")}</div>
+    return `<button class="prof p${i}" data-kid="${esc(k.name)}"><span class="av">${k.av}</span><span class="nm">${esc(k.name)}</span><span class="lv">${LEVELS[k.level].label} · ${LEVELS[k.level].grades}${k.challenge?" · 🔥 Challenge":""}</span><span>${done} of ${NUM_TESTS*(k.challenge?2:1)} tests done</span></button>`;}).join("")}</div>
   <div class="card" style="margin-top:16px"><h2>For grown-ups</h2>
   <p class="muted" style="font-size:16px">Progress is saved automatically in this browser on this device. To move progress to another device, or to keep a safe copy, use backup and restore.</p>
   <div class="row"><button class="btn alt small" data-act="export">⬇️ Download backup</button><label class="btn alt small" style="display:inline-block">⬆️ Restore backup<input type="file" accept="application/json" id="imp" hidden></label></div></div>
   <div class="foot">Original practice questions in the style of Kangaroo math contests.</div>`;}
 
 function screenHome(){stopTimer();const p=P(),CATS=CATS_(),stats=skillStats(),weak=weakList(stats),tried=CAT_KEYS.filter(c=>stats[c][1]>0);if(p.instant===undefined)p.instant=true;
-  const tests=Array.from({length:NUM_TESTS},(_,i)=>i+1).map(t=>{const b=best(t),ip=p.inProgress[t];
-    if(b!=null)return `<button class="tcard done" data-test="${t}"><span class="tn">Test ${t}</span><span class="stars">${starStr(starsFor(pct(b,MAX())))}</span><br><b>${b}</b>/${MAX()}<br><span class="muted" style="font-size:14px">Tap to see or retry</span></button>`;
-    if(ip)return `<button class="tcard prog" data-test="${t}"><span class="tn">Test ${t}</span>⏳ In progress<br><span class="muted" style="font-size:14px">${Object.keys(ip.answers).length}/${NQ()} answered</span></button>`;
-    return `<button class="tcard" data-test="${t}"><span class="tn">Test ${t}</span>🆕 Start<br><span class="muted" style="font-size:14px">${NQ()} questions</span></button>`;}).join("");
+  const card=t=>{const b=best(t),ip=p.inProgress[t],L=isCh(t)?"🔥 "+String(t).slice(1):"Test "+t;
+    if(b!=null)return `<button class="tcard done" data-test="${t}"><span class="tn">${L}</span><span class="stars">${starStr(starsFor(pct(b,MAX())))}</span><br><b>${b}</b>/${MAX()}<br><span class="muted" style="font-size:14px">Tap to see or retry</span></button>`;
+    if(ip)return `<button class="tcard prog" data-test="${t}"><span class="tn">${L}</span>⏳ In progress<br><span class="muted" style="font-size:14px">${Object.keys(ip.answers).length}/${NQ()} answered</span></button>`;
+    return `<button class="tcard ${isCh(t)?"hot":""}" data-test="${t}"><span class="tn">${L}</span>🆕 Start<br><span class="muted" style="font-size:14px">${NQ()} questions</span></button>`;};
+  const tests=regIds().map(card).join(""),chTests=kid().challenge?chIds().map(card).join(""):"";
   let weakHTML;
   if(!tried.length)weakHTML=`<p class="muted">Finish a test and I'll find the skills to practice. 🔍</p>`;
   else if(weak.length)weakHTML=`<p>These skills need a little more practice:</p><div class="weak">${weak.map(c=>`<button class="btn orange" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name} (${pct(...stats[c])}%)</button>`).join("")}</div>`;
   else {const low=tried.sort((a,b)=>stats[a][0]/stats[a][1]-stats[b][0]/stats[b][1])[0];weakHTML=`<p>Super work! No weak spots right now. 🎉 Want a challenge in your lowest skill?</p><button class="btn orange" data-prac="${low}">${CATS[low].emoji} ${CATS[low].name}</button>`;}
   app().innerHTML=header()+`<div class="card"><h1>Hi ${esc(DB.current)}! ${kid().av}</h1><p class="muted" style="margin:0">${LEVELS[LV()].label} (${LEVELS[LV()].grades}). Each test has ${NQ()} questions: ${PER()} worth 3 points, ${PER()} worth 4 points and ${PER()} worth 5 points. Best score: ${MAX()}. Wrong answers don't lose points, so always pick an answer!</p>
   <div class="modes"><button class="mode ${p.instant?"on":""}" data-mode="1"><b>💡 Learning mode</b><br><span>See if each answer is right, with the explanation, as soon as you tap it.</span></button><button class="mode ${p.instant?"":"on"}" data-mode="0"><b>🏁 Contest mode</b><br><span>Like the real contest: answers and explanations at the end.</span></button></div></div>
-  <div class="card"><h2>📝 Practice tests</h2><div class="tests">${tests}</div></div>
+  ${chTests?`<div class="card hotcard"><h2>🔥 Challenge tests</h2><p class="muted" style="margin-top:-6px">Extra-hard puzzles for a real brain workout. Don't worry if they feel tough: that's how you get stronger!</p><div class="tests">${chTests}</div></div>`:""}
+  <div class="card"><h2>📝 ${chTests?"Regular tests":"Practice tests"}</h2><div class="tests">${tests}</div></div>
   <div class="card"><h2>🎯 Practice my weak spots</h2>${weakHTML}</div>
   <div class="card"><h2>📊 My skills</h2>${CAT_KEYS.map(c=>{const [a,b]=stats[c];return `<div class="skill"><span>${CATS[c].emoji} ${CATS[c].name}</span><div class="bar"><i style="width:${pct(a,b)}%;background:${CATS[c].color}"></i></div><b>${b?pct(a,b)+"%":"–"}</b></div>`;}).join("")}
   <p class="muted" style="font-size:15px">Want to practice any skill? Pick one:</p><div class="weak">${CAT_KEYS.map(c=>`<button class="btn alt small" data-prac="${c}">${CATS[c].emoji} ${CATS[c].name}</button>`).join("")}</div></div>`;}
@@ -868,7 +991,7 @@ function startTest(n){const p=P();const ip=p.inProgress[n]||{answers:{},idx:0,el
 function renderQ(){const {qs,ip,n}=T,i=ip.idx,q=qs[i],sel=ip.answers[i],N=qs.length,learn=!!ip.instant,shown=learn&&sel!=null,ok=sel===q.answer;const pc={3:"var(--p3)",4:"var(--p4)",5:"var(--p5)"}[q.pts];
   const answered=Object.keys(ip.answers).length;
   app().innerHTML=header(`<span class="timer" id="tm">⏱ ${fmtTime(ip.elapsed)}</span>`)+`<div class="card">
-   <div class="qhead"><span class="qnum">Test ${n} · Question ${i+1} of ${N}</span><span class="pill" style="background:${pc}">${q.pts} points</span></div>
+   <div class="qhead"><span class="qnum">${tlabel(n)} · Question ${i+1} of ${N}</span><span class="pill" style="background:${pc}">${q.pts} points</span></div>
    <div class="bar" style="margin-bottom:14px"><i style="width:${pct(answered,N)}%;background:linear-gradient(90deg,#f472b6,#7c3aed)"></i></div>
    <div class="qtext">${q.text}</div>${q.svg||""}
    <div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,shown?(k===q.answer?"right":k===sel?"wrong":""):sel===k?"sel":"")).join("")}</div>
@@ -888,7 +1011,7 @@ function showResults(n,ai,fresh){stopTimer();const p=P(),CATS=CATS_(),att=p.atte
   const msg=pc>=85?"Amazing! You're a math superstar! 🌟":pc>=65?"Great job! You're hopping high! 🦘":pc>=40?"Good effort! Practice makes you stronger! 💪":"Nice try! Let's practice together and grow! 🌱";
   const weakHere=CAT_KEYS.filter(c=>g.byCat[c]&&g.byCat[c][0]/g.byCat[c][1]<0.7).sort((a,b)=>g.byCat[a][0]/g.byCat[a][1]-g.byCat[b][0]/g.byCat[b][1]);
   const hist=p.attempts[n].length>1?`<p class="muted" style="font-size:15px">Tries on this test: ${p.attempts[n].map((a,k)=>k===ai?`<b>${a.score}</b>`:a.score).join(" → ")}</p>`:"";
-  app().innerHTML=header()+`<div class="card score"><div class="tag">Test ${n} results</div><div style="font-size:60px">${pc>=65?"🏆":"🦘"}</div>
+  app().innerHTML=header()+`<div class="card score"><div class="tag">${tlabel(n)} results</div><div style="font-size:60px">${pc>=65?"🏆":"🦘"}</div>
    <div class="big">${g.score}<span style="font-size:30px;color:var(--muted)"> / ${M}</span></div><div class="bigstars">${starStr(st)}</div>
    <h2 style="margin:8px 0 4px">${msg}</h2><p class="muted" style="margin:0">${g.correct} of ${qs.length} correct · Time ${fmtTime(att.time)}${att.instant?" · 💡 Learning mode":""}</p>${hist}</div>
   <div class="card"><h2>🧮 How your score was counted</h2><table class="pts"><tr><th>Question type</th><th>Correct</th><th>Points each</th><th>Points earned</th></tr>
@@ -903,14 +1026,14 @@ function showResults(n,ai,fresh){stopTimer();const p=P(),CATS=CATS_(),att=p.atte
      <div class="qtext">${q.text}</div>${q.svg||""}<div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,k===q.answer?"right":k===a?"wrong":"")).join("")}</div>
      <p style="margin:10px 0 0"><b>Your answer:</b> ${esc(answerLabel(q,a))}${ok?"":` · <b>Correct:</b> ${esc(answerLabel(q,q.answer))}`}</p>
      <div class="expl">💡 <b>How to solve it:</b><br>${q.explain}</div></div>`;}).join("")}</div>
-  <div class="card row" style="justify-content:center"><button class="btn" data-retry="${n}">🔄 Try Test ${n} again</button>${n<NUM_TESTS?`<button class="btn green" data-test="${n+1}">Next: Test ${n+1} ➡</button>`:""}<button class="btn alt" data-act="home">🏠 Home</button></div>`;
+  <div class="card row" style="justify-content:center"><button class="btn" data-retry="${n}">🔄 Try ${tlabel(n)} again</button>${nextId(n)?`<button class="btn green" data-test="${nextId(n)}">Next: ${tlabel(nextId(n))} ➡</button>`:""}<button class="btn alt" data-act="home">🏠 Home</button></div>`;
   window.scrollTo({top:0});if(fresh&&pc>=65)confetti();}
 
 /* --- practice --- */
 let PR=null;
-function startPractice(cat){stopTimer();PR={cat,qs:makePractice(LV(),cat,Date.now()%1e9),i:0,picked:null,right:0};renderP();}
+function startPractice(cat){stopTimer();PR={cat,qs:makePractice(LV(),cat,Date.now()%1e9,10,!!kid().challenge),i:0,picked:null,right:0};renderP();}
 function renderP(){const CATS=CATS_(),{cat,qs,i,picked}=PR,q=qs[i],done=picked!=null,ok=picked===q.answer;
-  app().innerHTML=header()+`<div class="card"><div class="qhead"><span class="qnum">${CATS[cat].emoji} ${CATS[cat].name} practice · ${i+1} of ${qs.length}</span><span class="pill" style="background:var(--p${q.pts})">${["","Easy","Medium","Tricky"][q.d]}</span></div>
+  app().innerHTML=header()+`<div class="card"><div class="qhead"><span class="qnum">${CATS[cat].emoji} ${CATS[cat].name} practice · ${i+1} of ${qs.length}</span><span class="pill" style="background:var(--p${q.pts})">${["","Easy","Medium","Tricky","Super tricky"][q.d]}</span></div>
    <div class="bar" style="margin-bottom:14px"><i style="width:${pct(i,qs.length)}%;background:${CATS[cat].color}"></i></div>
    <div class="qtext">${q.text}</div>${q.svg||""}
    <div class="choices">${q.choices.map((_,k)=>choiceHTML(q,k,done?(k===q.answer?"right":k===picked?"wrong":""):"")).join("")}</div>
@@ -933,8 +1056,8 @@ document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)r
   if(d.act==="home"){if(T&&timerId)save();screenHome();return;}
   if(d.act==="switch"){save();screenProfiles();return;}
   if(d.act==="export"){const blob=new Blob([JSON.stringify(DB,null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="hop-math-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();return;}
-  if(d.test){openTest(+d.test);return;}
-  if(d.retry){delete P().inProgress[d.retry];save();startTest(+d.retry);return;}
+  if(d.test){openTest(d.test);return;}
+  if(d.retry){delete P().inProgress[d.retry];save();startTest(d.retry);return;}
   if(d.prac){startPractice(d.prac);return;}
   if(d.filter){document.querySelectorAll("#review .rev").forEach(r=>r.style.display=d.filter==="wrong"&&r.dataset.ok==="1"?"none":"");return;}
   if(d.act==="pnext"){nextP();return;}
