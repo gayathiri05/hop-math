@@ -795,7 +795,7 @@ F.repeatBig=()=>r=>{const sh=shuffle(r,SHAPES).slice(0,3).map(t=>({t,c:pick(r,PA
     explain:`One group has 5 shapes with <b>2</b> ${itemName(want)}s.<br>${N} = ${full} groups × 5 + ${left}.<br>${full} × 2 = ${full*2}, plus ${cnt-full*2} in the leftover ${left} shape${left===1?"":"s"}.<br>Total: <b>${cnt}</b>.`};};
 F.matchGrid=()=>r=>{const n=ri(r,4,7),ans=5*n+2;
   return {text:`A grid with 2 rows of ${n} squares is made from matchsticks (like the picture, but ${n} squares long). Squares next to each other share sticks. How many matchsticks are needed?`,svg:gridSVG(2,3),...numChoices(r,ans,[8*n,6*n+2,ans-2,7*n]),
-    explain:`Count the flat (across) sticks: 3 rows of lines × ${n} = ${3*n}.<br>Count the standing (up-down) sticks: ${n+1} lines × 2 = ${2*(n+1)}.<br>Total: ${3*n} + ${2*(n+1)} = <b>${ans}</b>.<br>(The picture shows 3 squares: 9 + 8 = 17 sticks.)`};};
+    explain:`Count the flat (across) sticks: 3 rows of lines × ${n} = ${3*n}.<br>Count the standing (up-down) sticks: ${n+1} lines × 2 = ${2*(n+1)}.<br>Total: ${3*n} + ${2*(n+1)} = <b>${ans}</b>.<br>(Check with the picture, which is 3 squares long: 9 + 8 = 17 sticks.)`};};
 F.ageSum=()=>r=>{const a=ri(r,6,12),d=ri(r,2,5),b=a-d,y=ri(r,2,6),S=a+b,F2=S+2*y,[x,z]=names(r,2);
   return {text:`${x} is ${d} years older than ${z}. Right now their ages add up to ${S}. How old will ${x} be when their ages add up to ${F2}?`,...numChoices(r,a+y,[a,a+2*y,b+y,(F2/2)|0]),
     explain:`Now: ${x} + ${z} = ${S} and ${x} is ${d} older, so ${x} = (${S} + ${d}) ÷ 2 = ${a}, ${z} = ${b}.<br>Each year the total grows by 2. From ${S} to ${F2} is ${F2-S}, so ${y} years pass.<br>${x} will be ${a} + ${y} = <b>${a+y}</b>.`};};
@@ -875,6 +875,71 @@ T3.logic[4]=[F.knights(),F.wheels(),T3.logic[3][2],T3.logic[2][2]];
 T3.measure[4]=[F.meet(),F.avgSpeed(),F.dateDay(),T3.measure[3][1]];
 T3.spatial[4]=[F.painted(5,"rand"),F.diceStack(5),F.boxFit(),F.mirror(5,7,10)];
 
+/* ================= GIA SERIES (Challenge 11–30): extra geometry picture templates, used ONLY by new tests ================= */
+const GX={shapes:{3:[],4:[]},spatial:{3:[],4:[]}};
+function cellsSVG(cells,R,C,col,opt){opt=opt||{};const s=opt.s||36,ox=14,oy=14;let b="";
+  for(let i=0;i<=R;i++)b+=`<line x1="${ox}" y1="${oy+i*s}" x2="${ox+C*s}" y2="${oy+i*s}" stroke="#e2e8f0" stroke-width="1.5"/>`;
+  for(let j=0;j<=C;j++)b+=`<line x1="${ox+j*s}" y1="${oy}" x2="${ox+j*s}" y2="${oy+R*s}" stroke="#e2e8f0" stroke-width="1.5"/>`;
+  cells.forEach(([r0,c0])=>b+=`<rect x="${ox+c0*s}" y="${oy+r0*s}" width="${s}" height="${s}" fill="${col}" stroke="#1e3a8a" stroke-width="2"/>`);
+  if(opt.extra)b+=opt.extra(ox,oy,s);return svgWrap(C*s+28,R*s+28,b);}
+function polyomino(r,k,R,C){const key=(a,b)=>a+","+b;let cells=[[Math.floor(R/2),Math.floor(C/2)]],set=new Set([key(...cells[0])]);
+  while(cells.length<k){const [a,b]=pick(r,cells),[da,db]=pick(r,[[0,1],[1,0],[0,-1],[-1,0]]),na=a+da,nb=b+db;if(na>=0&&na<R&&nb>=0&&nb<C&&!set.has(key(na,nb))){set.add(key(na,nb));cells.push([na,nb]);}}
+  return {cells,set,key};}
+function perimOf(cells,set,key){let p=0,shared=0;cells.forEach(([a,b])=>[[0,1],[1,0],[0,-1],[-1,0]].forEach(([x,y])=>{if(set.has(key(a+x,b+y)))shared++;else p++;}));return {p,pairs:shared/2};}
+const polyPerim=(kmin,kmax)=>r=>{const k=ri(r,kmin,kmax),{cells,set,key}=polyomino(r,k,5,6),{p,pairs}=perimOf(cells,set,key);
+  return {text:`Each small square has sides of 1 cm. What is the perimeter (the distance all the way around the outside) of this shape?`,svg:cellsSVG(cells,5,6,"#93c5fd"),...numChoices(r,p,[4*k,k,p+2,p-2]),
+    explain:`Each square has 4 sides: ${k} × 4 = ${4*k}.<br>But where two squares touch, <b>2</b> sides disappear inside the shape. There ${pairs===1?"is":"are"} ${pairs} touching pair${pairs===1?"":"s"}: ${pairs} × 2 = ${2*pairs}.<br>Perimeter: ${4*k} − ${2*pairs} = <b>${p} cm</b>.<br>(You can also just walk around the edge and count: ${p} sides.)`};};
+function squaresIn(set,key,R,C){const by=[];for(let s=1;s<=Math.min(R,C);s++){let c=0;for(let a=0;a+s<=R;a++)for(let b=0;b+s<=C;b++){let ok=true;for(let i=0;i<s&&ok;i++)for(let j=0;j<s;j++)if(!set.has(key(a+i,b+j))){ok=false;break;}if(ok)c++;}if(c)by.push([s,c]);}return by;}
+const irregSquares=(sizes,rmMin,rmMax)=>r=>{const [R,C]=pick(r,sizes),key=(a,b)=>a+","+b;let cells=[];for(let a=0;a<R;a++)for(let b=0;b<C;b++)cells.push([a,b]);
+  const edge=shuffle(r,cells.filter(([a,b])=>a===0||b===0||a===R-1||b===C-1)).slice(0,ri(r,rmMin,rmMax)),rm=new Set(edge.map(c=>key(...c)));cells=cells.filter(c=>!rm.has(key(...c)));
+  const set=new Set(cells.map(c=>key(...c))),by=squaresIn(set,key,R,C),tot=by.reduce((a,[,c])=>a+c,0);
+  return {text:`How many squares of <b>any size</b> can you find in this shape? (Big squares made of smaller squares count too.)`,svg:cellsSVG(cells,R,C,"#fde68a"),...numChoices(r,tot,[cells.length,tot+1,tot-1,tot+by.length]),
+    explain:`Count each size separately, and only use squares that are completely filled in:<br>${by.map(([s,c])=>`${s}×${s} squares: ${c}`).join("<br>")}<br>Total: <b>${tot}</b>.`};};
+const triArea=(amax,bmax)=>r=>{let a,b;do{a=ri(r,2,amax);b=ri(r,2,bmax);}while((a*b)%2);const R=b+1,C=a+1,s=Math.min(34,300/C);
+  const extra=(ox,oy,S)=>`<polygon points="${ox+S/2},${oy+S/2+b*S} ${ox+S/2+a*S},${oy+S/2+b*S} ${ox+S/2},${oy+S/2}" fill="#f9a8d4" fill-opacity=".85" stroke="#be185d" stroke-width="3" stroke-linejoin="round"/>`;
+  let grid="";const ox=14,oy=14;for(let i=0;i<=R;i++)grid+=`<line x1="${ox}" y1="${oy+i*s}" x2="${ox+C*s}" y2="${oy+i*s}" stroke="#cbd5e1"/>`;for(let j=0;j<=C;j++)grid+=`<line x1="${ox+j*s}" y1="${oy}" x2="${ox+j*s}" y2="${oy+R*s}" stroke="#cbd5e1"/>`;
+  return {text:`Each small square on the grid is 1 square cm. What is the area of the pink triangle, in square cm?`,svg:svgWrap(C*s+28,R*s+28,grid+extra(ox,oy,s)),...numChoices(r,a*b/2,[a*b,a+b,a*b/2+1,a*b/2-1]),
+    explain:`Draw a rectangle around the triangle: it is ${a} squares wide and ${b} squares tall, so it has ${a} × ${b} = ${a*b} squares.<br>The triangle is exactly <b>half</b> of that rectangle (cut along the slanted side).<br>${a*b} ÷ 2 = <b>${a*b/2}</b> square cm.`};};
+function fanCrossSVG(k){const A=[120,12],L=[14,170],R=[226,170],my=95;let b=`<polygon points="${A} ${L} ${R}" fill="#e0e7ff" stroke="#4338ca" stroke-width="3" stroke-linejoin="round"/>`;
+  for(let i=1;i<=k;i++){const x=L[0]+(R[0]-L[0])*i/(k+1);b+=`<line x1="${A[0]}" y1="${A[1]}" x2="${x}" y2="170" stroke="#4338ca" stroke-width="3"/>`;}
+  const t=(my-A[1])/(170-A[1]),xl=A[0]+(L[0]-A[0])*t,xr=A[0]+(R[0]-A[0])*t;b+=`<line x1="${xl}" y1="${my}" x2="${xr}" y2="${my}" stroke="#4338ca" stroke-width="3"/>`;return svgWrap(240,182,b);}
+const fanCross=(kmin,kmax)=>r=>{const k=ri(r,kmin,kmax),n=k+1,one=n*(n+1)/2,ans=2*one;
+  return {text:`How many triangles of any size are in this picture?`,svg:fanCrossSVG(k),...numChoices(r,ans,[one,ans+1,ans-n,one+n]),
+    explain:`Every triangle has its top corner at the very top. Its bottom side lies either on the <b>middle line</b> or on the <b>bottom line</b>.<br>Each of those lines is cut into ${n} pieces. Using pieces next to each other: ${Array.from({length:n},(_,s)=>n-s).join(" + ")} = ${one} triangles per line.<br>Two lines: ${one} × 2 = <b>${ans}</b>.`};};
+/* isometric cube piles */
+function isoSVG(H){const X=H.length,Y=H[0].length,s=26,c=Math.cos(Math.PI/6)*s;let maxZ=0;H.forEach(row=>row.forEach(h=>maxZ=Math.max(maxZ,h)));
+  const P=(x,y,z)=>[(x-y)*c,(x+y)*s/2-z*s];const cubes=[];for(let x=0;x<X;x++)for(let y=0;y<Y;y++)for(let z=0;z<H[x][y];z++)cubes.push([x,y,z]);
+  cubes.sort((a,b)=>(a[0]+a[1])-(b[0]+b[1])||a[2]-b[2]);const pts=[];cubes.forEach(([x,y,z])=>{[[x,y,z],[x+1,y+1,z+1],[x+1,y,z],[x,y+1,z],[x,y,z+1]].forEach(p=>pts.push(P(...p)));});
+  const minX=Math.min(...pts.map(p=>p[0]))-6,minY=Math.min(...pts.map(p=>p[1]))-6,maxX=Math.max(...pts.map(p=>p[0]))+6,maxY=Math.max(...pts.map(p=>p[1]))+6;
+  const poly=(arr,f)=>`<polygon points="${arr.map(p=>{const q=P(...p);return (q[0]-minX).toFixed(1)+","+(q[1]-minY).toFixed(1);}).join(" ")}" fill="${f}" stroke="#1e293b" stroke-width="1.6" stroke-linejoin="round"/>`;
+  let b="";cubes.forEach(([x,y,z])=>{b+=poly([[x,y,z+1],[x+1,y,z+1],[x+1,y+1,z+1],[x,y+1,z+1]],"#fef08a")+poly([[x+1,y,z],[x+1,y+1,z],[x+1,y+1,z+1],[x+1,y,z+1]],"#fb923c")+poly([[x,y+1,z],[x+1,y+1,z],[x+1,y+1,z+1],[x,y+1,z+1]],"#f59e0b");});
+  return `<svg class="qsvg" viewBox="0 0 ${(maxX-minX).toFixed(0)} ${(maxY-minY).toFixed(0)}" style="max-width:${Math.min(320,(maxX-minX)*1.6).toFixed(0)}px">${b}</svg>`;}
+function monoHeights(r,X,Y,hmax){const H=[];for(let x=0;x<X;x++){H.push([]);for(let y=0;y<Y;y++){let lim=hmax;if(x>0)lim=Math.min(lim,H[x-1][y]);if(y>0)lim=Math.min(lim,H[x][y-1]);H[x].push(ri(r,lim>=2?Math.max(1,lim-2):1,lim));}}return H;}
+const isoCount=(X,Y,hmax)=>r=>{const H=monoHeights(r,X,Y,hmax),tot=H.flat().reduce((a,b)=>a+b,0),cols=H.flat();
+  return {text:`How many cubes were used to build this? (Every cube sits on the table or on another cube, so some cubes are hidden underneath.)`,svg:isoSVG(H),...numChoices(r,tot,[tot-1,tot+1,tot-2,cols.length,tot+2]),
+    explain:`Count column by column (each stack from the table up), starting at the back: ${cols.join(" + ")} = <b>${tot}</b>.<br>Tip: cubes you can't see must be there, because the cubes on top need something to sit on.`};};
+const isoFill=()=>r=>{const H=monoHeights(r,3,3,3),tot=H.flat().reduce((a,b)=>a+b,0),ans=27-tot;if(ans<3)return isoFill()(r);
+  return {text:`How many more cubes are needed to turn this pile into a big 3 × 3 × 3 cube?`,svg:isoSVG(H),...numChoices(r,ans,[tot,ans+1,ans-1,27-H.flat().filter(h=>h).length]),
+    explain:`A 3 × 3 × 3 cube has 3 × 3 × 3 = 27 small cubes.<br>The pile has ${H.flat().join(" + ")} = ${tot} cubes (counting each stack).<br>Still needed: 27 − ${tot} = <b>${ans}</b>.`};};
+const symFill=()=>r=>{const R=4,C=6,half=3,key=(a,b)=>a+","+b;let left;do{left=[];for(let a=0;a<R;a++)for(let b=0;b<half;b++)if(r()<.4)left.push([a,b]);}while(left.length<3||left.length>6);
+  const all=left.concat(left.map(([a,b])=>[a,C-1-b])),miss=pick(r,left.map(([a,b])=>[a,C-1-b])),shown=all.filter(c=>key(...c)!==key(...miss)),filled=new Set(shown.map(c=>key(...c)));
+  const empt=[];for(let a=0;a<R;a++)for(let b=0;b<C;b++)if(!filled.has(key(a,b))&&key(a,b)!==key(...miss))empt.push([a,b]);
+  const near=empt.filter(([a,b])=>Math.abs(a-miss[0])+Math.abs(b-miss[1])<=2||key(a,b)===key(R-1-miss[0],miss[1]));const spots=[miss].concat(shuffle(r,near).concat(shuffle(r,empt)).filter((c,i,arr)=>arr.findIndex(d=>key(...d)===key(...c))===i).slice(0,4));
+  const letters=shuffle(r,["A","B","C","D","E"]);
+  const extra=(ox,oy,s)=>`<line x1="${ox+half*s}" y1="${oy-8}" x2="${ox+half*s}" y2="${oy+R*s+8}" stroke="#dc2626" stroke-width="3" stroke-dasharray="7 5"/>`+spots.map(([a,b],i)=>`<text x="${ox+b*s+s/2}" y="${oy+a*s+s/2+8}" text-anchor="middle" font-size="22" font-weight="900" fill="#475569">${letters[i]}</text>`).join("");
+  return {text:`Color <b>one</b> more square so the picture looks exactly the same on both sides of the red dashed line (like a mirror). Which square should you color?`,svg:cellsSVG(shown,R,C,"#a78bfa",{s:40,extra}),...textChoices(r,letters[0],letters.slice(1),true),
+    explain:(()=>{const d=miss[1]-half+1;return `Check each colored square on the left: its mirror partner must be in the <b>same row</b>, the same distance from the red line on the other side.<br>In row ${miss[0]+1}, the square ${d} place${d>1?"s":""} to the left of the line is colored, but the square ${d} place${d>1?"s":""} to the right of the line is not.<br>So color square <b>${letters[0]}</b>.`;})()};};
+const rotate=(n,kmin,kmax)=>r=>{const N=n*n,id=(a,c)=>a*n+c,cw=c=>c.map((_,i)=>c[id(n-1-i%n,Math.floor(i/n))]),ccw=c=>c.map((_,i)=>c[id(i%n,n-1-Math.floor(i/n))]),lr=c=>c.map((_,i)=>c[id(Math.floor(i/n),n-1-i%n)]);
+  let cells,cand;do{cells=Array(N).fill(0);shuffle(r,[...Array(N).keys()]).slice(0,ri(r,kmin,kmax)).forEach(i=>cells[i]=1);cand=[cw(cells),ccw(cells),lr(cells),cells,cw(cw(cells))];}while(new Set(cand.map(String)).size<5);
+  const col=pick(r,["#3b82f6","#ef4444","#16a34a","#9333ea"]),all=shuffle(r,cand),correct=cand[0];
+  const orig=`<svg class="qsvg" viewBox="0 0 130 130" style="max-width:170px">${gridBody(cells,n,col,120,5,5)}</svg>`;
+  return {text:`This tile is turned a <b>quarter turn clockwise</b> (the way clock hands move, like from 12 to 3). What does it look like after turning?`,svg:orig,choices:all.map(c=>patGrid(c,n,col)),answer:all.findIndex(c=>String(c)===String(correct)),
+    explain:`In a quarter turn clockwise, the <b>top row becomes the right column</b> (read from top to bottom), the right column becomes the bottom row, and so on.<br>Follow one colored square: a square in the top-left corner moves to the top-right corner.<br>Be careful: one wrong answer is turned the other way (counter-clockwise), one is a mirror image, one is turned halfway, and one isn't turned at all.`};};
+GX.shapes[3].push(polyPerim(4,6),irregSquares([[3,3],[3,4]],1,2),triArea(6,4),fanCross(1,2));
+GX.shapes[4].push(polyPerim(7,10),irregSquares([[4,4],[3,5],[4,5]],1,3),triArea(8,6),fanCross(2,4));
+GX.spatial[3].push(isoCount(2,2,3),isoCount(2,3,3),symFill(),rotate(3,3,4));
+GX.spatial[4].push(isoCount(3,3,4),isoFill(),rotate(4,4,6),symFill());
+
 /* ================= API ================= */
 const CATS={numbers:{name:"Numbers & Counting",emoji:"🔢",color:"#3b82f6"},arith:{name:"Adding & Taking Away",emoji:"➕",color:"#22c55e"},patterns:{name:"Patterns",emoji:"🔁",color:"#a855f7"},
   shapes:{name:"Shapes & Geometry",emoji:"🔺",color:"#f97316"},logic:{name:"Logic Puzzles",emoji:"🧩",color:"#ec4899"},measure:{name:"Time & Money",emoji:"⏰",color:"#14b8a6"},spatial:{name:"Seeing in 3D",emoji:"🎲",color:"#eab308"}};
@@ -887,20 +952,33 @@ function makeQ(r,cat,d,used,TT,maxT){const list=TT[cat][d].slice(0,maxT||99);let
 function makeTest(level,n,ver){const L=LEVELS[level],r=mulberry32(9001+n*7919+(level===1?0:level*100003)),used=new Set(),qs=[],maxT=level===1&&ver===1?3:99;
   for(const d of [1,2,3]){let cats=shuffle(r,CAT_KEYS);cats=L.per===8?cats.concat([pick(r,CAT_KEYS)]):cats.concat(shuffle(r,CAT_KEYS).slice(0,L.per-7));for(const c of shuffle(r,cats))qs.push(makeQ(r,c,d,used,L.T,maxT));}
   return qs;}
-function makeChallenge(level,n){const L=LEVELS[level],r=mulberry32(777+n*104729+level*1009),used=new Set(),qs=[];
+function makeChallenge0(level,n){const L=LEVELS[level],r=mulberry32(777+n*104729+level*1009),used=new Set(),qs=[];
   [[3,3],[4,4],[4,5]].forEach(([d,pts])=>{let cats=shuffle(r,CAT_KEYS).concat(shuffle(r,CAT_KEYS).slice(0,L.per-7));for(const c of shuffle(r,cats)){const q=makeQ(r,c,d,used,L.T);q.pts=pts;qs.push(q);}});
   return qs;}
+const SERIES_MAX=30;let SERIES=null;
+function buildSeries(){const sig=q=>q.text+"|"+(q.svg||""),seen=new Set();
+  for(let t=1;t<=10;t++){makeTest(1,t,1).forEach(q=>seen.add(sig(q)));makeTest(1,t,2).forEach(q=>seen.add(sig(q)));makeChallenge0(1,t).forEach(q=>seen.add(sig(q)));}
+  SERIES={};
+  for(let n=11;n<=SERIES_MAX;n++){const r=mulberry32(55555+n*7919),qs=[],usedT=new Set();
+    [[3,3],[4,4],[4,5]].forEach(([d,pts])=>{const slots=shuffle(r,["shapes","shapes","spatial","numbers","arith","patterns","logic","measure"]);
+      for(const cat of slots){let q=null;
+        for(let tries=0;tries<400&&!q;tries++){const c=tries<200?cat:pick(r,cat==="shapes"||cat==="spatial"?["shapes","spatial"]:CAT_KEYS);
+          const pool=T[c][d].concat((GX[c]&&GX[c][d])||[]),i=ri(r,0,pool.length-1),key=c+d+i;if(usedT.has(key)&&tries<100)continue;
+          const cand=Object.assign({cat:c,d,pts,tpl:"g"+key},pool[i](r));if(seen.has(sig(cand)))continue;seen.add(sig(cand));usedT.add(key);q=cand;}
+        if(!q)throw new Error("Could not find a new question for "+cat);qs.push(q);}});
+    SERIES[n]=qs;}}
+function makeChallenge(level,n){if(level===1&&n>10){if(!SERIES)buildSeries();return SERIES[n].map(q=>Object.assign({},q));}return makeChallenge0(level,n);}
 function makePractice(level,cat,seed,count,hard){const TT=LEVELS[level].T,r=mulberry32(seed),used=new Set(),ds=(hard&&TT[cat][4]?[3,3,3,4,4,4,4,4,4,4]:[1,1,1,2,2,2,2,3,3,3]).slice(0,count||10),qs=[];
   for(const d of ds){const q=makeQ(r,cat,d,used,TT);q.pts=POINTS[Math.min(d,3)];qs.push(q);}return qs;}
 
-const API={makeTest,makeChallenge,makePractice,CATS,catsFor,CAT_KEYS,POINTS,LEVELS,T,T2,T3};
+const API={GX,SERIES_MAX,makeTest,makeChallenge,makeChallenge0,makePractice,CATS,catsFor,CAT_KEYS,POINTS,LEVELS,T,T2,T3};
 if(typeof module!=="undefined")module.exports=API;else root.KQ=API;
 })(this);
 </script>
 <script>(function(){
 "use strict";
 const {makeTest:mkTest,makeChallenge,makePractice,catsFor,CAT_KEYS,LEVELS}=window.KQ;
-const KIDS=[{name:"Gia",av:"🦋",level:1,challenge:true},{name:"Aria",av:"🌸",level:1},{name:"Ananya",av:"🌟",level:2},{name:"Sahana",av:"🚀",level:3},{name:"Varenya",av:"🐬",level:1},{name:"Bub",av:"🐻",level:1},{name:"Mit",av:"🦁",level:3,challenge:true}];
+const KIDS=[{name:"Gia",av:"🦋",level:1,challenge:true,chCount:30},{name:"Aria",av:"🌸",level:1},{name:"Ananya",av:"🌟",level:2},{name:"Sahana",av:"🚀",level:3},{name:"Varenya",av:"🐬",level:1},{name:"Bub",av:"🐻",level:1},{name:"Mit",av:"🦁",level:3,challenge:true}];
 const KEY="hopmath-level1-v1";
 const LETTERS="ABCDE";
 const NUM_TESTS=10;
@@ -909,9 +987,9 @@ const testVer=a=>a&&a.v?a.v:1; // attempts/in-progress saved before levels exist
 const makeTest=(id,v)=>String(id)[0]==="c"?makeChallenge(LV(),+String(id).slice(1)):mkTest(LV(),+id,v||2);
 const isCh=id=>String(id)[0]==="c";
 const tlabel=id=>isCh(id)?"Challenge "+String(id).slice(1):"Test "+id;
-const regIds=()=>Array.from({length:NUM_TESTS},(_,i)=>String(i+1)), chIds=()=>Array.from({length:NUM_TESTS},(_,i)=>"c"+(i+1));
+const regIds=()=>Array.from({length:NUM_TESTS},(_,i)=>String(i+1)), chIds=()=>Array.from({length:kid().chCount||NUM_TESTS},(_,i)=>"c"+(i+1));
 const testIds=()=>kid().challenge?chIds().concat(regIds()):regIds();
-const nextId=id=>{const k=+String(id).replace("c","");return k<NUM_TESTS?(isCh(id)?"c":"")+(k+1):null;};
+const nextId=id=>{const k=+String(id).replace("c",""),mx=isCh(id)?(kid().chCount||NUM_TESTS):NUM_TESTS;return k<mx?(isCh(id)?"c":"")+(k+1):null;};
 const $=s=>document.querySelector(s);
 const app=()=>$("#app");
 
@@ -957,7 +1035,7 @@ const answerLabel=(q,i)=>i==null?"(no answer)":`(${LETTERS[i]})`+(q.labels?" "+q
 function screenProfiles(){stopTimer();DB.current=null;save();
   app().innerHTML=header()+`<div class="card" style="text-align:center"><h1>Who's practicing today?</h1><p class="muted">Tap your name to start hopping! 🦘</p></div>
   <div class="profiles">${KIDS.map((k,i)=>{const p=DB.profiles[k.name],done=Object.keys(p.attempts).length;
-    return `<button class="prof p${i}" data-kid="${esc(k.name)}"><span class="av">${k.av}</span><span class="nm">${esc(k.name)}</span><span class="lv">${LEVELS[k.level].label} · ${LEVELS[k.level].grades}${k.challenge?" · 🔥 Challenge":""}</span><span>${done} of ${NUM_TESTS*(k.challenge?2:1)} tests done</span></button>`;}).join("")}</div>
+    return `<button class="prof p${i}" data-kid="${esc(k.name)}"><span class="av">${k.av}</span><span class="nm">${esc(k.name)}</span><span class="lv">${LEVELS[k.level].label} · ${LEVELS[k.level].grades}${k.challenge?" · 🔥 Challenge":""}</span><span>${done} of ${NUM_TESTS+(k.challenge?(k.chCount||NUM_TESTS):0)} tests done</span></button>`;}).join("")}</div>
   <div class="card" style="margin-top:16px"><h2>For grown-ups</h2>
   <p class="muted" style="font-size:16px">Progress is saved automatically in this browser on this device. To move progress to another device, or to keep a safe copy, use backup and restore.</p>
   <div class="row"><button class="btn alt small" data-act="export">⬇️ Download backup</button><label class="btn alt small" style="display:inline-block">⬆️ Restore backup<input type="file" accept="application/json" id="imp" hidden></label></div></div>
@@ -975,7 +1053,7 @@ function screenHome(){stopTimer();const p=P(),CATS=CATS_(),stats=skillStats(),we
   else {const low=tried.sort((a,b)=>stats[a][0]/stats[a][1]-stats[b][0]/stats[b][1])[0];weakHTML=`<p>Super work! No weak spots right now. 🎉 Want a challenge in your lowest skill?</p><button class="btn orange" data-prac="${low}">${CATS[low].emoji} ${CATS[low].name}</button>`;}
   app().innerHTML=header()+`<div class="card"><h1>Hi ${esc(DB.current)}! ${kid().av}</h1><p class="muted" style="margin:0">${LEVELS[LV()].label} (${LEVELS[LV()].grades}). Each test has ${NQ()} questions: ${PER()} worth 3 points, ${PER()} worth 4 points and ${PER()} worth 5 points. Best score: ${MAX()}. Wrong answers don't lose points, so always pick an answer!</p>
   <div class="modes"><button class="mode ${p.instant?"on":""}" data-mode="1"><b>💡 Learning mode</b><br><span>See if each answer is right, with the explanation, as soon as you tap it.</span></button><button class="mode ${p.instant?"":"on"}" data-mode="0"><b>🏁 Contest mode</b><br><span>Like the real contest: answers and explanations at the end.</span></button></div></div>
-  ${chTests?`<div class="card hotcard"><h2>🔥 Challenge tests</h2><p class="muted" style="margin-top:-6px">Extra-hard puzzles for a real brain workout. Don't worry if they feel tough: that's how you get stronger!</p><div class="tests">${chTests}</div></div>`:""}
+  ${chTests?`<div class="card hotcard"><h2>🔥 Challenge tests</h2><p class="muted" style="margin-top:-6px">Extra-hard puzzles for a real brain workout${(kid().chCount||10)>10?`, with lots of geometry and picture puzzles in tests 11–${kid().chCount}`:""}. Don't worry if they feel tough: that's how you get stronger!</p><div class="tests">${chTests}</div></div>`:""}
   <div class="card"><h2>📝 ${chTests?"Regular tests":"Practice tests"}</h2><div class="tests">${tests}</div></div>
   <div class="card"><h2>🎯 Practice my weak spots</h2>${weakHTML}</div>
   <div class="card"><h2>📊 My skills</h2>${CAT_KEYS.map(c=>{const [a,b]=stats[c];return `<div class="skill"><span>${CATS[c].emoji} ${CATS[c].name}</span><div class="bar"><i style="width:${pct(a,b)}%;background:${CATS[c].color}"></i></div><b>${b?pct(a,b)+"%":"–"}</b></div>`;}).join("")}
